@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Redis;
  * @property float $pv 营业额
  * @property string $tj_ratio 推荐奖励
  * @property string $jc_ratio 极差奖励
- * @property string $jf_ratio 积分
+ * @property string $jf_ratio 消费券
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ShopLevel whereCreatedAt($value)

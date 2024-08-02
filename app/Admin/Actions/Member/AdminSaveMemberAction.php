@@ -46,9 +46,11 @@ class AdminSaveMemberAction extends RowAction
 
     public function form(Member $model)
     {
-        $this->text('mobile','手机号:')->default($model->mobile)->rules('required');
+        $this->select('nation','国家')->options(Member::getNations())->default(1)->rules('required');
+        $this->select('certificate_type','证件类型')->options(Member::getNtlw())->default(2)->rules('required');
+        $this->text('mobile','注册号:')->default($model->mobile)->rules('required');
         $this->text('real_name','姓名:')->default($model->real_name);
-        $this->text('id_number','身份证号:')->default($model->id_number);
+        $this->text('id_number','证件号:')->default($model->id_number);
         $this->text('password','登录密码:')->default('');
         $this->text('transaction_password','操作密码:')->default('');
 

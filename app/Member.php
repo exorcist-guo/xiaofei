@@ -120,10 +120,10 @@ class Member extends Authenticatable
     public static function getNtlw()
     {
         return [
-          1 => __('passport'),  //护照
+          1 => __('map.passport'),  //护照
           2 => 'ID',
-          3 => __('mobile'),
-          4 => __('rests'),
+          3 => __('map.mobile'),
+          4 => __('map.rests'),
         ];
     }
 

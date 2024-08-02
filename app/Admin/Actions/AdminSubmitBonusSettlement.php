@@ -64,7 +64,7 @@ class AdminSubmitBonusSettlement extends Action
     public function form()
     {
         $this->date('start_time', '开始时间')->rules('required');
-        $this->date('end_time', '操作')->rules('required');
+        $this->date('end_time', '结束时间')->rules('required');
 
     }
 

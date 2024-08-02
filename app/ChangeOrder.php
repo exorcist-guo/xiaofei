@@ -40,19 +40,19 @@ class ChangeOrder extends Model
     const TYPE_MAP = [
         1 => '会员信息修改',
         2 => '会员等级修改',
-        3 => '会员积分修改',
+        3 => '会员消费券修改',
         4 => '修改营业额',
         5 => '修改状态',
         6 => '修改上级',
         7 => '社区等级修改',
         8 => '社区等级防降级',
-        9 => '消费券修改',
+//        9 => '消费券修改',
     ];
 
     const ASSET_TYPE = [
-        3 => '积分',
+        3 => '消费券',
         4 => '营业额',
-        9 => '消费劵',
+//        9 => '消费券',
     ];
 
     const STATUS_MAP = [
@@ -151,14 +151,25 @@ class ChangeOrder extends Model
 
     public static function saveMember(Member $user,$data){
         $content = [];
+        if($data['nation'] != $user->nation){
+            $content['nation'] = $data['nation'];
+            $content['nation_old'] = $user->nation;
+        }
+        if($data['certificate_type'] != $user->certificate_type){
+            $content['certificate_type'] = $data['certificate_type'];
+            $content['certificate_type_old'] = $user->certificate_type;
+        }
         if($data['mobile'] != $user->mobile){
             $content['mobile'] = $data['mobile'];
+            $content['mobile_old'] = $user->mobile;
         }
         if($data['real_name'] != $user->real_name){
             $content['real_name'] = $data['real_name'];
+            $content['real_name_old'] = $user->real_name;
         }
         if($data['id_number'] != $user->id_number){
             $content['id_number'] = $data['id_number'];
+            $content['id_number_old'] = $user->id_number;
         }
         if(!empty($data['password']) ){
             $content['password'] = $data['password'];
@@ -199,17 +210,26 @@ class ChangeOrder extends Model
     public static function getContentView($content,$type){
         $view = '';
         $content = json_decode($content,true);
+
         switch ($type){
             case 1:
+                $nation = Member::getNations();
+                $certificate_type = Member::getNtlw();
                 foreach ($content as $key => $val){
+                    if($key == 'nation'){
+                        $view .= "国家由:{$nation[$content[$key.'_old']]}改为:{$nation[$val]}<br\>";
+                    }
+                    if($key == 'certificate_type'){
+                        $view .= "证件类型由:{$certificate_type[$content[$key.'_old']]}改为:{$certificate_type[$val]}<br\>";
+                    }
                     if($key == 'mobile'){
-                        $view .= "手机号修改为:{$val}<br\>";
+                        $view .= "手机号由:{$content[$key.'_old']}修改为:{$val}<br\>";
                     }
                     if($key == 'real_name'){
-                        $view .= "姓名修改为:{$val}<br\>";
+                        $view .= "姓名由:{$content[$key.'_old']}修改为:{$val}<br\>";
                     }
                     if($key == 'id_number'){
-                        $view .= "身份证修改为:{$val}<br\>";
+                        $view .= "证件号由:{$content[$key.'_old']}修改为:{$val}<br\>";
                     }
                     if($key == 'password'){
                         $view .= "登录密码修改为:{$val}<br\>";
@@ -229,9 +249,9 @@ class ChangeOrder extends Model
             case 3:
                 if(isset($content['amount'])){
                     if($content['amount']>0 ){
-                        $view = "增加积分:". abs($content['amount']);
+                        $view = "增加消费券:". abs($content['amount']);
                     }else{
-                        $view = "减少积分:". abs($content['amount']);
+                        $view = "减少消费券:". abs($content['amount']);
                     }
 
                 }

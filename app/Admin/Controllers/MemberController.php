@@ -133,10 +133,11 @@ class MemberController extends AdminController
         $grid->column('shop_level', __('Shop level'));
         $grid->column('mobile', __('Mobile'));
         $grid->column('number', __('Number'));
+        $grid->column('nation', __('Nation'))->using(Member::getNations());
         $grid->column('integral', __('Integral'))->sortable();
         $grid->column('all_integral', __('All integral'))->sortable();
         $grid->column('pv', __('Pv'))->sortable();
-//        $grid->column('avatar', __('Avatar'));
+        $grid->column('certificate_type', __('Certificate Type'))->using(Member::getNtlw());
         $grid->column('real_name', __('Real name'));
         $grid->column('id_number', __('Id number'));
         $grid->column('shop_member_id', __('Shop member id'));
