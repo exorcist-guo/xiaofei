@@ -28,7 +28,7 @@ class CreateMembersTable extends Migration
             $table->smallInteger('certificate_type')->default(1)->comment('证件类型');
             $table->string('real_name',50)->default('')->comment('真实姓名');
             $table->char('id_number',30)->default('')->comment('身份证号');
-            $table->smallInteger('certificate_image')->default(1)->comment('证件照');
+            $table->string('certificate_image',500)->default('')->comment('证件照');
             $table->smallInteger('is_active')->default(0)->comment('是否激活');
             $table->smallInteger('nation')->default(1)->comment('国家');
             $table->string('lang',15)->default(1)->comment('语言');

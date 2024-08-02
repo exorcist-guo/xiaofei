@@ -47,7 +47,12 @@ class ChangeOrderJob implements ShouldQueue
         $user = Member::whereId($change_order->member_id)->first();
         switch ($change_order->type){
             case 1:
-
+                if(!empty($content['nation'])){
+                    $user->nation = $content['nation'];
+                }
+                if(!empty($content['certificate_type'])){
+                    $user->certificate_type = $content['certificate_type'];
+                }
                 if(!empty($content['mobile'])){
                     $user->mobile = $content['mobile'];
                 }
