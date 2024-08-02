@@ -1,0 +1,1 @@
+import{a as t}from"./_plugin-vue_export-helper.d91a28a9.js";const a=a=>t({url:"integral/pv/log",method:"post",data:a}),o=a=>t({url:"pv/info",method:"post",data:a}),p=a=>t({url:"integral/log",method:"post",data:a});export{a,p as i,o as p};

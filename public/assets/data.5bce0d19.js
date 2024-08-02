@@ -1,0 +1,1 @@
+import{a as o}from"./request.f7e270e6.js";const t=()=>o({url:"integral/pv/log",method:"post"}),s=()=>o({url:"pv/info",method:"post"}),r=()=>o({url:"integral/log",method:"post"});export{t as a,r as i,s as p};
