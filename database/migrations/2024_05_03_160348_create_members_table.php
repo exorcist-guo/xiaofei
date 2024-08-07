@@ -16,6 +16,8 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('pid')->default(0);
+            $table->longText('path')->nullable();
+            $table->integer('deep')->default(0);
             $table->integer('level')->default(0);
             $table->integer('shop_level')->default(0);
             $table->string('mobile',15);
@@ -25,7 +27,7 @@ class CreateMembersTable extends Migration
             $table->decimal('pv',12,2)->default(0)->comment('业绩');
             $table->decimal('divvy_pv',12,2)->default(0)->comment('分红业绩');
             $table->string('avatar',200)->default('')->comment('图像');
-            $table->smallInteger('certificate_type')->default(1)->comment('证件类型');
+            $table->smallInteger('certificate_type')->default(2)->comment('证件类型');
             $table->string('real_name',50)->default('')->comment('真实姓名');
             $table->char('id_number',30)->default('')->comment('身份证号');
             $table->string('certificate_image',500)->default('')->comment('证件照');
