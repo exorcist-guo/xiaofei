@@ -16,7 +16,7 @@ class CreatePvOrderTable extends Migration
         Schema::create('pv_order', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('member_id');
-            $table->string('mobile',12)->comment('手机号');
+            $table->string('mobile',40)->comment('手机号');
             $table->decimal('amount', 12, 2)->comment('变动数量');
             $table->string('order_no',50)->unique()->comment('订单号');
             $table->smallInteger('status')->default(0);
