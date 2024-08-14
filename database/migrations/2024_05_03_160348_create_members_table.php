@@ -16,8 +16,8 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('pid')->default(0);
-            $table->longText('path')->nullable();
             $table->integer('deep')->default(0);
+            $table->longText('path')->nullable();
             $table->integer('level')->default(0);
             $table->integer('shop_level')->default(0);
             $table->string('mobile',15);

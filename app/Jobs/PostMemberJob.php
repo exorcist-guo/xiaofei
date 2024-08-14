@@ -41,6 +41,7 @@ class PostMemberJob implements ShouldQueue
             $post_member = PostMember::where('id',$data['id'])->first();
             if($post_member->status == 4){
                 $pid = 0;
+                $deep = 0;
                 $pid_shop_member_id = 0;
                 if($post_member->pid_id_number){
                     $pp = PostMember::where('status','>',1)->where('id_number',$post_member->pid_id_number)->first();
@@ -62,6 +63,7 @@ class PostMemberJob implements ShouldQueue
                 $data = [
                     'mobile' => $post_member->mobile,
                     'level' => 0,
+                    'deep' => $deep,
                     'shop_level' => 0,
                     'password' => \Hash::make(substr($post_member->id_number,-6)),
                     'pid' => $pid,
