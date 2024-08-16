@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\DikouquanLog whereRemark($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\DikouquanLog whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Member $member
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\DikouquanLog filterMember($memberId)
  */
 class DikouquanLog extends Model
 {

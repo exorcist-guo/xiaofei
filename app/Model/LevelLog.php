@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Model\LevelLog
  *
-
  * @mixin \Eloquent
  * @property int $id
  * @property int $member_id
@@ -26,6 +25,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\LevelLog whereMemberId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\LevelLog whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\LevelLog whereUpdatedAt($value)
+ * @property-read \App\Member $member
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\LevelLog filterMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\LevelLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\LevelLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\LevelLog query()
  */
 class LevelLog extends Model
 {

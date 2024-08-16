@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ShopLevel whereRealName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ShopLevel whereTjRatio($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ShopLevel whereUpdatedAt($value)
+ * @property float $bazaar_pv 新增市场业绩
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ShopLevel whereBazaarPv($value)
  */
 class ShopLevel extends Model
 {

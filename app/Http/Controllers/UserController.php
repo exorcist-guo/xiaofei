@@ -181,7 +181,7 @@ class UserController extends Controller
                 ],
             ];
             $messages = [
-                'required' => '请完善信息',
+                'required' => __('messages.required'),
             ];
 
             $mobile = $request->input('mobile');
@@ -189,7 +189,8 @@ class UserController extends Controller
 
 
             if (Redis::get($key) >= 5) {
-                throw new BizException('2小时内失败次数过多操作被拒绝');
+                //登录失败次数超过5次
+                throw new BizException(__('messages.sbjj'));
             }
 
             $validator = \Validator::make($request->all(), $rules, $messages);
@@ -197,24 +198,22 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return $this->error($validator->errors()->first());
             }
-            if(strlen($mobile) > 15){
-                $user = Member::where('id_number',$mobile)->where('is_disabled','<',9)->first();
-            }else{
-                $user = Member::findByMobile($mobile);
-            }
+            $user = Member::where('mobile',$mobile)
+                ->orWhere('number',$mobile)
+                ->orWhere('id_number',$mobile)->first();
 
-            if (!$user) {
-                throw new BizException('用户不存在或密码错误');
+            if (!$user || $user->is_disabled > 8) {
+                throw new BizException(__('messages.user_not_found'));
             }
 
             if($user->is_disabled) {
-                throw new BizException('您已经被封号无法登录');
+                throw new BizException(__('messages.fenghao'));
             }
 
             if (!$user->verifyPassword($request->input('password'))) {
                 $current = Redis::incrby($key, 1);
                 Redis::expire($key, 2 * 60 * 60); //
-                throw new BizException('用户不存在或密码错误');
+                throw new BizException(__('messages.user_not_found'));
             }
             $ip = VerifyService::getClientIp();
 
@@ -230,7 +229,7 @@ class UserController extends Controller
             $log->ip = $ip;
             $log->save();
 
-            return $this->success('登录成功', compact('token','is_real','is_mobile'));
+            return $this->success('success', compact('token','is_real','is_mobile'));
         } catch (BizException $e) {
             return $this->error($e->getMessage());
         }
@@ -248,9 +247,9 @@ class UserController extends Controller
         ];
 
         $messages = [
-            'required' => '请完善信息',
-            'exists' => '用户不存在',
-            'verify.verify_code' => '验证码错误',
+            'required' => __('messages.required'),
+            'exists' => __('messages.user_not_exist'),
+            'verify.verify_code' => __('messages.code_error'),
             'password.between' => '密码长度必须为6~12位',
         ];
 
@@ -301,6 +300,25 @@ class UserController extends Controller
 //                'required',
 //                sprintf("verify_code:%s,register", $request->input('mobile'))
 //            ],
+            'certificate_type' => [
+                'required',
+            ],
+            'nation' => [
+                'required',
+            ],
+            'mobile_nation' => [
+                'required',
+            ],
+            'lang' => [
+                'required',
+            ],
+            'name' => [
+                'required',
+            ],
+            'id_number' => [
+                'required',
+            ],
+
             'password' => [
                 'required',
                 'between:6,12'
@@ -308,6 +326,8 @@ class UserController extends Controller
         ];
         $messages = [
             'required' => '请完善信息',
+            'required.nation' => '国家不能为空',
+            'required.lang' => '语言不能为空',
             'mobile.not_exists' => '手机已注册',
             'invite_mobile.exists' => '邀请人不存在',
             'verify_code' => '验证码错误',
@@ -327,6 +347,14 @@ class UserController extends Controller
             $password = $request->input('password');
             $inviteCode = $request->input('invite_mobile');
 
+            $certificate_type = $request->input('certificate_type');
+            $nation = $request->input('nation');
+            $mobile_nation = $request->input('mobile_nation');
+            $lang = $request->input('lang');
+            $name = $request->input('name');
+            $id_number = $request->input('id_number');
+
+
 
             /** @var Member $parent */
             $inviteCode = strtolower($inviteCode);
@@ -337,6 +365,7 @@ class UserController extends Controller
 
             $pid = $parent->id;
             $pid_shop_member_id = $parent->pid_shop_member_id;
+
             $data = [
                 'mobile' => $mobile,
                 'level' => 0,
@@ -347,6 +376,15 @@ class UserController extends Controller
                 'number' => Member::getTradeNo(),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
+
+                'certificate_type' => $certificate_type,
+                'nation' => $nation,
+                'mobile_nation' => $mobile_nation,
+                'lang' => $lang,
+                'name' => $name,
+                'id_number' => $id_number,
+                'deep' => $parent->deep + 1,
+                'path' => $parent->path . '/' . $pid.'/',
             ];
             $id = DB::table('members')->insertGetId($data);
             if (!$id) {

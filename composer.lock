@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba99916b9f188bf85bbe4bdaa9aab03d",
+    "content-hash": "9dcc5389ad8ff62e1510ef231da7e79f",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1194,16 +1194,16 @@
         },
         {
             "name": "encore/laravel-admin",
-            "version": "v1.8.2",
+            "version": "v1.8.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/z-song/laravel-admin.git",
-                "reference": "72cf0f69a7873bd4e45404292ce14a16db7f9606"
+                "reference": "6c292ebb5efa886fa4776d86e975180608505946"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/72cf0f69a7873bd4e45404292ce14a16db7f9606",
-                "reference": "72cf0f69a7873bd4e45404292ce14a16db7f9606",
+                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/6c292ebb5efa886fa4776d86e975180608505946",
+                "reference": "6c292ebb5efa886fa4776d86e975180608505946",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1213,7 +1213,7 @@
                 ]
             },
             "require": {
-                "doctrine/dbal": "2.*",
+                "doctrine/dbal": "2.*|3.*",
                 "laravel/framework": ">=5.5",
                 "php": ">=7.0.0",
                 "symfony/dom-crawler": "~3.1|~4.0|~5.0"
@@ -1241,12 +1241,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Encore\\Admin\\": "src/"
-                },
                 "files": [
                     "src/helpers.php"
-                ]
+                ],
+                "psr-4": {
+                    "Encore\\Admin\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1266,7 +1266,11 @@
                 "grid",
                 "laravel"
             ],
-            "time": "2020-08-24T07:43:25+00:00"
+            "support": {
+                "issues": "https://github.com/z-song/laravel-admin/issues",
+                "source": "https://github.com/z-song/laravel-admin/tree/v1.8.19"
+            },
+            "time": "2022-05-24T03:49:38+00:00"
         },
         {
             "name": "fideloper/proxy",

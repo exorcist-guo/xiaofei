@@ -93,17 +93,17 @@ class MemberController extends AdminController
                 $filter->equal('number',  __('Number'));
                 $filter->between('created_at', __('Created at'))->datetime();
 
-//                $filter->where(function ($query) {
-//                    $parent = Member::find($this->input);
-//                    if (!$parent) {
-//                        admin_error('用户不存在', '节点不存在');
-//                    } else {
-//                        $path = $parent->path . '/' . $parent->id;
-//                        $query->where('id', $this->input)
-//                            ->orWhereIn('id', explode('/', $parent->path))
-//                            ->orWhere('path', 'like', "{$path}%");
-//                    }
-//                }, __('Team'), '_team');
+                $filter->where(function ($query) {
+                    $parent = Member::find($this->input);
+                    if (!$parent) {
+                        admin_error('用户不存在', '节点不存在');
+                    } else {
+                        $path = $parent->path . '/' . $parent->id;
+                        $query->where('id', $this->input)
+                            ->orWhereIn('id', explode('/', $parent->path))
+                            ->orWhere('path', 'like', "{$path}%");
+                    }
+                }, __('Team'), '_team');
 
 //                $filter->contains('secretInfo.contract_mobile', '联系电话');
             });

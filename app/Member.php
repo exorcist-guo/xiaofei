@@ -8,19 +8,35 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 
+
 /**
  * App\Member
  *
  * @property int $id
  * @property int $pid
+ * @property int $deep
+ * @property string|null $path
  * @property int $level
  * @property int $shop_level
+ * @property int $lock_shop_level 0 自动升降级 1不自动
  * @property string $mobile
+ * @property string $number 账号
  * @property float $integral 积分
  * @property float $all_integral 全部积分
  * @property float $pv 业绩
+ * @property float $divvy_pv 分红业绩
+ * @property float $dikouquan 抵扣券数量
+ * @property int $pid_shop_member_id 上级社区
+ * @property int $shop_member_id 所属社区
+ * @property string $avatar 图像
+ * @property int $certificate_type 证件类型
+ * @property string $real_name 真实姓名
+ * @property string $id_number 身份证号
+ * @property int $certificate_image 证件照
+ * @property int $is_active 是否激活
+ * @property int $nation 国家
+ * @property string $lang 语言
  * @property string $password
- * @property string|null $id_number
  * @property string $last_ip
  * @property string|null $last_login
  * @property int $is_disabled
@@ -33,42 +49,39 @@ use Illuminate\Support\Facades\Hash;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereAllIntegral($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereCertificateImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereCertificateType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDeep($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDikouquan($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDisabledAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDivvyPv($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIdNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIntegral($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIsDisabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIsSetTransactionPassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLang($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLastIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLastLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLockShopLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereMobile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereNation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member wherePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member wherePid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member wherePidShopMemberId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member wherePv($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereRealName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereShopLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereShopMemberId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereTransactionPassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property string $number 账号
- * @property string $avatar 图像
- * @property string $real_name 真实姓名
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereAvatar($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereRealName($value)
- * @property int $is_active 是否激活
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIsActive($value)
- * @property float $divvy_pv 分红营业额
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDivvyPv($value)
- * @property int $lock_shop_level 0 自动升降级 1不自动
- * @property float $dikouquan 变动数量
- * @property int $pid_shop_member_id 上级社区
- * @property int $shop_member_id 所属社区
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDikouquan($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLockShopLevel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member wherePidShopMemberId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereShopMemberId($value)
  */
 class Member extends Authenticatable
 {

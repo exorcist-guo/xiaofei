@@ -33,7 +33,9 @@ class CreateMembersTable extends Migration
             $table->string('certificate_image',500)->default('')->comment('证件照');
             $table->smallInteger('is_active')->default(0)->comment('是否激活');
             $table->smallInteger('nation')->default(1)->comment('国家');
-            $table->string('lang',15)->default(1)->comment('语言');
+            $table->string('mobile_nation',15)->default('')->nullable()->comment('手机区号');
+
+
 
             $table->string('password',100);
             $table->string('last_ip', 64)->default('');
