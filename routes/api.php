@@ -18,6 +18,9 @@ Route::post('/send/verify', 'UserController@sendVerifyGuest');
 Route::post('/user/login', 'UserController@passwordLogin');
 Route::post('/user/forget/password', 'UserController@forgetPassword');
 
+Route::post('/proclamation/list', 'MessageController@proclamationList'); //反馈记录
+
+
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/user/info', 'UserController@info');
     Route::post('/user/real/name', 'UserController@realName');

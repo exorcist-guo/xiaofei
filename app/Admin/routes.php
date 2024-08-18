@@ -24,6 +24,7 @@ Route::group([
     $router->resource('push-integrals', PushIntegralController::class);
     $router->resource('login-logs', LoginLogController::class);
     $router->any('add-member', AdminAddMember::class);  //添加会员
+    $router->resource('proclamations', ProclamationController::class); //公告
 
     $router->resource('change-orders-m', ChangeOrderMController::class); //会员信息修改列表
     $router->resource('change-orders-s', ChangeOrderSController::class); //会员状态变更申请

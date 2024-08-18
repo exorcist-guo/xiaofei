@@ -44,7 +44,8 @@ class Message extends Model
 
     const  TYPE_MAP = [
         1 => '银行卡反馈',
-        2 => '其他问题咨询',
+        2 => '提现',
+        3 => '其他问题咨询',
     ];
 
 }

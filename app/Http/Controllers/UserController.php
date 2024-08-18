@@ -199,7 +199,7 @@ class UserController extends Controller
                 return $this->error($validator->errors()->first());
             }
             $user = Member::where('mobile',$mobile)
-                ->orWhere('number',$mobile)
+//                ->orWhere('number',$mobile)
                 ->orWhere('id_number',$mobile)->first();
 
             if (!$user || $user->is_disabled > 8) {
@@ -300,24 +300,24 @@ class UserController extends Controller
 //                'required',
 //                sprintf("verify_code:%s,register", $request->input('mobile'))
 //            ],
-            'certificate_type' => [
-                'required',
-            ],
+//            'certificate_type' => [
+//                'required',
+//            ],
             'nation' => [
                 'required',
             ],
-            'mobile_nation' => [
-                'required',
-            ],
+//            'mobile_nation' => [
+//                'required',
+//            ],
             'lang' => [
                 'required',
             ],
             'name' => [
                 'required',
             ],
-            'id_number' => [
-                'required',
-            ],
+//            'id_number' => [
+//                'required',
+//            ],
 
             'password' => [
                 'required',
@@ -347,12 +347,12 @@ class UserController extends Controller
             $password = $request->input('password');
             $inviteCode = $request->input('invite_mobile');
 
-            $certificate_type = $request->input('certificate_type');
+//            $certificate_type = $request->input('certificate_type');
             $nation = $request->input('nation');
-            $mobile_nation = $request->input('mobile_nation');
+//            $mobile_nation = $request->input('mobile_nation');
             $lang = $request->input('lang');
             $name = $request->input('name');
-            $id_number = $request->input('id_number');
+//            $id_number = $request->input('id_number');
 
 
 
@@ -377,12 +377,12 @@ class UserController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
 
-                'certificate_type' => $certificate_type,
+//                'certificate_type' => $certificate_type,
                 'nation' => $nation,
-                'mobile_nation' => $mobile_nation,
+//                'mobile_nation' => $mobile_nation,
                 'lang' => $lang,
                 'name' => $name,
-                'id_number' => $id_number,
+//                'id_number' => $id_number,
                 'deep' => $parent->deep + 1,
                 'path' => $parent->path . '/' . $pid.'/',
             ];

@@ -29,25 +29,25 @@ class ForeignController extends Controller
     public function checkMobile(Request $request)
     {
         try {
-//            $mobile = $request->input('mobile','');
-            $real_name = $request->input('real_name','');
-            $id_number = $request->input('id_number','');
-            if(empty($id_number)){
+            $mobile = $request->input('mobile','');
+//            $real_name = $request->input('real_name','');
+//            $id_number = $request->input('id_number','');
+            if(empty($mobile)){
                 throw new BizException('参数有误');
             }
 
 
 
-            $user = Member::whereIdNumber($id_number)->first();
+            $user = Member::whereMobile($mobile)->first();
             if(empty($user)){
                 throw new BizException('用户不存在');
             }
-            if($real_name != $user->real_name){
-                throw new BizException('姓名不匹配');
-            }
-            if($id_number != $user->id_number){
-                throw new BizException('证件号不匹配');
-            }
+//            if($real_name != $user->real_name){
+//                throw new BizException('姓名不匹配');
+//            }
+//            if($id_number != $user->id_number){
+//                throw new BizException('证件号不匹配');
+//            }
 
 
             if($user->is_active == 0){
@@ -55,9 +55,9 @@ class ForeignController extends Controller
                 $user->save();
             }
             $data = [
-//                'mobile' => $mobile,
-                'real_name' => $real_name,
-                'id_number' => $id_number
+                'mobile' => $mobile,
+//                'real_name' => $real_name,
+//                'id_number' => $id_number
             ];
             return $this->success('用户匹配成功',$data);
         }catch (\Throwable $e){
@@ -78,13 +78,14 @@ class ForeignController extends Controller
 
     public function pushPv(Request $request){
         $order_no = $request->input('order_no','');
-        $id_number = $request->input('id_number','');
+        $mobile = $request->input('mobile','');
         $amount = $request->input('amount',0);
-        $redis_key = 'push_mobile'.$id_number;
+        $cash_amount = $request->input('cash_amount',0);
+        $redis_key = 'push_mobile'.$mobile;
 
         try {
             if(!Redis::set($redis_key, 1, 'ex', 15, 'nx')) {
-                throw new BizException($id_number.'业务正在处理请不要重复提交');
+                throw new BizException($mobile.'业务正在处理请不要重复提交');
             }
             if(!($amount > 0)){
                 throw new BizException('数量有误');
@@ -92,7 +93,7 @@ class ForeignController extends Controller
             if(empty($order_no) || empty($id_number)){
                 throw new BizException('订单号或证件号不能为空');
             }
-            $user = Member::whereIdNumber($id_number)->first();
+            $user = Member::whereMobile($mobile)->first();
             if(empty($user)){
                 return $this->error('用户不存在');
             }
@@ -102,9 +103,10 @@ class ForeignController extends Controller
             }
 //            \DB::transaction(function() use($user, $request){
 //                $user = Member::whereId($user->id)->lockForUpdate()->first();
-                $order_no = $request->input('order_no','');
-                $id_number = $request->input('id_number','');
-                $amount = $request->input('amount',0);
+//                $order_no = $request->input('order_no','');
+//                $id_number = $request->input('id_number','');
+//
+//                $amount = $request->input('amount',0);
                 //插入订单
                 $time = date("Y-m-d H:i:s");
                 $order_id = PvOrder::insertGetId([
@@ -112,6 +114,7 @@ class ForeignController extends Controller
                     'mobile' => $id_number,
                     'order_no' => $order_no,
                     'amount' => $amount,
+                    'cash_amount' => $cash_amount,
                     'status' => 0,
                     'created_at' => $time,
                     'updated_at' => $time,

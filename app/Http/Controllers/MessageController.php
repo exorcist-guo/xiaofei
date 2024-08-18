@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\BizException;
 use App\Member;
 use App\Model\Message;
+use App\Proclamation;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -13,6 +14,20 @@ use Illuminate\Support\Facades\Validator;
 class MessageController extends Controller
 {
     use ApiResponseTrait;
+
+
+    public function proclamationList(Request $request){
+        $page = $request->input('page', 1);
+        $limit = $request->input('limit', 10);
+        $data = Proclamation::where('issue',1)
+            ->select('id','title','description','created_at','abstract', 'created_at')
+            ->orderByRaw('sort desc, id desc')
+            ->forPage($page, $limit)
+            ->get();
+        return $this->success('success', $data);
+    }
+
+
 
     public function messageInfo(){
         $data = Message::TYPE_MAP;

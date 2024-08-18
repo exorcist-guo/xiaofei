@@ -18,6 +18,7 @@ class CreatePvOrderTable extends Migration
             $table->bigInteger('member_id');
             $table->string('mobile',40)->comment('手机号');
             $table->decimal('amount', 12, 2)->comment('变动数量');
+            $table->decimal('cash_amount', 12, 2)->comment('变动数量');
             $table->string('order_no',50)->unique()->comment('订单号');
             $table->smallInteger('status')->default(0);
 

@@ -443,5 +443,16 @@ return [
             'check_permission' => false,
             'break_when_errors' => false // do not save anything if have errors
         ],
+        'ckeditor' => [
+
+            //Set to false if you want to disable this extension
+            'enable' => true,
+
+            // Editor configuration
+            'config' => [
+                'lang'   => 'zh-CN',
+                'height' => 500,
+            ]
+        ],
     ],
 ];
