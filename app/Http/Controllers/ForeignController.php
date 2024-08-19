@@ -90,7 +90,7 @@ class ForeignController extends Controller
             if(!($amount > 0)){
                 throw new BizException('数量有误');
             }
-            if(empty($order_no) || empty($id_number)){
+            if(empty($order_no) || empty($mobile)){
                 throw new BizException('订单号或证件号不能为空');
             }
             $user = Member::whereMobile($mobile)->first();
@@ -111,7 +111,7 @@ class ForeignController extends Controller
                 $time = date("Y-m-d H:i:s");
                 $order_id = PvOrder::insertGetId([
                     'member_id' => $user->id,
-                    'mobile' => $id_number,
+                    'mobile' => $mobile,
                     'order_no' => $order_no,
                     'amount' => $amount,
                     'cash_amount' => $cash_amount,

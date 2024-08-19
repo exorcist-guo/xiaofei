@@ -67,7 +67,7 @@ class AdminAddMember extends Form
     public function form()
     {
         $this->text('pid_mobile','上级手机号/账号')->required();
-        $this->mobile('mobile','手机号')->required();
+        $this->email('mobile','手机号')->required();
         $this->text('real_name','登录密码')->required();
         $this->text('password','姓名')->required();
         $this->text('id_number','身份证号')->required();
