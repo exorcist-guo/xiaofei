@@ -24,6 +24,14 @@ class UserController extends Controller
 
     }
 
+    public function getConfig()
+    {
+        $data = [
+            'nation' => Member::getNations(),
+            'lang' => Member::getLangList()
+        ];
+        return $this->success('success', $data);
+    }
     public function team(Request $request){
         $user = \Auth::user();
         $count = Member::wherePid($user->id)->count();
@@ -190,7 +198,7 @@ class UserController extends Controller
 
             if (Redis::get($key) >= 5) {
                 //登录失败次数超过5次
-                throw new BizException(__('messages.sbjj'));
+//                throw new BizException(__('messages.sbjj'));
             }
 
             $validator = \Validator::make($request->all(), $rules, $messages);
@@ -201,9 +209,8 @@ class UserController extends Controller
             $user = Member::where('mobile',$mobile)
 //                ->orWhere('number',$mobile)
                 ->orWhere('id_number',$mobile)->first();
-
             if (!$user || $user->is_disabled > 8) {
-                throw new BizException(__('messages.user_not_found'));
+                throw new BizException(__('messages.user_not_found').'1');
             }
 
             if($user->is_disabled) {
@@ -213,7 +220,7 @@ class UserController extends Controller
             if (!$user->verifyPassword($request->input('password'))) {
                 $current = Redis::incrby($key, 1);
                 Redis::expire($key, 2 * 60 * 60); //
-                throw new BizException(__('messages.user_not_found'));
+                throw new BizException(__('messages.user_not_found').'2');
             }
             $ip = VerifyService::getClientIp();
 

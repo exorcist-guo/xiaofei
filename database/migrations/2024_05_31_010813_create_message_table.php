@@ -22,7 +22,7 @@ class CreateMessageTable extends Migration
             $table->string('name',15)->comment('姓名');
 
             $table->smallInteger('status')->default(0)->comment(' 0未回复,1已回复');
-            $table->timestamp('question')->comment('问题');
+            $table->text('question')->comment('问题');
             $table->string('reply')->default('')->comment('回复');
 
             $table->timestamps();
