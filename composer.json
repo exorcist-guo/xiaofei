@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "aws/aws-sdk-php": "^3.312",
         "barryvdh/laravel-ide-helper": "2.7",
         "encore/laravel-admin": "*",
         "fideloper/proxy": "^4.0",

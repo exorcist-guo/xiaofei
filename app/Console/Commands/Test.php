@@ -7,6 +7,7 @@ use App\Level;
 use App\Member;
 use App\PostMember;
 use App\Services\ForeignService;
+use App\Services\VerifyService;
 use App\ShopLevel;
 use Illuminate\Console\Command;
 use think\api\Client;
@@ -48,6 +49,9 @@ class Test extends Command
      */
     public function handle()
     {
+
+        VerifyService::sendEmail('success@simulator.amazonses.com',1458);
+        exit;
         \App::setLocale('en');
         $locale = \App::getLocale();
         var_dump($locale);

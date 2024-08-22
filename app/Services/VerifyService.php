@@ -71,7 +71,10 @@ class VerifyService
                 \Log::channel('verify')->info('', compact('email','code'));
                 $message->to($email)->subject(config('mail.from.name') . '验证码');
             });
+            var_dump(777);
         } catch (\Exception $e) {
+            var_dump(8888);
+            var_dump($e->getMessage());
             \Log::channel('verify')->error($e, compact('email'));
         }
 

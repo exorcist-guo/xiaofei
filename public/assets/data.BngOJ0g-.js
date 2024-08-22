@@ -1,0 +1,1 @@
+import{a as t}from"./request.Bbgpknwy.js";const a=a=>t({url:"integral/pv/log",method:"post",data:a}),o=a=>t({url:"pv/info",method:"post",data:a}),s=a=>t({url:"integral/log",method:"post",data:a});export{a,s as i,o as p};
