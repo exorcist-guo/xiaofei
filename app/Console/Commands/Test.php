@@ -50,7 +50,7 @@ class Test extends Command
     public function handle()
     {
 
-        VerifyService::sendEmail('success@simulator.amazonses.com',1458);
+        VerifyService::sendEmail('qazkdjfhgfd@outlook.com',548987);
         exit;
         \App::setLocale('en');
         $locale = \App::getLocale();
