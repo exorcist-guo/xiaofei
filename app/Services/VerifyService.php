@@ -69,7 +69,8 @@ class VerifyService
         try {
             \Mail::raw("您的验证码是：$code", function ($message) use ($code, $email) {
                 \Log::channel('verify')->info('', compact('email','code'));
-                $message->to($email)->subject(config('mail.from.name') . '验证码');
+                $a = $message->to($email)->subject(config('mail.from.name') . '验证码');
+                var_dump($a);
             });
             var_dump(777);
         } catch (\Exception $e) {
