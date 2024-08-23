@@ -78,9 +78,9 @@ class VerifyService
     public static function sendEmail($email, $code,$type)
     {
         try {
-            \Mail::raw(__('message.verify_code')."：$code", function ($message) use ($code, $email,$type) {
+            \Mail::raw(__('messages.verify_code')."：$code", function ($message) use ($code, $email,$type) {
                 \Log::channel('verify')->info('', compact('email','code'));
-                $message->to($email)->subject(config('mail.from.name') . __('message.code'));
+                $message->to($email)->subject(config('mail.from.name') . __('messages.code'));
             });
 
         } catch (\Exception $e) {
