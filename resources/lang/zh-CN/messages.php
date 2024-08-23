@@ -10,6 +10,8 @@ return [
     'fenghao' => '您已经被封号无法登录',
     'user_not_exist' => '用户不存在',
     'code_error' => '验证码错误',
+    'verify_code' => '您的验证码是',
+    'code' => '验证码',
 
 
 ];

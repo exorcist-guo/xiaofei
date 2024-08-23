@@ -34,7 +34,18 @@ class VerifyService
             return true;
         }
 
-        return self::sendSms($mobile, $verify,$type);
+        if(strpos($mobile, '@') == false) {
+            return true;
+//            $tpl = config('sms.gateways.aliyun.template_code');
+//
+//            return self::sendSms($mobile, $verify,$type);
+
+        } else {
+
+            return self::sendEmail($mobile, $verify,$type);
+        }
+
+
 
 
     }
@@ -64,17 +75,15 @@ class VerifyService
         return Redis::del(sprintf('verify_%s_%s', $type, $mobile));
     }
 
-    public static function sendEmail($email, $code)
+    public static function sendEmail($email, $code,$type)
     {
         try {
-            \Mail::raw("您的验证码是：$code", function ($message) use ($code, $email) {
+            \Mail::raw(__('message.verify_code')."：$code", function ($message) use ($code, $email,$type) {
                 \Log::channel('verify')->info('', compact('email','code'));
-                $message->to($email)->subject(config('mail.from.name') . '验证码');
+                $message->to($email)->subject(config('mail.from.name') . __('message.code'));
             });
-            var_dump(777);
+
         } catch (\Exception $e) {
-            var_dump(8888);
-            var_dump($e->getMessage());
             \Log::channel('verify')->error($e, compact('email'));
         }
 
