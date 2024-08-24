@@ -50,10 +50,12 @@ class ImportMemberPost extends Action
                     $data = [
                         'status' => '0',
                         'pici' => $pici,
-                        'mobile' => $val[3],
-                        'pid_id_number' => $val[2],
-                        'real_name' => $val[1],
-                        'id_number' => $val[0],
+                        'mobile' => $val[0],
+                        'pid_id_number' => $val[1],
+                        'group_number' => $val[2],
+                        'number' => $val[3],
+                        'real_name' => $val[4],
+                        'id_number' => '',
                     ];
                     PostMemberJob::dispatch($data);
                 }

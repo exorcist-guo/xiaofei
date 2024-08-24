@@ -20,6 +20,7 @@ class CreateMembersTable extends Migration
             $table->longText('path')->nullable();
             $table->integer('level')->default(0);
             $table->integer('shop_level')->default(0);
+            $table->integer('group_number')->default(0)->nullable()->comment('组号');
             $table->string('mobile',40);
             $table->char('number',18)->unique()->comment('账号');
             $table->decimal('integral',12,2)->default(0)->comment('积分');

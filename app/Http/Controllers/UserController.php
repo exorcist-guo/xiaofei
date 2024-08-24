@@ -293,6 +293,8 @@ class UserController extends Controller
         return $this->error('操作失败');
     }
 
+
+    //注册
     public function register(Request $request)
     {
         $rules = [
@@ -335,7 +337,7 @@ class UserController extends Controller
             'required' => '请完善信息',
             'required.nation' => '国家不能为空',
             'required.lang' => '语言不能为空',
-            'mobile.not_exists' => '手机已注册',
+            'mobile.not_exists' => '账号已注册',
             'invite_mobile.exists' => '邀请人不存在',
             'verify_code' => '验证码错误',
             'password.between' => '密码长度必须为6到12个字符',

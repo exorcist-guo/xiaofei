@@ -17,10 +17,11 @@ class CreatePostMemberTable extends Migration
             $table->bigIncrements('id');
             $table->smallInteger('status')->default(0)->comment('0待检验 1弃用, 3异常,4待导入,6导入异常 7成功');
             $table->bigInteger('pici')->comment('导入批次');
-            $table->string('mobile',15)->default(0);
+            $table->string('mobile',40)->default(0);
 
-            $table->string('pid_id_number',18)->default(0)->comment('上级身份证号');
+            $table->string('pid_id_number',40)->default(0)->comment('上级身份证号');
             $table->char('number',18)->default('')->comment('账号');
+            $table->integer('group_number')->comment('组号');
             $table->string('real_name',30)->default('')->comment('真实姓名');
             $table->char('id_number',18)->default('')->comment('身份证号');
             $table->string('error')->default('')->comment('错误');

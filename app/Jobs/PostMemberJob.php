@@ -42,18 +42,29 @@ class PostMemberJob implements ShouldQueue
             if($post_member->status == 4){
                 $pid = 0;
                 $deep = 0;
+                $path = '';
+                $group_number = $post_member->group_number;
                 $pid_shop_member_id = 0;
                 if($post_member->pid_id_number){
-                    $pp = PostMember::where('status','>',1)->where('id_number',$post_member->pid_id_number)->first();
+                    $pp = PostMember::where('status','>',1)->where('mobile',$post_member->pid_id_number)->first();
                     if($pp){
                         $parent = Member::whereNumber($pp->number)->first();
-                        $pid = $parent->pid;
+                        $pid = $parent->id;
+                        $deep =  $parent->deep + 1;
+                        $group_number = $parent->group_number;
+                        if($parent->path){
+                            $path = $parent->path . $pid.'/';
+                        }else{
+                            $path = '/'.$pid.'/';
+                        }
+
 
                         $pid_shop_member_id = $parent->pid_shop_member_id;
                     }
                     if(empty($pid)){
                         $post_member->status = 6;
                         $pid = 0;
+                        $path = '';
                         $pid_shop_member_id = 0;
                         $error .= '上级未找到';
                     }
@@ -64,7 +75,9 @@ class PostMemberJob implements ShouldQueue
                     'mobile' => $post_member->mobile,
                     'level' => 0,
                     'deep' => $deep,
+                    'path' => $path,
                     'shop_level' => 0,
+                    'group_number' => $group_number,
                     'password' => \Hash::make(substr($post_member->id_number,-6)),
                     'pid' => $pid,
                     'pid_shop_member_id' => $pid_shop_member_id,
@@ -85,19 +98,21 @@ class PostMemberJob implements ShouldQueue
 
 
             }elseif(in_array($post_member->status,[0,3,6])){
+                //验证数据
                 if($post_member->pid_id_number){
-                    $pp = PostMember::where('status','>',1)->where('id_number',$post_member->pid_id_number)->first();
-                    if(empty($pp)){
+                    $pp = PostMember::where('status','>',1)->where('mobile',$post_member->pid_id_number)->first();
+                    $pp2 = Member::whereMobile($post_member->is_disabled)->where('status','<','9')->first();
+                    if(empty($pp) && empty($pp2)){
                         $post_member->status = 3;
                         $error .= '上级推荐人不存在。';
                     }
 
                 }
-                $a = Member::isIdCard($post_member->id_number);
-                if(!$a){
-                    $post_member->status = 3;
-                    $error .= '身份证号异常。';
-                }
+//                $a = Member::isIdCard($post_member->id_number);
+//                if(!$a){
+//                    $post_member->status = 3;
+//                    $error .= '身份证号异常。';
+//                }
             }
 
             $post_member->error = $error;
@@ -110,25 +125,56 @@ class PostMemberJob implements ShouldQueue
             $post_member->pid_id_number = $data['pid_id_number'];
             $post_member->real_name = $data['real_name'];
             $post_member->id_number = $data['id_number'];
-            $post_member->number = Member::getTradeNo();
+            $post_member->group_number = $data['group_number'];
+            $post_member->number = $data['number'];
+            if(empty($post_member->number)){
+                $post_member->status = 3;
+                $error .= '账号不能为空';
+            }
+
             if($post_member->pid_id_number){
-               $pp = PostMember::where('status','>',1)->where('id_number',$post_member->pid_id_number)->first();
-               if(empty($pp)){
+               $pp = PostMember::where('status','>',1)->where('mobile',$post_member->pid_id_number)->first();
+               $pp2 = Member::whereMobile($post_member->pid_id_number)->where('is_disabled','<','9')->first();
+               if(empty($pp) && empty($pp2)){
                    $post_member->status = 3;
                    $error .= '上级推荐人不存在';
                }
+            }else{
+                if(empty($post_member->group_number)){
+                    $post_member->status = 3;
+                    $error .= '顶级组号不能为空';
+                }else{
+                    $zh = Member::where('group_number',$post_member->group_number)->where('is_disabled','<','9')->first();
+                    if($zh){
+                        $post_member->status = 3;
+                        $error .= '组号与已有的重复';
+                    }
+                    if($post_member->group_number < 1000 || $post_member->group_number > 9999) {
+                        $post_member->status = 3;
+                        $error .= '组号范围必须是1000-9999';
+                    }
+                }
+            }
 
-            }
-            $a = Member::isIdCard($post_member->id_number);
-            if(!$a){
+//            $a = Member::isIdCard($post_member->id_number);
+//            if(!$a){
+//                $post_member->status = 3;
+//                $error .= '身份证号异常';
+//            }
+            $pp = PostMember::where('status','>',1)->where('mobile',$post_member->mobile)->first();
+            $pp2 = Member::where('is_disabled','<',9)->where('mobile',$post_member->mobile)->first();
+            if($pp || $pp2){
                 $post_member->status = 3;
-                $error .= '身份证号异常';
+                $error .= '该邮箱已经存在';
             }
-            $pp = PostMember::where('status','>',1)->where('id_number',$post_member->id_number)->first();
-            if($pp){
+
+            $pp = PostMember::where('status','>',1)->where('number',$post_member->number)->first();
+            $pp2 = Member::where('is_disabled','<',9)->where('number',$post_member->number)->first();
+            if($pp || $pp2){
                 $post_member->status = 3;
-                $error .= '该身份证已存在';
+                $error .= '该账号已经存在';
             }
+
             $post_member->error = $error;
             $post_member->save();
         }
