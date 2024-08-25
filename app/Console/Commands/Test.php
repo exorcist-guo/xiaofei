@@ -49,7 +49,12 @@ class Test extends Command
      */
     public function handle()
     {
-
+        $mobile = 'test@qq.com';
+        $a =  Member::where('is_disabled','<',9)->Where(function ($query)use($mobile){
+            $query->where('mobile',$mobile)->orWhere('number',$mobile);
+        })->toSql();
+        var_dump($a);
+        exit;
         VerifyService::sendEmail('qazkdjfhgfd@outlook.com',548987);
         exit;
         \App::setLocale('en');

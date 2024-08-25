@@ -369,9 +369,10 @@ class UserController extends Controller
 
             /** @var Member $parent */
             $inviteCode = strtolower($inviteCode);
-            $parent = Member::where('mobile',$inviteCode)
-                ->orWhere('number',$inviteCode)
-                ->first();
+            $parent = Member::where('is_disabled','<',9)->Where(function ($query)use($inviteCode){
+                $query->where('mobile',$inviteCode)->orWhere('number',$inviteCode);
+            })->first();
+
             if(empty($parent)){
                 throw new BizException('邀请人不存在');
             }
