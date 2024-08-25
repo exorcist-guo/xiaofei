@@ -394,7 +394,7 @@ class UserController extends Controller
                 'nation' => $nation,
 //                'mobile_nation' => $mobile_nation,
                 'lang' => $lang,
-                'name' => $name,
+                'real_name' => $name,
 //                'id_number' => $id_number,
                 'deep' => $parent->deep + 1,
                 'path' => $parent->path . '/' . $pid.'/',
