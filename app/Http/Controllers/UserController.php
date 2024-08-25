@@ -361,7 +361,7 @@ class UserController extends Controller
 //            $certificate_type = $request->input('certificate_type');
             $nation = $request->input('nation');
 //            $mobile_nation = $request->input('mobile_nation');
-            $lang = $request->input('lang');
+            $lang = \App::getLocale();
             $name = $request->input('name');
 //            $id_number = $request->input('id_number');
 
