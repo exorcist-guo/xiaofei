@@ -320,9 +320,9 @@ class UserController extends Controller
 //            'mobile_nation' => [
 //                'required',
 //            ],
-            'lang' => [
-                'required',
-            ],
+//            'lang' => [
+//                'required',
+//            ],
             'name' => [
                 'required',
             ],
