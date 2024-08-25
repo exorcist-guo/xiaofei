@@ -56,10 +56,12 @@ class UserController extends Controller
 
     public function info(Request $request){
         $user = \Auth::user();
-        $data = \Arr::only($user->toArray(), ['id', 'shop_level','level','mobile','number','integral','all_integral','pv','dikouquan','is_set_transaction_password']);
+        $data = \Arr::only($user->toArray(), ['id', 'shop_level','level','mobile','number','integral','all_integral','pv','dikouquan','dikouquan_k','is_set_transaction_password']);
         $data['mobile'] = substr_replace($data['mobile'], '****', 3, 4);
-        $data['is_real'] = $user->real_name?1:0;
-        $data['is_mobile'] = $user->mobile?1:0;
+//        $data['is_real'] = $user->real_name?1:0;
+//        $data['is_mobile'] = $user->mobile?1:0;
+        $data['is_real'] = 1;
+        $data['is_mobile'] = 1;
         if($user->is_disabled > 0){
             if($user->is_disabled == 1){
                 return $this->error('账号已冻结');

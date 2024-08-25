@@ -15,7 +15,7 @@ class IntegralLogController extends AdminController
      *
      * @var string
      */
-    protected $title = '消费券记录';
+    protected $title = '积分记录';
 
     /**
      * Make a grid builder.

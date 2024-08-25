@@ -41,8 +41,9 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('/pv/info', 'IntegralController@pvInfo'); //营业额详情
 
     Route::post('/bind/mobile', 'UserController@bindMobile'); //营业额详情
-    Route::post('/push/dikouquan', 'IntegralController@pushDikouquan'); //推送抵扣券
-
+    Route::post('/push/dikouquan', 'IntegralController@pushDikouquan'); //推送消费券
+    Route::post('/dikouquan/transfer', 'IntegralController@dikouquanTransfer'); //消费券互转
+    Route::post('/dikouquan/log', 'IntegralController@dikouquanLog'); //消费券日子
 
     //问题反馈
     Route::post('/message', 'MessageController@messageInfo'); //问题反馈

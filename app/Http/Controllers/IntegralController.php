@@ -327,6 +327,100 @@ class IntegralController extends Controller
 
     }
 
+    public function dikouquanTransfer(Request $request){
+        /** @var Member $user */
+        $user = $request->user();
+        $redis_key = 'user_lock'.$user->id;
+        if(!Redis::set($redis_key, 1, 'ex', 30, 'nx')) {
+            throw new BizException('操作太频繁');
+        }
+        $rules = [
+            'amount' => [
+                'required',
+            ],
+            'number' => 'required',
+            'trade_password' => sprintf('required|verify_trad_password:%s', $user->transaction_password)
+        ];
+
+        $messages = [
+            'required' => '参数不能为空',
+            'verify_trad_password' => '交易密码错误',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if($validator->fails()) {
+            Redis::expire($redis_key,3);
+            return $this->error($validator->errors()->first());
+        }
+
+        try {
+            if(config('base.transfer_status') != 1){
+                throw new BizException('互转暂未开放');
+            }
+
+
+            $number = $request->input('number');
+
+
+            $to_user = Member::where('mobile',$number)->orWhere('number',$number)->first();
+
+            if(empty($to_user)){
+                throw new BizException('收款人不存在');
+            }
+
+            \DB::transaction(function() use ($request, $user,$to_user){
+                $amount = $request->input('amount',0);
+                if($amount <= 0){
+                    throw new BizException('数量有误');
+                }
+                $member = Member::whereId($user->id)->first();
+                if($member->integral < $amount){
+                    throw new BizException('数量不足');
+                }
+                //生成转账记录
+                $ransfer = new Transfer();
+                $ransfer->member_id = $member->id;
+                $ransfer->c_member_id = $to_user->id;
+                $ransfer->amount = $amount;
+                $ransfer->fee = 0;
+                $ransfer->actual_amount = $amount;
+                $ransfer->save();
+                $related_id = $ransfer->id;
+                //数量变动
+                $remark = '转出到'.$to_user->mobile;
+                IntegralLogs::changeIntegral($amount,$member,0,13,$related_id,$remark);
+                $remark = $member->mobile.'转入';
+                IntegralLogs::changeIntegral($amount,$to_user,1,2,$related_id,$remark);
+            });
+            Redis::expire($redis_key,3);
+            return $this->success('转账成功');
+        } catch (\Throwable $e) {
+            Redis::expire($redis_key,3);
+            return $this->error($e->getMessage());
+        }
+    }
+
+    public function dikouquanLog(Request $request){
+        /** @var Member $user */
+        $user = $request->user();
+        $page = $request->input('page', 1);
+        $limit = 16;
+        $status_map =  DikouquanLog::STATUS_MAP;
+        $data = DikouquanLog::whereMemberId($user->id)
+            ->orderBy('id', 'desc')
+            ->forPage($page, $limit)
+            ->get()
+            ->map(function(DikouquanLog $log)use($status_map){
+                $data =  $log->only(['id', 'member_id', 'action', 'amount', 'balance_before','balance_after','remark', 'created_at']);
+                $data['action_name'] = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
+                $data['created_at'] = date('Y-m-d H:i', $log->created_at->timestamp);
+                return $data;
+            })
+        ;
+
+        return $this->success('success', $data);
+
+    }
+
 
     public function push(Request $request)
     {
