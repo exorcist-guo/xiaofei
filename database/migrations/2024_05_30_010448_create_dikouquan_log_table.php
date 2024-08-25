@@ -17,6 +17,7 @@ class CreateDikouquanLogTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('member_id');
             $table->integer('action')->comment('类型ID');
+            $table->smallInteger('type')->default(0)->comment('1冻结 2可用');
             $table->decimal('amount', 12, 2)->comment('变动数量');
             $table->decimal('balance_before', 20, 4)->comment('变动后数量');
             $table->decimal('balance_after', 20, 4)->comment('变动前数量');
@@ -29,6 +30,7 @@ class CreateDikouquanLogTable extends Migration
         Schema::table('members', function (Blueprint $table) {
             $table->bigInteger('shop_member_id')->default(0)->after('divvy_pv')->comment('所属社区');
             $table->decimal('dikouquan',12,2)->after('divvy_pv')->default(0)->comment('抵扣券数量');
+            $table->decimal('dikouquan_k',12,2)->after('divvy_pv')->default(0)->comment('可用抵扣券数量');
 
         });
 

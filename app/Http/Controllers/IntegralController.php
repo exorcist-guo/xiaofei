@@ -304,7 +304,7 @@ class IntegralController extends Controller
                     throw new BizException('数量有误');
                 }
                 $member = Member::whereId($user->id)->first();
-                if($member->dikouquan < $amount){
+                if($member->dikouquan_k < $amount){
                     throw new BizException('数量不足');
                 }
                 //生成推送记录
@@ -316,7 +316,7 @@ class IntegralController extends Controller
                 $push_integral->save();
                 $related_id = $push_integral->id;
                 //数量变动
-                DikouquanLog::changeIntegral($amount,$member,0,11,$related_id);
+                DikouquanLog::changeIntegralK($amount,$member,0,11,$related_id);
                 //加入推送订单
                 PushOrder::pushDikouquan($member,$push_integral);
             });
@@ -373,7 +373,7 @@ class IntegralController extends Controller
                     throw new BizException('数量有误');
                 }
                 $member = Member::whereId($user->id)->first();
-                if($member->integral < $amount){
+                if($member->dikouquan_k < $amount){
                     throw new BizException('数量不足');
                 }
                 //生成转账记录
@@ -387,9 +387,9 @@ class IntegralController extends Controller
                 $related_id = $ransfer->id;
                 //数量变动
                 $remark = '转出到'.$to_user->mobile;
-                IntegralLogs::changeIntegral($amount,$member,0,13,$related_id,$remark);
+                DikouquanLog::changeIntegralK($amount,$member,0,13,$related_id,$remark);
                 $remark = $member->mobile.'转入';
-                IntegralLogs::changeIntegral($amount,$to_user,1,2,$related_id,$remark);
+                DikouquanLog::changeIntegralK($amount,$to_user,1,2,$related_id,$remark);
             });
             Redis::expire($redis_key,3);
             return $this->success('转账成功');

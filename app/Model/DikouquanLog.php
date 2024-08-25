@@ -69,6 +69,38 @@ class DikouquanLog extends Model
             'member_id' => $member->id,
             'action' => $action,
             'amount' => $amount,
+            'type' => 1,
+            'balance_before' => $balance_before,
+            'balance_after' => $balance_after,
+            'remark' => $remark,
+            'related_id' => $related_id,
+            'created_at' => $time,
+            'updated_at' => $time,
+        ];
+        $in_log = DikouquanLog::insertGetId($log_data);
+        $success = $in_log && $member->save();
+        return $success;
+    }
+
+    public static function changeIntegralK($amount,$member,$type,$action,$related_id = 0,$remark = ''){
+        /** @var Member $member */
+        $amount = abs($amount);
+        $balance_before = $member->dikouquan_k;
+        if($type == 1){
+            $balance_after = bcadd($balance_before,$amount,2);
+
+        }else{
+            $balance_after = bcsub($balance_before,$amount,2);
+            $amount = -$amount;
+        }
+        $member->dikouquan_k = $balance_after;
+        $time = date('Y-m-d H:i:s');
+
+        $log_data = [
+            'member_id' => $member->id,
+            'action' => $action,
+            'amount' => $amount,
+            'type' => 2,
             'balance_before' => $balance_before,
             'balance_after' => $balance_after,
             'remark' => $remark,
