@@ -360,8 +360,9 @@ class IntegralController extends Controller
 
             $number = $request->input('number');
 
-
-            $to_user = Member::where('mobile',$number)->orWhere('number',$number)->first();
+            $to_user = Member::where('is_disabled','<',9)->Where(function ($query)use($number){
+                $query->where('mobile',$number)->orWhere('number',$number);
+            })->first();
 
             if(empty($to_user)){
                 throw new BizException('收款人不存在');
@@ -387,9 +388,9 @@ class IntegralController extends Controller
                 $related_id = $ransfer->id;
                 //数量变动
                 $remark = '转出到'.$to_user->mobile;
-                DikouquanLog::changeIntegralK($amount,$member,0,13,$related_id,$remark);
+                DikouquanLog::changeIntegralK($amount,$member,0,14,$related_id,$remark);
                 $remark = $member->mobile.'转入';
-                DikouquanLog::changeIntegralK($amount,$to_user,1,2,$related_id,$remark);
+                DikouquanLog::changeIntegralK($amount,$to_user,1,4,$related_id,$remark);
             });
             Redis::expire($redis_key,3);
             return $this->success('转账成功');

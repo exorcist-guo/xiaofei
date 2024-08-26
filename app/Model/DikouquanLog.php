@@ -43,11 +43,14 @@ class DikouquanLog extends Model
     protected $table = 'dikouquan_log';
 
     const STATUS_MAP = [
-        1 => '后台增加',
+        1 => '后台增加',    //冻结
+        2 => '后台增加',    //激活部分
+        4 => '转入',
 
         11 => '推送',
-        12 => '后台减少',
-
+        12 => '后台减少', //冻结
+        13 => '后台增加', //激活部分
+        14 => '转出',
     ];
 
     //type == 1 增加  0 减少
