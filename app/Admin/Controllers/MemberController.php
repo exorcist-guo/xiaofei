@@ -137,13 +137,15 @@ class MemberController extends AdminController
         $grid->column('integral', __('Integral'))->sortable();
         $grid->column('all_integral', __('All integral'))->sortable();
         $grid->column('pv', __('Pv'))->sortable();
-        $grid->column('certificate_type', __('Certificate Type'))->using(Member::getNtlw());
+        $grid->column('dikouquan', __('Dikouquan'))->sortable();
+        $grid->column('dikouquan_k', __('Dikouquan_k'))->sortable();
+//        $grid->column('certificate_type', __('Certificate Type'))->using(Member::getNtlw());
         $grid->column('real_name', __('Real name'));
-        $grid->column('id_number', __('Id number'));
+//        $grid->column('id_number', __('Id number'));
         $grid->column('shop_member_id', __('Shop member id'));
 
 //        $grid->column('last_ip', __('Last ip'));
-        $grid->column('last_login', __('Last login'));
+        $grid->column('last_login', __('Last login'))->hide();
         $grid->column('is_disabled', __('Is disabled'))->using(
             [0=>'正常',1=>'锁定']
         )->label([0=>'success',1=>'danger']);
@@ -151,7 +153,7 @@ class MemberController extends AdminController
 
 //        $grid->column('is_set_transaction_password', __('Is set transaction password'));
         $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('updated_at', __('Updated at'))->hide();
 
         return $grid;
     }

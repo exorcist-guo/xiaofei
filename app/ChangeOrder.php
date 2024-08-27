@@ -50,9 +50,10 @@ class ChangeOrder extends Model
     ];
 
     const ASSET_TYPE = [
-        3 => '消费券',
+        3 => '积分',
         4 => '营业额',
-//        9 => '消费券',
+        9 => '冻结消费券',
+        10 => '可用消费券',
     ];
 
     const STATUS_MAP = [
@@ -293,9 +294,19 @@ class ChangeOrder extends Model
             case 9:
                 if(isset($content['amount'])){
                     if($content['amount']>0 ){
-                        $view = "增加消费劵:". abs($content['amount']);
+                        $view = "增加冻结消费劵:". abs($content['amount']);
                     }else{
-                        $view = "减少消费劵:". abs($content['amount']);
+                        $view = "减少冻结消费劵:". abs($content['amount']);
+                    }
+
+                }
+                break;
+            case 10:
+                if(isset($content['amount'])){
+                    if($content['amount']>0 ){
+                        $view = "增加可用消费劵:". abs($content['amount']);
+                    }else{
+                        $view = "减少可用消费劵:". abs($content['amount']);
                     }
 
                 }

@@ -134,6 +134,17 @@ class ChangeOrderJob implements ShouldQueue
                     $change_order->status = 3;
                 }
                 break;
+            case 10:
+                //抵扣劵变动
+                if($content['amount'] > 0){
+                    $result = DikouquanLog::changeIntegralK(abs($content['amount']),$user,1,2,$change_order->id);
+                }else{
+                    $result = DikouquanLog::changeIntegralK(abs($content['amount']),$user,0,13,$change_order->id);
+                }
+                if($result){
+                    $change_order->status = 3;
+                }
+                break;
 
         }
 
