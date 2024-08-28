@@ -102,10 +102,11 @@ class ChangeOrder extends Model
         return $change_order->save();
     }
 
-    public static function adjustMemberShopLevel($user,$toLevel){
+    public static function adjustMemberShopLevel($user,$toLevel,$zuohao = 0){
         $content = [
             'level_before' => $user->level,
-            'level_after' => $toLevel
+            'level_after' => $toLevel,
+            'zuohao' => $zuohao
         ];
         $content = json_encode($content);
         $change_order = new ChangeOrder();
@@ -282,7 +283,9 @@ class ChangeOrder extends Model
             case 7:
                 if(isset($content['level_before']) && isset($content['level_after'])){
                     $view = "社群原等级:【{$content['level_before']}】调整为等级【{$content['level_after']}】";
-
+                    if(!empty($content['zuohao'])){
+                        $view .= '组号为：'.$content['zuohao'];
+                    }
                 }
                 break;
             case 8:

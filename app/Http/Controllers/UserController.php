@@ -296,7 +296,7 @@ class UserController extends Controller
     }
 
 
-    //注册
+    //注册账号
     public function register(Request $request)
     {
         $rules = [
@@ -379,7 +379,7 @@ class UserController extends Controller
 
             $pid = $parent->id;
             $pid_shop_member_id = $parent->pid_shop_member_id;
-
+            $shop_member_id = $parent->shop_member_id;
             $data = [
                 'mobile' => $mobile,
                 'level' => 0,
@@ -387,7 +387,8 @@ class UserController extends Controller
                 'password' => \Hash::make($password),
                 'pid' => $pid,
                 'pid_shop_member_id' => $pid_shop_member_id,
-                'number' => Member::getTradeNo(),
+                'shop_member_id' => $shop_member_id,
+                'number' => Member::getTradeNo($shop_member_id),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
 

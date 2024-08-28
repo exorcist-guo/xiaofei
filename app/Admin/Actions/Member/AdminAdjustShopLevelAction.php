@@ -5,6 +5,7 @@ namespace App\Admin\Actions\Member;
 use App\ChangeOrder;
 use App\Exceptions\BizException;
 
+use App\Model\ShopNumber;
 use App\ShopLevel;
 use Encore\Admin\Actions\RowAction;
 use Encore\Admin\Facades\Admin;
@@ -32,7 +33,24 @@ class AdminAdjustShopLevelAction extends RowAction
             if(!in_array($toLevel, array_keys(ShopLevel::getName()))) {
                 throw new BizException('非法的等级');
             }
-            $result = ChangeOrder::adjustMemberShopLevel($model,$toLevel);
+            if(!$model->shop_level){
+                $zuohao = $request->input('zuohao','');
+                if(empty($zuohao)){
+                    throw new BizException('组号不能为空');
+                }
+                $shop_nimber = ShopNumber::whereNumber($zuohao)->first();
+                if(empty($shop_nimber->id)){
+                    throw new BizException('组号不存在');
+                }
+                if($shop_nimber->member_id){
+                    throw new BizException('组号已被占用');
+                }
+
+
+            }
+
+
+            $result = ChangeOrder::adjustMemberShopLevel($model,$toLevel,$zuohao);
             if($result){
                 return $this->response()->success('已提交等待审核')->refresh();
             }else{
@@ -51,6 +69,10 @@ class AdminAdjustShopLevelAction extends RowAction
             ->options(ShopLevel::getName())
             ->default($user->level)
             ->rules('required');
+        if(!$user->shop_level){
+            $this->text('zuohao',__('Number Z'));
+        }
+
     }
 
     public function authorize($user, $model)

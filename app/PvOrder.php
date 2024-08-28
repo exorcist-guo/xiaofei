@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int $status
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder whereStatus($value)
+ * @property float|null $cash_amount
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder whereCashAmount($value)
  */
 class PvOrder extends Model
 {

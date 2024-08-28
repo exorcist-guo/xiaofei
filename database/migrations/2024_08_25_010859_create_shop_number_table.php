@@ -15,7 +15,8 @@ class CreateShopNumberTable extends Migration
     {
         Schema::create('shop_number', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('member_id');
+            $table->bigInteger('member_id')->nullable();
+            $table->integer('number')->nullable()->comment('组号');
             $table->smallInteger('status')->default(0)->comment('0 失效 1有效');
             $table->timestamps();
         });

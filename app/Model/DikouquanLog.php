@@ -35,6 +35,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \App\Member $member
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\DikouquanLog filterMember($memberId)
+ * @property int|null $type 1冻结 2激活
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\DikouquanLog whereType($value)
  */
 class DikouquanLog extends Model
 {

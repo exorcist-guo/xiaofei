@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PostMember whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PostMember whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int|null $group_number 组号
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PostMember whereGroupNumber($value)
  */
 class PostMember extends Model
 {

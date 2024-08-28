@@ -43,6 +43,7 @@ Route::group([
     $router->resource('levellogs', LevelLogController::class); //等级记录
     $router->resource('shoplevellogs', ShopLevelLogController::class); //社区等级记录
     $router->resource('post-templates', PostTemplateController::class);//导入模版下载
+    $router->resource('shop-numbers', ShopNumberController::class); //组号列表
 
 
 //php artisan admin:make PostMemberController --model=App\PostMember  --title=会员导入
