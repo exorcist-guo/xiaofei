@@ -3,10 +3,12 @@
 namespace App\Jobs;
 
 use App\ChangeOrder;
+use App\Exceptions\BizException;
 use App\IntegralLogs;
 use App\Member;
 use App\Model\DikouquanLog;
 use App\Model\LevelLog;
+use App\Model\ShopNumber;
 use App\ShopLevel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -107,6 +109,20 @@ class ChangeOrderJob implements ShouldQueue
                 break;
             case 7:
                 if(isset($content['level_after'])){
+                    //验证组号
+                    if(!empty($content['zuohao'])){
+                        $shop_number = ShopNumber::whereNumber($content['zuohao'])->first();
+                        if(empty($shop_number->id)){
+                            break;
+                        }
+                        if($shop_number->member_id){
+                            break;
+                        }
+                        $shop_number->member_id = $user->id;
+                        $shop_number->status = 1;
+                        $shop_number->save();
+                    }
+
                     LevelLog::addLevelLog($user,$content['level_after'],2,2);
                     $old_shop_level = $user->shop_level;
                     $user->shop_level = $content['level_after'];

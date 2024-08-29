@@ -3,10 +3,12 @@
 namespace App;
 
 use App\Exceptions\BizException;
+use App\Model\ShopNumber;
 use App\Traits\SubmeterModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 
 
 /**
@@ -103,6 +105,10 @@ class Member extends Authenticatable
         1 => '禁用'
     ];
 
+    public function zuhao()
+    {
+        return $this->belongsTo(ShopNumber::class, 'shop_member_id', 'member_id');
+    }
 
 
     public function setPassword($password)
@@ -177,6 +183,37 @@ class Member extends Authenticatable
         $num = time() + $a + substr(str_shuffle(str_repeat('123456789', 5)), 0, 10);
 
         return $head.date('md').$num;
+    }
+
+    public static function createMemberNumber($member_id)
+    {
+        $redis_key = 'zuohao'.date('ymd').'m'.$member_id;
+        $redis_num_key = 'zuohao_list_cache';
+
+        $zuohao = Redis::hget($redis_num_key,$member_id);
+        if(empty($redis_num)){
+            $zuohao = ShopNumber::whereMemberId($member_id)->value('number');
+            if(empty($zuohao)){
+                $member_id = 0;
+                $zuohao = '1000';
+            }
+            Redis::hset($redis_num_key,$member_id,$zuohao);
+        }
+
+        Redis::INCR($redis_key);
+        $num = Redis::get($redis_key);
+        Redis::expire($redis_key,86400);
+        $number = date('ymd').$zuohao;
+        if($num == 1){
+            $m_number = Member::where('number','like',$number.'%')->value('number');
+            if($m_number){
+                $num = substr($m_number,9) + 1;
+                Redis::set($redis_key,$num);
+            }
+        }
+        $num = str_pad($num,3,'0',STR_PAD_LEFT);
+        $number .= $num;
+        return $number;
     }
 
     public function setTradePassword($password)

@@ -10,6 +10,7 @@ use App\Services\ForeignService;
 use App\Services\VerifyService;
 use App\ShopLevel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
 use think\api\Client;
 
 class Test extends Command
@@ -49,6 +50,19 @@ class Test extends Command
      */
     public function handle()
     {
+//        $num = substr('240829100003100',9) + 1;
+//        var_dump($num);
+//        $key = 'asdasdasd';
+//        Redis::set($key,100);
+//        Redis::INCR($key);
+//        $a = Redis::get($key);
+////        $num = 1000;
+////        $a = str_pad($num,3,'0',STR_PAD_LEFT);
+//        var_dump($a);
+//        $a = Redis::expire($key,60);
+//        exit;
+        Member::createMemberNumber(0);
+        exit;
         $mobile = 'test@qq.com';
         $a =  Member::where('is_disabled','<',9)->Where(function ($query)use($mobile){
             $query->where('mobile',$mobile)->orWhere('number',$mobile);

@@ -388,7 +388,7 @@ class UserController extends Controller
                 'pid' => $pid,
                 'pid_shop_member_id' => $pid_shop_member_id,
                 'shop_member_id' => $shop_member_id,
-                'number' => Member::getTradeNo($shop_member_id),
+                'number' => Member::createMemberNumber($shop_member_id),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
 
