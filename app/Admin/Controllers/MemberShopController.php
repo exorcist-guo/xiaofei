@@ -123,14 +123,18 @@ class MemberShopController extends AdminController
         $grid->column('mobile', __('Mobile'));
         $grid->column('number', __('Number'));
         $grid->column('integral', __('Integral'))->sortable();
-        $grid->column('all_integral', __('All integral'))->sortable();
+//        $grid->column('all_integral', __('All integral'))->sortable();
         $grid->column('pv', __('Pv'))->sortable();
-//        $grid->column('avatar', __('Avatar'));
+        $grid->column('dikouquan', __('Dikouquan'))->sortable();
+        $grid->column('dikouquan_k', __('Dikouquan_k'))->sortable();
+//        $grid->column('certificate_type', __('Certificate Type'))->using(Member::getNtlw());
         $grid->column('real_name', __('Real name'));
-        $grid->column('id_number', __('Id number'));
+//        $grid->column('id_number', __('Id number'));
+        $grid->column('zuhao.number', __('Number Z'));
+        $grid->column('shop_member_id', __('Shop member id'));
 
 //        $grid->column('last_ip', __('Last ip'));
-        $grid->column('last_login', __('Last login'));
+//        $grid->column('last_login', __('Last login'));
         $grid->column('is_disabled', __('Is disabled'))->using(
             [0=>'正常',1=>'锁定']
         )->label([0=>'success',1=>'danger']);
