@@ -26,6 +26,8 @@ Route::group([
     $router->any('add-member', AdminAddMember::class);  //添加会员
     $router->resource('proclamations', ProclamationController::class); //公告
 
+    $router->resource('dikouquan-logs', DikouquanLogController::class); //抵扣券记录
+
     $router->resource('change-orders-m', ChangeOrderMController::class); //会员信息修改列表
     $router->resource('change-orders-s', ChangeOrderSController::class); //会员状态变更申请
     $router->resource('change-orders-t', ChangeOrderTController::class); //推荐人改变申请
@@ -37,6 +39,8 @@ Route::group([
 
     //导入
     $router->resource('post-members', PostMemberController::class);  //会员导入
+    $router->resource('post-save-members', PostSaveMemberController::class); //导入批量修改
+
 
     $router->resource('bonus-settlements', BonusSettlementController::class); //奖金结算
 

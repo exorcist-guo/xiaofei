@@ -22,6 +22,7 @@ class CreatePostSaveMember extends Migration
             $table->smallInteger('type')->default(0)->comment('1会员信息修改,2修改等级，3修改积分,4修改营业额');
             $table->bigInteger('pici')->comment('导入批次');
             $table->string('content')->comment('内容');
+            $table->string('val')->comment('原始内容');
 
             $table->string('error')->default('')->comment('错误');
             $table->timestamps();

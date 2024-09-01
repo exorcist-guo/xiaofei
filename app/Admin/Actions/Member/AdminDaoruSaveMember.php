@@ -2,10 +2,10 @@
 
 namespace App\Admin\Actions\Member;
 
+
 use App\Exceptions\BizException;
-use App\Imports\CommonImport;
-use App\Jobs\PostMemberJob;
-use App\PostMember;
+use App\Jobs\ChangeOrderJob;
+use App\PostSaveMember;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 
@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\Filesystem;
 
 
-class AdminDaoruMember extends Action
+class AdminDaoruSaveMember extends Action
 {
 
-    protected $selector = '.post-member';
+    protected $selector = '.post-daoru-save-member';
 
     public function handle(Request $request)
     {
@@ -32,24 +32,26 @@ class AdminDaoruMember extends Action
             }
             $post_member_status = $request->input('post_member_status');
             $pici = $request->input('pici');
-            $is_pici = PostMember::where('pici',$pici)->first();
+            $is_pici = PostSaveMember::where('pici',$pici)->first();
             if(empty($is_pici)){
                 throw new BizException('操作批次不存在');
             }
+            $msg = '数据执行修改成功';
             if($post_member_status == 1){
-                $is_pici = PostMember::where('pici',$pici)->whereIn('status',[7])->first();
+                $msg = '弃用成功';
+                $is_pici = PostSaveMember::where('pici',$pici)->whereIn('status',[7])->first();
                 if($is_pici){
                     throw new BizException('有会员已导入，无法弃用');
                 }
-                PostMember::where('pici',$pici)->update(['status'=>1]);
+                PostSaveMember::where('pici',$pici)->update(['status'=>1]);
             }elseif($post_member_status == 8){
-                $is_pici = PostMember::where('pici',$pici)->whereIn('status',[1,3,6,7])->first();
+                $is_pici = PostSaveMember::where('pici',$pici)->whereIn('status',[1,3,6,7])->first();
                 if($is_pici){
                     throw new BizException('有会员状态不是待导入');
                 }
-                PostMember::where('pici',$pici)->chunk(500, function ($post_members) {
+                PostSaveMember::where('pici',$pici)->chunk(500, function ($post_members) {
                     foreach ($post_members as $post_member){
-                        PostMemberJob::dispatch(['id'=>$post_member->id]);
+                        ChangeOrderJob::dispatchNow(['id'=>$post_member->id]);
                     }
 
                 });
@@ -61,7 +63,7 @@ class AdminDaoruMember extends Action
 
 
 
-            return $this->response()->success('数据导入成功')->refresh();
+            return $this->response()->success($msg)->refresh();
         }catch (\Exception $e){
             Redis::expire($redis_key,2);
             return $this->response()->error($e -> getMessage());
@@ -81,7 +83,7 @@ class AdminDaoruMember extends Action
     public function html()
     {
         return <<<HTML
-        <a class="btn btn-sm btn-default post-member">转入到会员</a>
+        <a class="btn btn-sm btn-default post-daoru-save-member">执行修改</a>
 HTML;
     }
 
@@ -97,7 +99,7 @@ HTML;
 //            ]);
         $this->text('pici', '批次');
         $this->radio('post_member_status', '操作')
-            ->options(['1'=> '弃用',8=>'转入会员']);
+            ->options(['1'=> '弃用',8=>'执行修改']);
 
     }
 

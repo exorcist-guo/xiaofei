@@ -55,7 +55,12 @@ class DikouquanLog extends Model
         14 => '转出',
     ];
 
-    //type == 1 增加  0 减少
+    const TYPE_MAP = [
+        1 => '冻结消费券',
+        2 => '可用消费券',
+    ];
+
+
     public static function changeIntegral($amount,$member,$type,$action,$related_id = 0,$remark = ''){
         /** @var Member $member */
         $amount = abs($amount);
@@ -74,7 +79,7 @@ class DikouquanLog extends Model
             'member_id' => $member->id,
             'action' => $action,
             'amount' => $amount,
-            'type' => 1,
+            'type' => 1, //冻结
             'balance_before' => $balance_before,
             'balance_after' => $balance_after,
             'remark' => $remark,
@@ -105,7 +110,7 @@ class DikouquanLog extends Model
             'member_id' => $member->id,
             'action' => $action,
             'amount' => $amount,
-            'type' => 2,
+            'type' => 2, // 可用
             'balance_before' => $balance_before,
             'balance_after' => $balance_after,
             'remark' => $remark,

@@ -5,7 +5,9 @@ namespace App\Admin\Actions\Post;
 use App\Exceptions\BizException;
 use App\Imports\CommonImport;
 use App\Jobs\PostMemberJob;
+use App\Jobs\PostSaveMemberJob;
 use App\PostMember;
+use App\PostSaveMember;
 use Encore\Admin\Actions\Action;
 use Illuminate\Http\Request;
 
@@ -24,12 +26,12 @@ class ImportSaveMemberPost extends Action
     {
         ini_set('max_execution_time', '0');
         $Filesystem = new Filesystem;
-        $file_path = 'uploads/post/member';
+        $file_path = 'uploads/post/savemember';
         $Filesystem->deleteDirectory($file_path);
         try{
-            $is_pici = PostMember::whereIn('status',[0,3,4,6])->first();
+            $is_pici = PostSaveMember::whereIn('status',[0,3,4,6])->first();
             if($is_pici){
-                throw new BizException('有'.PostMember::STATUS_MAP[$is_pici->status].'会员没处理');
+                throw new BizException('有'.PostSaveMember::STATUS_MAP[$is_pici->status].'会员没处理');
             }
 
             // $request ...
@@ -38,31 +40,40 @@ class ImportSaveMemberPost extends Action
 
             $result = Excel::toArray( new CommonImport(),$file);
 //            var_dump($result);
-            $posr_member  = PostMember::orderByDesc('id')->first();
+            $posr_member  = PostSaveMember::orderByDesc('id')->first();
             if($posr_member){
                 $pici  = $posr_member->pici + 1;
             }else{
                 $pici = 1;
             }
             $result = $result[0];
-            $titles = $result[0][0];
-            //字段锁定
+            $titles = $result[0];
+            $title_map = PostSaveMember::TITLE_MAP;
+            if($titles[0] != '账号'){
+                throw new BizException('首列必须是账号');
+            }
 
-            foreach ($result as $key => $val){
-                if($key > 0 && isset($val[3])){
-                    $data = [
-                        'status' => '0',
-                        'pici' => $pici,
-                        'mobile' => $val[3],
-                        'pid_id_number' => $val[2],
-                        'real_name' => $val[1],
-                        'id_number' => $val[0],
-                    ];
-                    PostMemberJob::dispatch($data);
-                }
+            if(empty($title_map[$titles[1]])){
+                throw new BizException('不支持'.$titles[1].'修改');
+            }else{
+                $type = $title_map[$titles[1]];
             }
 
 
+
+
+            foreach ($result as $key => $val){
+                if($key > 0 && isset($val[1])){
+                    $data = [
+                        'status' => '0',
+                        'pici' => $pici,
+                        'admin_id' => ADMIN_ID,
+                        'type' => $type,
+                        'val' => $val,
+                    ];
+                    PostSaveMemberJob::dispatch($data);
+                }
+            }
             return $this->response()->success('数据导入成功')->refresh();
         }catch (\Exception $e){
             return $this->response()->error($e -> getMessage());
