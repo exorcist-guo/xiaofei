@@ -367,6 +367,22 @@ class IntegralController extends Controller
             if(empty($to_user)){
                 throw new BizException('收款人不存在');
             }
+            $transfer_type = config('base.transfer_type');
+            if($transfer_type == 3){
+                throw new BizException('互转已关闭');
+            }
+            if(config('base.transfer_type') == 2){
+                //限制网体互转
+                if($to_user->shop_level && $user->shop_level){
+                        if($user->group_number != $to_user->group_number){
+                            throw new BizException('不再同一个市场不能互转');
+                        }
+                }elseif($user->shop_member_id != $to_user->shop_member_id){
+                    throw new BizException('不再同一个社群不能互转');
+                }
+
+            }
+
 
             \DB::transaction(function() use ($request, $user,$to_user){
                 $amount = $request->input('amount',0);
@@ -447,6 +463,9 @@ class IntegralController extends Controller
 
         if($validator->fails()) {
             return $this->error($validator->errors()->first());
+        }
+        if(config('base.push_status') != 1){
+            throw new BizException('推送暂未开放');
         }
 
         try {
