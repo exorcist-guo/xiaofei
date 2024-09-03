@@ -121,10 +121,40 @@ class ChangeOrderJob implements ShouldQueue
                 $change_order->status = $success_status;
                 break;
             case 6:
+                try {
                 if(isset($content['pid_before']) && isset($content['pid_after'])){
+                    $p = Member::whereId($content['pid_after'])->first();
+                    if(!$p) {
+                        throw new \App\Exceptions\BizException('找不到父节点');
+                    }
+                    $cid = $user->id;
+                    \DB::transaction(function() use($cid,  $p){
+                        $m = Member::whereId($cid)->first();
+                        if(!$m) {
+                            throw new \App\Exceptions\BizException('找不到子节点');
+                        }
+                        $paths = explode('/', $p->path);
+                        if(in_array($m->id, $paths)) {
+                            throw new Exception('闭环');
+                        }
+                        $m->deep = $p->deep + 1;
+                        $m->pid = $p->id;
+                        if($p->path){
+                            $path = $p->path . $p->id.'/';
+                        }else{
+                            $path = '/'.$p->id.'/';
+                        }
+                        $m->path = $path;
+                        $m->save();
+                        $this->migrateMemberPath($m);
+                        \Log::channel('user')->info('网体移动', [$m->id,$p->id]);
+                    });
                     $user->pid = $content['pid_after'];
                     $user->save();
                     $change_order->status = $success_status;
+                }
+                } catch (Exception $e) {
+                    \Log::channel('user')->info('网体移动失败', [$e->getMessage()]);
                 }
                 break;
             case 7:
@@ -189,5 +219,16 @@ class ChangeOrderJob implements ShouldQueue
 
 
 
+    }
+
+    public function migrateMemberPath($member)
+    {
+        $children = $member->children;
+        foreach($children as $child) {
+            $child->deep = $member->deep + 1;
+            $child->path = $member->path . $member->getKey().'/';
+            $child->save();
+            $this->migrateMemberPath($child);
+        }
     }
 }

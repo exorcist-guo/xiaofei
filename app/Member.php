@@ -105,6 +105,11 @@ class Member extends Authenticatable
         1 => '禁用'
     ];
 
+    public function children()
+    {
+        return $this->hasMany(static::class, 'pid', 'id');
+    }
+
     public function zuhao()
     {
         return $this->belongsTo(ShopNumber::class, 'shop_member_id', 'member_id');
