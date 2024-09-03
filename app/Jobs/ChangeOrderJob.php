@@ -27,6 +27,13 @@ class ChangeOrderJob implements ShouldQueue
      * @return void
      */
 
+    /**
+     * 任务可以执行的最大秒数 (超时时间)。
+     *
+     * @var int
+     */
+    public $timeout = 600;
+
     protected $order_id;
     public function __construct($id)
     {
