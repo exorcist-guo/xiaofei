@@ -61,20 +61,30 @@ class Test extends Command
 //        var_dump($a);
 //        $a = Redis::expire($key,60);
 //        exit;
-        Member::createMemberNumber(0);
-        exit;
-        $mobile = 'test@qq.com';
-        $a =  Member::where('is_disabled','<',9)->Where(function ($query)use($mobile){
-            $query->where('mobile',$mobile)->orWhere('number',$mobile);
-        })->toSql();
-        var_dump($a);
-        exit;
-        VerifyService::sendEmail('qazkdjfhgfd@outlook.com',548987);
-        exit;
-        \App::setLocale('en');
-        $locale = \App::getLocale();
-        var_dump($locale);
-        var_dump(Member::getNations());
+        var_dump(99);
+        $openid = 777;
+        register_shutdown_function(function ($openid){
+            //防止同一个用户并发执行
+            sleep(15);
+           var_dump($openid);
+        },$openid);
+        var_dump(66666666);
+        return 99999;
+//        exit;
+//        Member::createMemberNumber(0);
+//        exit;
+//        $mobile = 'test@qq.com';
+//        $a =  Member::where('is_disabled','<',9)->Where(function ($query)use($mobile){
+//            $query->where('mobile',$mobile)->orWhere('number',$mobile);
+//        })->toSql();
+//        var_dump($a);
+//        exit;
+//        VerifyService::sendEmail('qazkdjfhgfd@outlook.com',548987);
+//        exit;
+//        \App::setLocale('en');
+//        $locale = \App::getLocale();
+//        var_dump($locale);
+//        var_dump(Member::getNations());
 
     }
 }

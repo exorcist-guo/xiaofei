@@ -74,7 +74,7 @@ class PushPvJob implements ShouldQueue
                     if(!$success) {
                         throw new BizException('业绩增加失败');
                     }
-
+                    /*
                     $levels = Level::getLevels();
 
                     //判断是否升级
@@ -133,6 +133,7 @@ class PushPvJob implements ShouldQueue
                         }
 
                     }
+                    */
                 });
 
             }
