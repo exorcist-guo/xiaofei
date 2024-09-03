@@ -98,12 +98,16 @@ class MemberController extends AdminController
                     if (!$parent) {
                         admin_error('用户不存在', '节点不存在');
                     } else {
-                        $path = $parent->path . '/' . $parent->id;
+                        if($parent->path){
+                            $path = $parent->path . $parent->id.'/';
+                        }else{
+                            $path = '/'.$parent->id.'/';
+                        }
                         $query->where('id', $this->input)
                             ->orWhereIn('id', explode('/', $parent->path))
                             ->orWhere('path', 'like', "{$path}%");
                     }
-                }, __('Team'), '_team');
+                }, __('Team'), '_team')->placeholder('输入用户ID');
 
 //                $filter->contains('secretInfo.contract_mobile', '联系电话');
             });
@@ -122,6 +126,28 @@ class MemberController extends AdminController
 
         $grid->column('id', __('Id'))->sortable();
         $grid->column('pid', __('Pid'));
+        if(intval(request('_team'))>0) {
+            /** @var Member $current */
+            $current = Member::find(request('_team'));
+            $grid->column('teamDeep', '团队深度')->display(function() use ($current){
+                $deep = $this->deep - $current->deep;
+
+                if($deep == 0) {
+                    $v = '当前用户';
+                }
+                else if($deep>0) {
+                    $v = sprintf('伞下%d级', $deep);
+                }
+                else {
+                    $v = sprintf('上%d级', abs($deep));
+                }
+
+                return $v;
+            });
+        } else {
+            $grid->column('deep', __('Deep'))->sortable();
+
+        }
         $grid->column('level', __('Level'))->using(Level::getName())
             ->label([
                 0 => 'default',

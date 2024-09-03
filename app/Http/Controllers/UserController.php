@@ -380,6 +380,11 @@ class UserController extends Controller
             $pid = $parent->id;
             $pid_shop_member_id = $parent->pid_shop_member_id;
             $shop_member_id = $parent->shop_member_id;
+            if($parent->path){
+                $path = $parent->path . $pid.'/';
+            }else{
+                $path = '/'.$pid.'/';
+            }
             $data = [
                 'mobile' => $mobile,
                 'level' => 0,
@@ -399,7 +404,7 @@ class UserController extends Controller
                 'real_name' => $name,
 //                'id_number' => $id_number,
                 'deep' => $parent->deep + 1,
-                'path' => $parent->path . '/' . $pid.'/',
+                'path' => $path,
             ];
             $id = DB::table('members')->insertGetId($data);
             if (!$id) {
