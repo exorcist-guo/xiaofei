@@ -34,11 +34,11 @@ class AdminSubmitBonusSettlement extends Action
             if($start_time == $day_time || $end_time == $day_time){
                 throw new BizException('不能结算当天的');
             }
-            if($start_time > $end_time || $start_time > $day_time ){
+            if($start_time > $end_time || $start_time > $day_time || $end_time > $day_time){
                 throw new BizException('结算时间有误');
             }
             $last_jie = BonusSettlement::orderByDesc('id')->first();
-            if($last_jie->status < 20){
+            if(!empty($last_jie->status) && $last_jie->status < 20){
                 throw new BizException('有未完成结算');
             }
             $bonus_settlement = new BonusSettlement();
