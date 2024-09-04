@@ -10,6 +10,7 @@ use App\Model\DikouquanLog;
 use App\Model\LevelLog;
 use App\Model\ShopNumber;
 use App\PostSaveMember;
+use App\PvLogs;
 use App\ShopLevel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -120,6 +121,18 @@ class ChangeOrderJob implements ShouldQueue
                 }
                 break;
             case 4:
+                //营业额变动
+                $result = '';
+                if($content['amount'] > 0){
+                    $remark = '';
+                    if(empty($content['remark'])){
+                        $remark = $content['remark'];
+                    }
+                    $result = PvLogs::addPv($user->id,abs($content['amount']),$user,2,$remark);
+                }
+                if($result){
+                    $change_order->status = $success_status;
+                }
 
                 break;
             case 5:
