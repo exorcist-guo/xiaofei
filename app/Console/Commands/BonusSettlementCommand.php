@@ -57,7 +57,21 @@ class BonusSettlementCommand extends Command
             Redis::del($redis_start);
             $bonus_settlement = BonusSettlement::where($bonus_settlement_id)->first();
             if($bonus_settlement){
-                $this->settlement($bonus_settlement);
+                try{
+                    $start_time = $bonus_settlement->start_time;
+                    $end_time = $bonus_settlement->end_time;
+                    $bonus_settlement_id = $bonus_settlement->id;
+                }catch (\Exception $e){
+                    \Log::channel('push_pv')->info('结算异常',[$e->getMessage()]);
+                }
+                $levels = Level::getLevels();
+                //获取可结算业绩
+                PvOrder::whereBetween('create_time',[$start_time,$end_time])->where('status',1)
+                    ->orderBy('id', 'asc')
+                    ->chunk(1000, function ($members)use($levels) {
+                        //模拟进单顺序结算
+
+                    });
             }
 
         }

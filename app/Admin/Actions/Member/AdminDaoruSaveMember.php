@@ -51,7 +51,7 @@ class AdminDaoruSaveMember extends Action
                 }
                 PostSaveMember::where('pici',$pici)->chunk(500, function ($post_members) {
                     foreach ($post_members as $post_member){
-                        ChangeOrderJob::dispatchNow(['id'=>$post_member->id]);
+                        ChangeOrderJob::dispatch(['id'=>$post_member->id]);
                     }
 
                 });
