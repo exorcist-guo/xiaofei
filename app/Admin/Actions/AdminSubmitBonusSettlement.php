@@ -53,6 +53,8 @@ class AdminSubmitBonusSettlement extends Action
             }
             $bonus_settlement->save();
 
+            $redis_start = 'command:bonus-settlement-start';
+            Redis::set($redis_start,$bonus_settlement->id);
             return $this->response()->success('提交成功等待结算')->refresh();
         }catch (\Exception $e){
             Redis::expire($redis_key,2);

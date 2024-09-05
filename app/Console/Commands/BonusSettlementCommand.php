@@ -9,6 +9,7 @@ use App\Model\BonusSettlement;
 use App\Model\NewPerformance;
 use App\PvOrder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
 class BonusSettlementCommand extends Command
@@ -54,36 +55,57 @@ class BonusSettlementCommand extends Command
         $redis_start = 'command:bonus-settlement-start';
         $bonus_settlement_id =  Redis::get($redis_start);
         if($bonus_settlement_id){
-            Redis::del($redis_start);
-            $bonus_settlement = BonusSettlement::where($bonus_settlement_id)->first();
+//            Redis::del($redis_start);  能重复结算
+            $bonus_settlement = BonusSettlement::whereId($bonus_settlement_id)->first();
             if($bonus_settlement){
                 try{
                     $start_time = $bonus_settlement->start_time;
                     $end_time = $bonus_settlement->end_time;
                     $bonus_settlement_id = $bonus_settlement->id;
                 }catch (\Exception $e){
-                    \Log::channel('push_pv')->info('结算异常',[$e->getMessage()]);
+                    \Log::channel('bonus_settlement')->info('结算异常',[$e->getMessage()]);
                 }
                 $levels = Level::getLevels();
                 //获取可结算业绩
-                PvOrder::whereBetween('create_time',[$start_time,$end_time])->where('status',1)
+                var_dump(66);
+                //whereBetween('created_at',[$start_time,$end_time])-> 时间限制，正式需要调用
+                PvOrder::where('status',1)
                     ->orderBy('id', 'asc')
-                    ->chunk(1000, function ($members)use($levels) {
+                    ->chunk(1000, function ($pv_order)use($levels) {
                         //模拟进单顺序结算
+                        try{
+                            foreach ($pv_orders as $pv_order){
 
+                            }
+                            DB::beginTransaction();
+                                //激活奖励
+
+                            $user = Member::whereId($pv_order->member_id)->first();
+                            $this->jihuoJiang($user,$pv_order);
+                            var_dump(666);
+
+
+
+                            DB::Commit();
+                        }catch (\Exception $e){
+                            DB::Rollback();
+                            var_dump($e->getMessage());
+                            \Log::channel('bonus_settlement')->info('结算中异常',[$e->getMessage()]);
+                        }
                     });
             }
 
         }
         sleep(1);
 
+    }
 
-
-
-
-
-
-
+    //激活奖励
+    public function jihuoJiang(Member $user,PvOrder $pv_order)
+    {
+        //老会员本人及网体下人员，每期消费都可以激活现金消费部分的25%的消费券到可用余额
+        $user_ids = explode($user->path);
+        var_dump($user_ids);
     }
 
     //结算
