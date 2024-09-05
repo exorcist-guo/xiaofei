@@ -125,10 +125,10 @@ class ChangeOrderJob implements ShouldQueue
                 $result = '';
                 if($content['amount'] > 0){
                     $remark = '';
-                    if(empty($content['remark'])){
+                    if(!empty($content['remark'])){
                         $remark = $content['remark'];
                     }
-                    $result = PvLogs::addPv($user->id,abs($content['amount']),$user,2,$remark);
+                    $result = PvLogs::addPv($user->id,abs($content['amount']),$user,$remark);
                 }
                 if($result){
                     $change_order->status = $success_status;
