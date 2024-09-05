@@ -87,11 +87,12 @@ class PostSaveMemberJob implements ShouldQueue
                         'amount' => $val[1]??0,
                         'remark' => '导入增加',
                     ];
-                    $content = json_encode($content);
-                    $post_save_member->content = $content;
-                    if($content['amount']){
+                    if($content['amount'] < 0){
                         $error .= "营业额不能减少";
                     }
+                    $content = json_encode($content);
+                    $post_save_member->content = $content;
+
                     break;
                 case 5:
                     $is_status= Member::IS_DISABLED_MAP;
