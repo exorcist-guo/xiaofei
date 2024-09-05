@@ -72,7 +72,7 @@ class PostSaveMemberJob implements ShouldQueue
                     }
                     break;
                 case 3:
-                case 4:
+
                 case 9:
                 case 10:
                     $content = [
@@ -80,6 +80,18 @@ class PostSaveMemberJob implements ShouldQueue
                     ];
                     $content = json_encode($content);
                     $post_save_member->content = $content;
+                    break;
+                case 4:
+
+                    $content = [
+                        'amount' => $val[1]??0,
+                        'remark' => '导入增加',
+                    ];
+                    $content = json_encode($content);
+                    $post_save_member->content = $content;
+                    if($content['amount']){
+                        $error .= "营业额不能减少";
+                    }
                     break;
                 case 5:
                     $is_status= Member::IS_DISABLED_MAP;
