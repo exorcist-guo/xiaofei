@@ -54,6 +54,7 @@ class BonusSettlementCommand extends Command
 
         $redis_start = 'command:bonus-settlement-start';
         $bonus_settlement_id =  Redis::get($redis_start);
+        $bonus_settlement_id = 2;
         if($bonus_settlement_id){
 //            Redis::del($redis_start);  能重复结算
             $bonus_settlement = BonusSettlement::whereId($bonus_settlement_id)->first();
@@ -71,22 +72,22 @@ class BonusSettlementCommand extends Command
                 //whereBetween('created_at',[$start_time,$end_time])-> 时间限制，正式需要调用
                 PvOrder::where('status',1)
                     ->orderBy('id', 'asc')
-                    ->chunk(1000, function ($pv_order)use($levels) {
+                    ->chunk(1000, function ($pv_orders)use($levels) {
                         //模拟进单顺序结算
                         try{
                             foreach ($pv_orders as $pv_order){
+                                DB::beginTransaction();
 
-                            }
-                            DB::beginTransaction();
+
                                 //激活奖励
-
-                            $user = Member::whereId($pv_order->member_id)->first();
-                            $this->jihuoJiang($user,$pv_order);
-                            var_dump(666);
+                                $user = Member::whereId($pv_order->member_id)->first();
+                                $this->jihuoJiang($user,$pv_order);
+                                var_dump(666);
 
 
 
                             DB::Commit();
+                            }
                         }catch (\Exception $e){
                             DB::Rollback();
                             var_dump($e->getMessage());
@@ -104,8 +105,19 @@ class BonusSettlementCommand extends Command
     public function jihuoJiang(Member $user,PvOrder $pv_order)
     {
         //老会员本人及网体下人员，每期消费都可以激活现金消费部分的25%的消费券到可用余额
-        $user_ids = explode($user->path);
-        var_dump($user_ids);
+        $user_ids = explode('/',$user->path);
+        $user_ids[0] = $user->id;
+        $jihuo_ratio = 0.25; //激活比率
+        $jihuo_amount = bcmul($pv_order->amount,$jihuo_ratio,2);
+        foreach ($user_ids as $user_id){
+            if(!$user_id) continue;
+            $member = Member::whereId($user_id)->first();
+            if($member && $member->dikouquan > 0){
+                //有冻结消费券的用户
+
+            }
+        }
+
     }
 
     //结算

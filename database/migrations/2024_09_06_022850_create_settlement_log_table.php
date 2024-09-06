@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJsMemberTable extends Migration
+class CreateSettlementLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateJsMemberTable extends Migration
      */
     public function up()
     {
-        Schema::create('settlement_member', function (Blueprint $table) {
+        Schema::create('settlement_log', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('bonus_settlement_id')->comment('结算id');
             $table->bigInteger('member_id')->comment('用户id');
-            $table->decimal('jihuo_amount')->comment('激活数量');
-            $table->decimal('')->comment('积分');
-
-
-
+            $table->smallInteger('type')->comment('类型');
+            $table->decimal('amount',10,2)->comment('收益');
+            $table->bigInteger('related_id')->comment('关联id');
+            $table->string('ratio')->comment('结算比率');
+            $table->string('remark')->comment('备注');
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ class CreateJsMemberTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settlement_member');
+        Schema::dropIfExists('settlement_log');
     }
 }
