@@ -41,9 +41,37 @@ class SettlementLog extends Model
 {
     protected $table = 'settlement_log';
 
-    public function addLog()
-    {
+    const TYPE_MAP = [
+        1 => '推新奖励',
+        2 => '消费奖励',
+    ];
 
+    public function addLog($amount,$yuan_amount,$settlement_member,$type,$related_id = 0,$remark = ''){
+        /** @var SettlementMember $settlement_member */
+        $amount = abs($amount);
+        switch ($type){
+            case 1:
+            case 2:
+                $balance_after = bcadd((string)$settlement_member->jh,(string)$amount,2);
+                $settlement_member->jh = $balance_after;
+                break;
+        }
+        $time = date('Y-m-d H:i:s');
+        $log_data = [
+            'bonus_settlement_id' => $settlement_member->bonus_settlement_id,
+            'member_id' => $settlement_member->member_id,
+            'type' => $type,
+            'amount' => $amount,
+            'yuan_amount' => $yuan_amount,
+            'balance_after' => $balance_after,
+            'remark' => $remark,
+            'related_id' => $related_id,
+            'created_at' => $time,
+            'updated_at' => $time,
+        ];
+        $in_log = self::InsertGetId($log_data);
+        $success = $in_log && $settlement_member->save();
+        return $success;
     }
 
 }

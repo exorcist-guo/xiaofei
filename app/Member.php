@@ -21,13 +21,15 @@ use Illuminate\Support\Facades\Redis;
  * @property int $level
  * @property int $shop_level
  * @property int $lock_shop_level 0 自动升降级 1不自动
+ * @property int|null $group_number 组号
  * @property string $mobile
  * @property string $number 账号
  * @property float $integral 积分
  * @property float $all_integral 全部积分
  * @property float $pv 业绩
- * @property float $divvy_pv 分红业绩
+ * @property float $divvy_pv 已结算业绩
  * @property float $dikouquan 抵扣券数量
+ * @property float $dikouquan_k 可用消费券
  * @property int $pid_shop_member_id 上级社区
  * @property int $shop_member_id 所属社区
  * @property string $avatar 图像
@@ -38,6 +40,7 @@ use Illuminate\Support\Facades\Redis;
  * @property int $is_active 是否激活
  * @property int $nation 国家
  * @property string $lang 语言
+ * @property string|null $mobile_nation
  * @property string $password
  * @property string $last_ip
  * @property string|null $last_login
@@ -47,6 +50,9 @@ use Illuminate\Support\Facades\Redis;
  * @property int $is_set_transaction_password
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Member[] $children
+ * @property-read int|null $children_count
+ * @property-read \App\Model\ShopNumber $zuhao
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member query()
@@ -57,8 +63,10 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDeep($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDikouquan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDikouquanK($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDisabledAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDivvyPv($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereGroupNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIdNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIntegral($value)
@@ -71,6 +79,7 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereLockShopLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereMobile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereMobileNation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereNation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member wherePassword($value)
@@ -84,15 +93,6 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereTransactionPassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property int|null $group_number 组号
- * @property float $dikouquan_k 可用消费券
- * @property string|null $mobile_nation
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Member[] $children
- * @property-read int|null $children_count
- * @property-read \App\Model\ShopNumber $zuhao
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDikouquanK($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereGroupNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereMobileNation($value)
  */
 class Member extends Authenticatable
 {

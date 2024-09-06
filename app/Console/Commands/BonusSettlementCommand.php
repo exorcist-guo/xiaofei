@@ -7,6 +7,8 @@ use App\Level;
 use App\Member;
 use App\Model\BonusSettlement;
 use App\Model\NewPerformance;
+use App\Model\SettlementLog;
+use App\Model\SettlementMember;
 use App\PvOrder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -102,8 +104,26 @@ class BonusSettlementCommand extends Command
     }
 
     //激活奖励
-    public function jihuoJiang(Member $user,PvOrder $pv_order)
+    public function jihuoJiang(Member $user,PvOrder $pv_order,$bonus_settlement_id)
     {
+        //增加业绩
+
+
+        //推荐三个人消费400给奖励400
+        if($user->pid && $user->is_active < 3){
+            $count = Member::wherePid($user->pid)->where('id','<>',$user->id)
+                ->where('divvy_pv','>',400)->count();
+            if($count >= 2){
+                if($user && $user->dikouquan > 0){
+                    //有冻结消费券的用户
+                    $jihuo_amount = 400;
+                    $settlement_member = SettlementMember::getSettlementMember($user->id,$bonus_settlement_id);
+                    SettlementLog::addLog($jihuo_amount,$pv_order->amount,$settlement_member,1,$pv_order->id);
+                    $user->is_active = 3;
+                }
+            }
+        }
+
         //老会员本人及网体下人员，每期消费都可以激活现金消费部分的25%的消费券到可用余额
         $user_ids = explode('/',$user->path);
         $user_ids[0] = $user->id;
@@ -114,7 +134,8 @@ class BonusSettlementCommand extends Command
             $member = Member::whereId($user_id)->first();
             if($member && $member->dikouquan > 0){
                 //有冻结消费券的用户
-
+                $settlement_member = SettlementMember::getSettlementMember($member->id,$bonus_settlement_id);
+                SettlementLog::addLog($jihuo_amount,$pv_order->amount,$settlement_member,2,$pv_order->id);
             }
         }
 
