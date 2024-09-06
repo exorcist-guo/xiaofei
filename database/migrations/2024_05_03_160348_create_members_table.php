@@ -64,8 +64,8 @@ class CreateMembersTable extends Migration
             $table->bigInteger('member_id');
             $table->integer('action')->comment('类型ID');
             $table->decimal('amount', 12, 2)->comment('变动数量');
-            $table->decimal('balance_before', 20, 4)->comment('变动后数量');
-            $table->decimal('balance_after', 20, 4)->comment('变动前数量');
+            $table->decimal('balance_before', 12, 2)->comment('变动后数量');
+            $table->decimal('balance_after', 12, 2)->comment('变动前数量');
             $table->string('remark',100);
             $table->bigInteger('related_id')->comment('关联id');
 
@@ -78,8 +78,8 @@ class CreateMembersTable extends Migration
             $table->bigInteger('member_id');
             $table->integer('action')->comment('类型ID');
             $table->decimal('amount', 12, 2)->comment('变动数量');
-            $table->decimal('balance_before', 20, 4)->comment('变动后数量');
-            $table->decimal('balance_after', 20, 4)->comment('变动前数量');
+            $table->decimal('balance_before', 12, 2)->comment('变动后数量');
+            $table->decimal('balance_after', 12, 2)->comment('变动前数量');
             $table->string('remark',100);
             $table->bigInteger('related_id')->comment('关联id');
 
@@ -110,8 +110,8 @@ class CreateMembersTable extends Migration
                 $table->bigInteger('member_id');
                 $table->integer('action')->comment('类型ID');
                 $table->decimal('amount', 12, 2)->comment('变动数量');
-                $table->decimal('balance_before', 20, 4)->comment('变动后数量');
-                $table->decimal('balance_after', 20, 4)->comment('变动前数量');
+                $table->decimal('balance_before', 12, 2)->comment('变动后数量');
+                $table->decimal('balance_after', 12, 2)->comment('变动前数量');
                 $table->string('remark',100);
                 $table->bigInteger('related_id')->comment('关联id');
 

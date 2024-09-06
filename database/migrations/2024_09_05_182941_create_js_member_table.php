@@ -17,11 +17,15 @@ class CreateJsMemberTable extends Migration
             $table->bigIncrements('id');
             $table->integer('bonus_settlement_id')->comment('结算id');
             $table->bigInteger('member_id')->comment('用户id');
-            $table->decimal('jihuo_amount')->comment('激活数量');
-            $table->decimal('')->comment('积分');
+            $table->smallInteger('status')->default(0)->nullable()->comment('状态');
+            $table->decimal('jh',10,2)->comment('激活数量');
+            $table->decimal('jc',10,2)->comment('极差');
+            $table->decimal('tj',10,2)->comment('推荐');
+            $table->decimal('fw',10,2)->comment('服务');
+            $table->decimal('bt',10,2)->comment('补贴');
+            $table->decimal('cx',12,2)->comment('促销奖');
 
-
-
+            $table->decimal('yj',12,2)->comment('业绩');
             $table->timestamps();
         });
     }

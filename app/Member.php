@@ -84,6 +84,15 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereTransactionPassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int|null $group_number 组号
+ * @property float $dikouquan_k 可用消费券
+ * @property string|null $mobile_nation
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Member[] $children
+ * @property-read int|null $children_count
+ * @property-read \App\Model\ShopNumber $zuhao
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDikouquanK($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereGroupNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereMobileNation($value)
  */
 class Member extends Authenticatable
 {
