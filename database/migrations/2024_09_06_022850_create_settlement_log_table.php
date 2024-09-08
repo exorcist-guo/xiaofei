@@ -20,12 +20,14 @@ class CreateSettlementLogTable extends Migration
             $table->smallInteger('type')->comment('类型');
 
             $table->decimal('amount',10,2)->comment('收益');
-            $table->decimal('balance_before', 12, 2)->comment('变动后数量');
+            $table->decimal('balance_after', 12, 2)->comment('变动后数量');
             $table->bigInteger('related_id')->comment('关联id');
             $table->decimal('yuan_amount',10,2)->comment('计算基数');
             $table->string('ratio')->comment('结算比率');
             $table->string('remark')->comment('备注');
             $table->timestamps();
+
+            $table->index(['member_id','bonus_settlement_id'], 'idx-settlement-member_id');
         });
     }
 

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Exceptions\BizException;
+use App\Model\LevelLog;
 use App\Model\ShopNumber;
 use App\Traits\SubmeterModelTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -249,6 +250,52 @@ class Member extends Authenticatable
             $uids[] = $uid;
         }while($uid);
         return $uids;
+    }
+
+    public static function getIdMember($user_ids){
+        $member_list = Member::whereIn('id',$user_ids)->get();
+        $data_list = [];
+        if($member_list){
+            foreach ($member_list as $member){
+                $data_list[$member->id] = $member;
+            }
+        }
+        return $data_list;
+
+    }
+
+    public static function checkLevel($user,$levels = []){
+        if(empty($levels)){
+            $levels = Level::getLevels();
+        }
+        $user_ids = array_reverse(explode('/',$user->path));
+        $user_ids[0] = $user->id;
+        foreach ($user_ids as $user_id){
+            if(!$user_id) continue;
+            $member = Member::whereId($user_id)->first();
+            if($member){
+                $level_j = 0;
+                if($member->path){
+                    $path = $member->path . $member->id.'/';
+                }else{
+                    $path = '/'.$member->id.'/';
+                }
+
+                $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
+                $all_divvy_pv = $all_divvy_pv + $member->divvy_pv;
+                foreach ($levels as $level){
+                    if($all_divvy_pv > $level['pv']){
+                        $level_j = $level['id'];
+                        break;
+                    }
+                }
+                if($level_j){
+                    LevelLog::addLevelLog($member,$level_j,1,1);
+                }
+
+            }
+
+        }
     }
 
     public static function isIdCard($idcard='') {

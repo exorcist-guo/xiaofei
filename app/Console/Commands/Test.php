@@ -50,6 +50,21 @@ class Test extends Command
      */
     public function handle()
     {
+         $a  = Level::getLevels();
+//        krsort($a);
+        var_dump($a);
+        exit;
+        $a = array_reverse(explode('/','/8/9/'));
+        $a = array_filter($a);
+
+
+        $member_list = Member::whereIn('id',$a)->get();
+        var_dump($member_list);
+
+        exit;
+
+
+
 //        $num = substr('240829100003100',9) + 1;
 //        var_dump($num);
 //        $key = 'asdasdasd';

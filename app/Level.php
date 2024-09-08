@@ -44,7 +44,7 @@ class Level extends Model
         if($levels){
             $levels = json_decode($levels,true);
         }else{
-            $level = self::get()->toArray();
+            $level = self::orderByDesc('id')->get()->toArray();
             $levels = [];
             foreach ($level as $val){
                 $levels[$val['id']] = $val;

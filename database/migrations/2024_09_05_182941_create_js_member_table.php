@@ -17,6 +17,7 @@ class CreateJsMemberTable extends Migration
             $table->bigIncrements('id');
             $table->integer('bonus_settlement_id')->comment('结算id');
             $table->bigInteger('member_id')->comment('用户id');
+            $table->bigInteger('shop_member_id')->default(0)->comment('所属社区');
             $table->smallInteger('status')->default(0)->nullable()->comment('状态');
             $table->decimal('jh',10,2)->comment('激活数量');
             $table->decimal('jc',10,2)->comment('极差');
@@ -27,6 +28,8 @@ class CreateJsMemberTable extends Migration
 
             $table->decimal('yj',12,2)->comment('业绩');
             $table->timestamps();
+
+            $table->index(['member_id','bonus_settlement_id'], 'idx-settlement-member_id');
         });
     }
 

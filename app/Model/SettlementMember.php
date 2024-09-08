@@ -42,12 +42,14 @@ class SettlementMember extends Model
 {
     protected $table = 'settlement_member';
 
-    public static function getSettlementMember($member_id,$bonus_settlement_id)
+    public static function getSettlementMember($member,$bonus_settlement_id)
     {
-         $settlement_member = self::whereMemberId($member_id)->whereBonusSettlementId($bonus_settlement_id)->first();
+         $settlement_member = self::whereMemberId($member->id)->whereBonusSettlementId($bonus_settlement_id)->first();
          if(empty($settlement_member)){
              $settlement_member = new SettlementMember();
-             $settlement_member->member_id = $member_id;
+             $settlement_member->member_id = $member->id;
+             $settlement_member->shop_member_id = $member->shop_member_id;
+
              $settlement_member->bonus_settlement_id = $bonus_settlement_id;
              $settlement_member->status = 0;
              $settlement_member->jh = 0;

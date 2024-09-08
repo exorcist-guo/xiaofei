@@ -50,8 +50,10 @@ class LevelLog extends Model
     {
         if($type == 1){
             $level_before = $member->level;
+            $member->level = $level;
         }else{
             $level_before = $member->shop_level;
+            $member->shop_level = $level;
         }
 
         $level_log = new LevelLog();
@@ -61,6 +63,7 @@ class LevelLog extends Model
         $level_log->level_before = $level_before;
         $level_log->level_after = $level;
 
-        return $level_log->save();
+
+        return $level_log->save() && $member->save();
     }
 }

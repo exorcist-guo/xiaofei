@@ -37,6 +37,11 @@ class DivvyPvLogs extends Model
 {
     protected $table = 'divvy_pv_logs';
 
+    const STATUS_MAP = [
+        1 => '结算',
+    ];
+
+
     public static function changeIntegral($amount,$member,$type,$action,$related_id = 0,$remark = ''){
         /** @var Member $member */
         $amount = abs($amount);

@@ -43,6 +43,11 @@ Route::group([
 
 
     $router->resource('bonus-settlements', BonusSettlementController::class); //奖金结算
+    $router->resource('settlement-members', SettlementMemberController::class); //结算汇总
+    $router->resource('settlement-logs', SettlementLogController::class); //结算明细
+
+
+
 
     $router->resource('levellogs', LevelLogController::class); //等级记录
     $router->resource('shoplevellogs', ShopLevelLogController::class); //社区等级记录

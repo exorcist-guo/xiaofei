@@ -44,9 +44,19 @@ class SettlementLog extends Model
     const TYPE_MAP = [
         1 => '推新奖励',
         2 => '消费奖励',
+
+        3 => '极差奖励',
+        4 => '推荐奖励',
+
+        5 => '结算业绩',
+        6 => '促销奖励',
+        9 => '推荐促销',
+        7 => '服务奖励',
+        8 => '服务补贴',
+
     ];
 
-    public function addLog($amount,$yuan_amount,$settlement_member,$type,$related_id = 0,$remark = ''){
+    public static function addLog($amount,$yuan_amount,$ratio,$settlement_member,$type,$related_id = 0,$remark = ''){
         /** @var SettlementMember $settlement_member */
         $amount = abs($amount);
         switch ($type){
@@ -55,6 +65,33 @@ class SettlementLog extends Model
                 $balance_after = bcadd((string)$settlement_member->jh,(string)$amount,2);
                 $settlement_member->jh = $balance_after;
                 break;
+            case 3:
+                $balance_after = bcadd((string)$settlement_member->jc,(string)$amount,2);
+                $settlement_member->jc = $balance_after;
+                break;
+            case 4:
+                $balance_after = bcadd((string)$settlement_member->tj,(string)$amount,2);
+                $settlement_member->tj = $balance_after;
+                break;
+            case 5:
+                $balance_after = bcadd((string)$settlement_member->yj,(string)$amount,2);
+                $settlement_member->yj = $balance_after;
+                break;
+            case 6:
+            case 9:
+                $balance_after = bcadd((string)$settlement_member->cx,(string)$amount,2);
+                $settlement_member->cx = $balance_after;
+                break;
+            case 7:
+                $balance_after = bcadd((string)$settlement_member->fw,(string)$amount,2);
+                $settlement_member->fw = $balance_after;
+                break;
+            case 8:
+                $balance_after = bcadd((string)$settlement_member->bt,(string)$amount,2);
+                $settlement_member->bt = $balance_after;
+                break;
+            default :
+                return false;
         }
         $time = date('Y-m-d H:i:s');
         $log_data = [
@@ -63,6 +100,7 @@ class SettlementLog extends Model
             'type' => $type,
             'amount' => $amount,
             'yuan_amount' => $yuan_amount,
+            'ratio' => $ratio,
             'balance_after' => $balance_after,
             'remark' => $remark,
             'related_id' => $related_id,
