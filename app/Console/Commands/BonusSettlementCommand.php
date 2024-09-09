@@ -58,31 +58,32 @@ class BonusSettlementCommand extends Command
         }
         Redis::set($reids_lock,1,'ex',60);
 
-        $redis_start = 'command:bonus-settlement-start';
-        $bonus_settlement_id =  Redis::get($redis_start);
+        while (true){
+            $redis_start = 'command:bonus-settlement-start';
+            $bonus_settlement_id =  Redis::get($redis_start);
 //        $bonus_settlement_id = 2;
-        if($bonus_settlement_id){
-            Redis::del($redis_start);
+            if($bonus_settlement_id){
+                Redis::del($redis_start);
 
-            $is_open_chuxiao = config('dividend.is_open_chuxiao',0);
+                $is_open_chuxiao = config('dividend.is_open_chuxiao',0);
 
-            $bonus_settlement = BonusSettlement::whereId($bonus_settlement_id)->first();
-            if($bonus_settlement){
-                try{
-                    $start_time = $bonus_settlement->start_time;
-                    $end_time = $bonus_settlement->end_time;
-                    $bonus_settlement_id = $bonus_settlement->id;
-                }catch (\Exception $e){
-                    \Log::channel('bonus_settlement')->info('结算异常',[$e->getMessage()]);
-                }
-                $levels = Level::getLevels();
-                //获取可结算业绩
+                $bonus_settlement = BonusSettlement::whereId($bonus_settlement_id)->first();
+                if($bonus_settlement){
+                    try{
+                        $start_time = $bonus_settlement->start_time;
+                        $end_time = $bonus_settlement->end_time;
+                        $bonus_settlement_id = $bonus_settlement->id;
+                    }catch (\Exception $e){
+                        \Log::channel('bonus_settlement')->info('结算异常',[$e->getMessage()]);
+                    }
+                    $levels = Level::getLevels();
+                    //获取可结算业绩
 
-                //whereBetween('created_at',[$start_time,$end_time])-> 时间限制，正式需要调用
-                PvOrder::where('status',1)
-                    ->orderBy('id', 'asc')
-                    ->chunk(1000, function ($pv_orders)use($levels,$bonus_settlement_id,$is_open_chuxiao) {
-                        //模拟进单顺序结算
+                    //whereBetween('created_at',[$start_time,$end_time])-> 时间限制，正式需要调用
+                    PvOrder::where('status',1)
+                        ->orderBy('id', 'asc')
+                        ->chunk(1000, function ($pv_orders)use($levels,$bonus_settlement_id,$is_open_chuxiao) {
+                            //模拟进单顺序结算
                             foreach ($pv_orders as $pv_order){
                                 try{
                                     $pv_order->status = 2;
@@ -114,55 +115,60 @@ class BonusSettlementCommand extends Command
                                 }
                             }
 
+                        });
+
+                    //团队奖励结算
+                    $shop_levels = ShopLevel::getLevels();
+
+                    Member::where('shop_level','>',0)->chunk(500, function ($members)use($shop_levels,$bonus_settlement_id) {
+                        //模拟进单顺序结算
+                        foreach ($members as $user){
+                            try{
+                                //服务奖励，服务补贴
+                                $this->tuandui($user,$bonus_settlement_id,$shop_levels);
+
+                            }catch (\Exception $e){
+                                \Log::channel('bonus_settlement')->info('团队结算中异常',[$e->getMessage()]);
+                            }
+                        }
+
                     });
 
-                //团队奖励结算
-                $shop_levels = ShopLevel::getLevels();
+                    //发放奖励
+                    SettlementMember::where('bonus_settlement_id',$bonus_settlement_id)->where('status',0)->chunk(500, function ($SettlementMember) {
+                        //模拟进单顺序结算
+                        foreach ($SettlementMember as $settlement_member){
+                            try{
 
-                Member::where('shop_level','>',0)->chunk(500, function ($members)use($shop_levels,$bonus_settlement_id) {
-                    //模拟进单顺序结算
-                    foreach ($members as $user){
-                        try{
-                            //服务奖励，服务补贴
-                            $this->tuandui($user,$bonus_settlement_id,$shop_levels);
+                                //发放奖励
+                                $this->fafang($settlement_member);
 
-                        }catch (\Exception $e){
-                            \Log::channel('bonus_settlement')->info('团队结算中异常',[$e->getMessage()]);
+                            }catch (\Exception $e){
+                                \Log::channel('bonus_settlement')->info('发放奖励',[$e->getMessage()]);
+                            }
                         }
-                    }
 
-                });
-
-                //发放奖励
-                SettlementMember::where('bonus_settlement_id',$bonus_settlement_id)->where('status',0)->chunk(500, function ($SettlementMember) {
-                    //模拟进单顺序结算
-                    foreach ($SettlementMember as $settlement_member){
-                        try{
-
-                            //发放奖励
-                            $this->fafang($settlement_member);
-
-                        }catch (\Exception $e){
-                            \Log::channel('bonus_settlement')->info('发放奖励',[$e->getMessage()]);
-                        }
-                    }
-
-                });
+                    });
 
 
+
+                }
+
+                $new_bonus_settlement = new BonusSettlement();
+                $new_bonus_settlement->status = 20;
+                $new_bonus_settlement->admin_id = $bonus_settlement->admin_id;
+                $new_bonus_settlement->start_time = $bonus_settlement->start_time;
+                $new_bonus_settlement->end_time = $bonus_settlement->end_time;
+
+                $new_bonus_settlement->save();
 
             }
-
-            $new_bonus_settlement = new BonusSettlement();
-            $new_bonus_settlement->status = 20;
-            $new_bonus_settlement->admin_id = $bonus_settlement->admin_id;
-            $new_bonus_settlement->start_time = $bonus_settlement->start_time;
-            $new_bonus_settlement->end_time = $bonus_settlement->end_time;
-
-            $new_bonus_settlement->save();
-
+            sleep(3);
         }
-        sleep(1);
+
+
+
+
 
     }
 
