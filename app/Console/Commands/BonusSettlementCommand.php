@@ -56,6 +56,7 @@ class BonusSettlementCommand extends Command
             var_dump('已有进程');
             return ;
         }
+        Redis::set($reids_lock,1,'ex',60);
 
         $redis_start = 'command:bonus-settlement-start';
         $bonus_settlement_id =  Redis::get($redis_start);
@@ -148,7 +149,17 @@ class BonusSettlementCommand extends Command
 
                 });
 
+
+
             }
+
+            $new_bonus_settlement = new BonusSettlement();
+            $new_bonus_settlement->status = 20;
+            $new_bonus_settlement->admin_id = $bonus_settlement->admin_id;
+            $new_bonus_settlement->start_time = $bonus_settlement->start_time;
+            $new_bonus_settlement->end_time = $bonus_settlement->end_time;
+
+            $new_bonus_settlement->save();
 
         }
         sleep(1);

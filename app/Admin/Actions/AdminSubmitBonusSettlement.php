@@ -46,7 +46,6 @@ class AdminSubmitBonusSettlement extends Action
             $bonus_settlement->admin_id = ADMIN_ID;
             $bonus_settlement->start_time = $start_time.' 00:00:00';
             $bonus_settlement->end_time = $end_time.' 23:59:59';
-            $bonus_settlement->status = 0;
             $is_jie = BonusSettlement::whereDate('end_time', '>=',$start_time)->first();
             if($is_jie){
                 throw new BizException('该时间段已结算');
