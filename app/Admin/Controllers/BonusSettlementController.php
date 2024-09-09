@@ -28,6 +28,8 @@ class BonusSettlementController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new BonusSettlement());
+
+        $grid->model()->orderByDesc('id');
         $grid->disableCreateButton();
         $grid->disableActions();
         $grid->tools(function (Grid\Tools $tools) {

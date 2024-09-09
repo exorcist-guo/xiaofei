@@ -66,8 +66,11 @@ class AdminSubmitBonusSettlement extends Action
     {
         $this->date('start_time', '开始时间')->rules('required');
         $this->date('end_time', '结束时间')->rules('required');
+        $this->confirm('确定结算奖金？');
 
     }
+
+
 
 //    public function dialog()
 //    {
