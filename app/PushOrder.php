@@ -54,6 +54,7 @@ class PushOrder extends Model
         $push_order->related_id = $push_integral->id;
         $push_order->content = json_encode([
             'mobile' => $user->mobile,
+            'number' => $user->number,
             'amount' => $push_integral->amount,
             'star_amount' => $push_integral->star_amount,
         ]);
@@ -68,6 +69,7 @@ class PushOrder extends Model
         $push_order->related_id = $push_integral->id;
         $push_order->content = json_encode([
             'mobile' => $user->mobile,
+            'number' => $user->number,
             'amount' => $push_integral->amount,
             'dikou_amount' => $push_integral->dikou_amount,
         ]);
