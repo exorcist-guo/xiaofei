@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Model\Levellog;
+use App\Model\LevelLog;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -24,7 +24,7 @@ class ShopLevelLogController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Levellog());
+        $grid = new Grid(new LevelLog());
         $grid->model()->where('type',2)->orderByDesc('id');
         $grid->disableCreateButton();
         $grid->disableColumnSelector();
