@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\ChangeOrderJob;
 use App\Level;
 use App\Member;
+use App\Model\LevelLog;
 use App\PostMember;
 use App\Services\ForeignService;
 use App\Services\VerifyService;
@@ -50,8 +51,13 @@ class Test extends Command
      */
     public function handle()
     {
-        $user = Member::where('id',14)->first();
+
+
+        $user = Member::where('id',15)->first();
         ShopLevel::setShopLowerMember($user);
+
+
+
         exit;
          $a  = Level::getLevels();
 //        krsort($a);

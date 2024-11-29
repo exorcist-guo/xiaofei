@@ -192,11 +192,9 @@ class ChangeOrderJob implements ShouldQueue
                         $shop_number->status = 1;
                         $shop_number->save();
                     }
-
-                    LevelLog::addLevelLog($user,$content['level_after'],2,2);
                     $old_shop_level = $user->shop_level;
+                    LevelLog::addLevelLog($user,$content['level_after'],2,2);
                     $user->shop_level = $content['level_after'];
-                    $user->save();
                     $change_order->status = $success_status;
                     if($old_shop_level == 0){
                         ShopLevel::setShopLowerMember($user);
