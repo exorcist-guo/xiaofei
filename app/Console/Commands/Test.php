@@ -50,6 +50,9 @@ class Test extends Command
      */
     public function handle()
     {
+        $user = Member::where('id',14)->first();
+        ShopLevel::setShopLowerMember($user);
+        exit;
          $a  = Level::getLevels();
 //        krsort($a);
         var_dump($a);
