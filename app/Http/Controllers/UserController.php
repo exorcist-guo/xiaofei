@@ -28,7 +28,8 @@ class UserController extends Controller
     {
         $data = [
             'nation' => Member::getNations(),
-            'lang' => Member::getLangList()
+            'lang' => Member::getLangList(),
+            'certificate_type_name' => Member::getNtlw(),
         ];
         return $this->success('success', $data);
     }

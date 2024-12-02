@@ -155,7 +155,6 @@ class Member extends Authenticatable
     {
         return [
           1 => __('map.passport'),  //护照
-          2 => 'ID',
           3 => __('map.mobile'),
           4 => __('map.rests'),
         ];
