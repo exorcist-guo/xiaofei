@@ -359,12 +359,13 @@ class UserController extends Controller
             $password = $request->input('password');
             $inviteCode = $request->input('invite_mobile');
 
-//            $certificate_type = $request->input('certificate_type');
+            $certificate_type = $request->input('certificate_type');
             $nation = $request->input('nation');
 //            $mobile_nation = $request->input('mobile_nation');
             $lang = \App::getLocale();
             $name = $request->input('name');
-//            $id_number = $request->input('id_number');
+            $id_number = $request->input('id_number');
+            $real_name = $request->input('real_name');
 
 
 
@@ -398,12 +399,13 @@ class UserController extends Controller
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
 
-//                'certificate_type' => $certificate_type,
+                'certificate_type' => $certificate_type,
                 'nation' => $nation,
 //                'mobile_nation' => $mobile_nation,
                 'lang' => $lang,
-                'real_name' => $name,
-//                'id_number' => $id_number,
+                'nike_name' => $name,
+                'real_name' => $real_name,
+                'id_number' => $id_number,
                 'deep' => $parent->deep + 1,
                 'path' => $path,
             ];
