@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use think\api\Client;
 
@@ -607,6 +608,37 @@ class UserController extends Controller
         return $this->success('', [
             'url' => app('captcha')->create('math', true)
         ]);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        /** @var Member $user */
+        $user = $request->user();
+        $rules = [
+            'base64' => [
+                'required',
+//                sprintf("starts_with:%s", "base64")
+            ]
+        ];
+
+        $messages = [
+            'required' => '内容不能为空',
+//            'starts_with' => '错误的数据格式',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first());
+        }
+
+
+        Storage::disk('public')->makeDirectory('m');
+
+        $a = Storage::disk('public')->putFile('m', $request->file('base64'));
+//        var_dump($a);
+        return $this->success('上传成功', ['image_url' => Storage::disk('public')->url($a)]);
+
     }
 
 

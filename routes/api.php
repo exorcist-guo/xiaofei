@@ -18,6 +18,7 @@ Route::post('/cp', 'UserController@captcha');
 Route::post('/send/verify', 'UserController@sendVerifyGuest');
 Route::post('/user/login', 'UserController@passwordLogin');
 Route::post('/user/forget/password', 'UserController@forgetPassword');
+Route::post('/upload/image', 'UserController@uploadImage');
 
 Route::post('/proclamation/list', 'MessageController@proclamationList'); //反馈记录
 
