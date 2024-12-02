@@ -46,7 +46,7 @@ class PostMemberJob implements ShouldQueue
                 $group_number = $post_member->group_number;
                 $pid_shop_member_id = 0;
                 if($post_member->pid_id_number){
-                    $pp = PostMember::where('status','>',1)->where('mobile',$post_member->pid_id_number)->first();
+                    $pp = PostMember::where('status','>',1)->where('number',$post_member->pid_id_number)->first();
                     if($pp){
                         $parent = Member::whereNumber($pp->number)->first();
                         $pid = $parent->id;
@@ -100,8 +100,8 @@ class PostMemberJob implements ShouldQueue
             }elseif(in_array($post_member->status,[0,3,6])){
                 //验证数据
                 if($post_member->pid_id_number){
-                    $pp = PostMember::where('status','>',1)->where('mobile',$post_member->pid_id_number)->first();
-                    $pp2 = Member::whereMobile($post_member->is_disabled)->where('status','<','9')->first();
+                    $pp = PostMember::where('status','>',1)->where('number',$post_member->pid_id_number)->first();
+                    $pp2 = Member::whereNumber($post_member->is_disabled)->where('status','<','9')->first();
                     if(empty($pp) && empty($pp2)){
                         $post_member->status = 3;
                         $error .= '上级推荐人不存在。';
@@ -133,8 +133,8 @@ class PostMemberJob implements ShouldQueue
             }
 
             if($post_member->pid_id_number){
-               $pp = PostMember::where('status','>',1)->where('mobile',$post_member->pid_id_number)->first();
-               $pp2 = Member::whereMobile($post_member->pid_id_number)->where('is_disabled','<','9')->first();
+               $pp = PostMember::where('status','>',1)->where('number',$post_member->pid_id_number)->first();
+               $pp2 = Member::whereNumber($post_member->pid_id_number)->where('is_disabled','<','9')->first();
                if(empty($pp) && empty($pp2)){
                    $post_member->status = 3;
                    $error .= '上级推荐人不存在';
