@@ -107,7 +107,8 @@ class Member extends Authenticatable
     const IS_DISABLED_MAP = [
         0 => '正常',
         1 => '锁定',
-        9 => '删除',
+        5 => '待审核',
+        9 => '注销',
     ];
 
     const LOCK_SHOP_LEVEL_MAP = [

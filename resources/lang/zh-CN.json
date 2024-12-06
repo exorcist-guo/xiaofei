@@ -15,7 +15,7 @@
     "Id number": "证件号",
     "Last ip": "最后登录IP",
     "Last login": "最后登录时间",
-    "Is disabled": "锁定？",
+    "Is disabled": "状态",
     "Disabled at": "锁定时间",
     "Member id": "用户ID",
     "Action": "动作",
