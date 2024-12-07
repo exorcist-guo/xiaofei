@@ -6,7 +6,7 @@ use App\Services\ForeignService;
 use App\Traits\ApiResponseTrait;
 use Closure;
 
-class CheckForeign
+class LangExamine
 {
     use ApiResponseTrait;
     /**
@@ -18,19 +18,9 @@ class CheckForeign
      */
     public function handle($request, Closure $next)
     {
-
-        $data = $request->input();
-        $appid = $request->input('appid','');
-        if($appid != config('app.foreign.appid')){
-            return $this->error('appid不存在');
+        if($locale = $request->header('Language')){
+            \App::setLocale($locale);
         }
-        if(config('app.env') != 'local'){
-            $is_c = ForeignService::checksign($data);
-            if(!$is_c){
-                return $this->error('验签失败');
-            }
-        }
-
         return $next($request);
     }
 }
