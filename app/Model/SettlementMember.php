@@ -37,6 +37,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\model\SettlementMember whereYj($value)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\model\SettlementMember whereStatus($value)
+ * @property int $shop_member_id 所属社区
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementMember whereShopMemberId($value)
  */
 class SettlementMember extends Model
 {

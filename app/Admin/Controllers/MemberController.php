@@ -114,7 +114,7 @@ class MemberController extends AdminController
             $filter->column(1 / 2, function (Grid\Filter $filter) {
                 $filter->equal('level', __('Level'))->select(Level::getName());
 
-                $filter->equal('is_disabled', '封号？')->select([1 => '已封', 0 => '未封']);
+                $filter->equal('is_disabled', '状态')->select(Member::IS_DISABLED_MAP);
                 $filter->contains('real_name',__('Real name'));
                 $filter->contains('id_number',__('Id number'));
 
@@ -174,7 +174,7 @@ class MemberController extends AdminController
 //        $grid->column('last_ip', __('Last ip'));
         $grid->column('last_login', __('Last login'))->hide();
         $grid->column('is_disabled', __('Is disabled'))->using(
-            [0=>'正常',1=>'锁定']
+            Member::IS_DISABLED_MAP
         )->label([0=>'success',1=>'danger']);
 //        $grid->column('disabled_at', __('Disabled at'));
 

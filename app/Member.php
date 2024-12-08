@@ -107,7 +107,8 @@ class Member extends Authenticatable
     const IS_DISABLED_MAP = [
         0 => '正常',
         1 => '锁定',
-        5 => '待审核',
+        7 => '待审核',
+        8 => '审核失败',
         9 => '注销',
     ];
 
@@ -165,7 +166,7 @@ class Member extends Authenticatable
     //9 已删除
     public static function findByMobile($mobile)
     {
-        return Member::where('mobile', $mobile)->where('is_disabled','<',9)->first();
+        return Member::where('mobile', $mobile)->where('is_disabled','<',8)->first();
     }
 
     public function setParent($inviteUser)

@@ -454,5 +454,10 @@ return [
                 'height' => 500,
             ]
         ],
+        'grid-lightbox' => [
+
+            // Set to `false` if you want to disable this extension
+            'enable' => true,
+        ],
     ],
 ];

@@ -6,6 +6,7 @@ use App\Auth\JwtUserProvider;
 use App\Exceptions\BizException;
 use App\LoginLog;
 use App\Member;
+use App\Model\MemberExamine;
 use App\PushOrder;
 use App\Services\VerifyService;
 use App\Traits\ApiResponseTrait;
@@ -213,8 +214,14 @@ class UserController extends Controller
             $user = Member::where('mobile',$mobile)
 //                ->orWhere('number',$mobile)
                 ->orWhere('id_number',$mobile)->first();
+            if($user->is_disabled == 8){
+                $msg = MemberExamine::whereMemberId($user->id)->orderByDesc('id')->value('msg');
+                throw new BizException('审核失败，请重新注册。失败原因：'.$msg);
+            }elseif ($user->is_disabled == 7){
+                throw new BizException('等待管理员审核');
+            }
             if (!$user || $user->is_disabled > 8) {
-                throw new BizException(__('messages.user_not_found').'1');
+                throw new BizException(__('messages.user_not_found'));
             }
 
             if($user->is_disabled) {
@@ -319,6 +326,9 @@ class UserController extends Controller
             'nation' => [
                 'required',
             ],
+            'certificate_image' => [
+                'required',
+            ],
 //            'mobile_nation' => [
 //                'required',
 //            ],
@@ -345,6 +355,7 @@ class UserController extends Controller
             'invite_mobile.exists' => '邀请人不存在',
             'verify_code' => '验证码错误',
             'password.between' => '密码长度必须为6到12个字符',
+            'required.certificate_image' => '证件照不能为空'
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -359,7 +370,7 @@ class UserController extends Controller
             $mobile = $request->input('mobile');
             $password = $request->input('password');
             $inviteCode = $request->input('invite_mobile');
-
+            $certificate_image = $request->input('certificate_image');
             $certificate_type = $request->input('certificate_type');
             $nation = $request->input('nation');
 //            $mobile_nation = $request->input('mobile_nation');
@@ -404,16 +415,41 @@ class UserController extends Controller
                 'nation' => $nation,
 //                'mobile_nation' => $mobile_nation,
                 'lang' => $lang,
-                'nike_name' => $name,
+//                'nike_name' => $name,
                 'real_name' => $real_name,
                 'id_number' => $id_number,
                 'deep' => $parent->deep + 1,
                 'path' => $path,
+                'is_disabled' => 7,
+                'certificate_image' => $certificate_image,
             ];
-            $id = DB::table('members')->insertGetId($data);
-            if (!$id) {
-                throw new BizException('保存用户信息失败');
+            $member = DB::table('members')->where('mobile',$mobile)->where('is_disabled',8)->first();
+            if($member){
+                DB::table('members')->where('id',$member->id)->update($data);
+                $id = $member->id;
+            }else{
+                $id = DB::table('members')->insertGetId($data);
+                if (!$id) {
+                    throw new BizException('保存用户信息失败');
+                }
             }
+
+            $data_e = [
+                'mobile' => $mobile,
+                'number' => $data['number'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'certificate_type' => $certificate_type,
+                'nation' => $nation,
+//                'lang' => $lang,
+                'real_name' => $real_name,
+                'id_number' => $id_number,
+                'is_disabled' => 7,
+                'member_id' => $id,
+                'certificate_image' => $certificate_image,
+            ];
+            Db::table('member_examine')->insert($data_e);
+
            /*
             $suffix =  $id%Member::SUBNUM;
             $data['id'] = $id;

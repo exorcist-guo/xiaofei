@@ -11,6 +11,7 @@ use App\Services\ForeignService;
 use App\Services\VerifyService;
 use App\ShopLevel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use think\api\Client;
 
@@ -53,9 +54,10 @@ class Test extends Command
     {
 
 
-        $user = Member::where('id',15)->first();
-        ShopLevel::setShopLowerMember($user);
 
+        $member = DB::table('members')->where('id',1)->first();
+
+        var_dump($member->id);
 
 
         exit;

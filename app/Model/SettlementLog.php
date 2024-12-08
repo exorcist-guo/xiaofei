@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementLog whereBalanceBefore($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementLog whereStatus($value)
+ * @property float $balance_after 变动后数量
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementLog whereBalanceAfter($value)
  */
 class SettlementLog extends Model
 {
