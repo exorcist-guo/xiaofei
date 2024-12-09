@@ -48,6 +48,7 @@ class ChangeOrder extends Model
         8 => '社区等级防降级',
         9 => '冻结消费券修改',
         10 => '可用消费券修改',
+        11 => '个人结算业绩修改',
     ];
 
     const ASSET_TYPE = [
@@ -55,6 +56,7 @@ class ChangeOrder extends Model
         4 => '营业额',
         9 => '冻结消费券',
         10 => '可用消费券',
+        11 => '个人结算业绩',
     ];
 
     const STATUS_MAP = [
@@ -313,6 +315,15 @@ class ChangeOrder extends Model
                         $view = "减少可用消费劵:". abs($content['amount']);
                     }
 
+                }
+                break;
+            case 11:
+                if(isset($content['amount'])){
+                    if($content['amount']>0 ){
+                        $view = "增加个人已结算营业额:". abs($content['amount']);
+                    }else{
+                        $view = "减少个人已结算营业额:". abs($content['amount']);
+                    }
                 }
                 break;
             default:

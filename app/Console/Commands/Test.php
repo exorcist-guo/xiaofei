@@ -55,9 +55,9 @@ class Test extends Command
 
 
 
-        $member = DB::table('members')->where('id',1)->first();
+        $member = Member::whereId(1)->first();
 
-        var_dump($member->id);
+        Member::checkLevel($member);
 
 
         exit;

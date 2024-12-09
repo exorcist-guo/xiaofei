@@ -33,6 +33,7 @@ Route::group([
     $router->resource('change-orders-t', ChangeOrderTController::class); //推荐人改变申请
     $router->resource('change-orders-i', ChangeOrderIController::class); //积分变动申请
     $router->resource('change-orders-p', ChangeOrderPController::class); //营业额变动申请
+    $router->resource('change-orders-pt', ChangeOrderPtController::class); //特殊已结算营业额变动申请
     $router->resource('change-orders-d', ChangeOrderDController::class); //消费券变动申请
     $router->resource('change-orders-l', ChangeOrderLController::class); //会员等级变动申请
     $router->resource('change-orders-shop', ChangeOrderShopController::class); //社区等级修改

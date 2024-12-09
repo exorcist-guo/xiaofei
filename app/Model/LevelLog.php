@@ -39,6 +39,7 @@ class LevelLog extends Model
     const ACTION_MAP = [
         1 => '条件升级',
         2 => '后台调整',
+        3 => '调整业绩',
         12 => '条件降级',
     ];
 

@@ -163,6 +163,8 @@ class MemberController extends AdminController
         $grid->column('integral', __('Integral'))->sortable();
         $grid->column('all_integral', __('All integral'))->sortable();
         $grid->column('pv', __('Pv'))->sortable();
+        $grid->column('divvy_pv', __('Divvy Pv'))->hide();
+        $grid->column('divvy_pv_t', __('Divvy Pv T'))->hide();
         $grid->column('dikouquan', __('Dikouquan'))->sortable();
         $grid->column('dikouquan_k', __('Dikouquan_k'))->sortable();
 //        $grid->column('certificate_type', __('Certificate Type'))->using(Member::getNtlw());

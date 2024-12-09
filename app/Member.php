@@ -285,7 +285,7 @@ class Member extends Authenticatable
                 $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
                 $all_divvy_pv = $all_divvy_pv + $member->divvy_pv;
                 foreach ($levels as $level){
-                    if($all_divvy_pv > $level['pv']){
+                    if(($all_divvy_pv + $member->divvy_pv_t) > $level['pv']){
                         $level_j = $level['id'];
                         break;
                     }
@@ -294,6 +294,36 @@ class Member extends Authenticatable
                     LevelLog::addLevelLog($member,$level_j,1,1);
                 }
 
+            }
+
+        }
+    }
+
+    public static function checkAdminLevel($user,$levels = [],$action = 3){
+        if(empty($levels)){
+            $levels = Level::getLevels();
+        }
+
+        $user_id = $user->id;
+        $member = Member::whereId($user_id)->first();
+        if($member){
+            $level_j = 0;
+            if($member->path){
+                $path = $member->path . $member->id.'/';
+            }else{
+                $path = '/'.$member->id.'/';
+            }
+
+            $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
+            $all_divvy_pv = $all_divvy_pv + $member->divvy_pv + $member->divvy_pv_t;
+            foreach ($levels as $level){
+                if($all_divvy_pv > $level['pv']){
+                    $level_j = $level['id'];
+                    break;
+                }
+            }
+            if($level_j){
+                LevelLog::addLevelLog($member,$level_j,$action,1);
             }
 
         }

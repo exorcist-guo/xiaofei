@@ -229,6 +229,15 @@ class ChangeOrderJob implements ShouldQueue
                     $change_order->status = $success_status;
                 }
                 break;
+            case 11:
+                //特殊已结算业绩
+                $user->divvy_pv_t = $user->divvy_pv_t + $content['amount'];
+                $result = $user->save();
+                if($result){
+                    Member::checkAdminLevel($user);
+                    $change_order->status = $success_status;
+                }
+                break;
 
         }
 
