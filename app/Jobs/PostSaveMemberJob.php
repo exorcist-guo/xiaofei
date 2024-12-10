@@ -107,6 +107,19 @@ class PostSaveMemberJob implements ShouldQueue
                         $error .= "状态{$val[1]}不存在";
                     }
                     break;
+                case 11:
+
+                    $content = [
+                        'amount' => $val[1]??0,
+                        'remark' => '导入增加',
+                    ];
+                    if($content['amount'] < 0){
+                        $content['remark'] = '导入减少';
+                    }
+                    $content = json_encode($content);
+                    $post_save_member->content = $content;
+
+                    break;
 
                 default :
                     $error .= "不能修改{$val[0]}";
