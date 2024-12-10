@@ -215,121 +215,126 @@ class ChangeOrder extends Model
     public static function getContentView($content,$type){
         $view = '';
         $content = json_decode($content,true);
+        try{
+            switch ($type){
+                case 1:
+                    $nation = Member::getNations();
+                    $certificate_type = Member::getNtlw();
+                    foreach ($content as $key => $val){
+                        if($key == 'nation'){
+                            $view .= "国家由:{$nation[$content[$key.'_old']]}改为:{$nation[$val]}<br\>";
+                        }
+                        if($key == 'certificate_type'){
+                            $view .= "证件类型由:{$certificate_type[$content[$key.'_old']]}改为:{$certificate_type[$val]}<br\>";
+                        }
+                        if($key == 'mobile'){
+                            $view .= "手机号由:{$content[$key.'_old']}修改为:{$val}<br\>";
+                        }
+                        if($key == 'real_name'){
+                            $view .= "姓名由:{$content[$key.'_old']}修改为:{$val}<br\>";
+                        }
+                        if($key == 'id_number'){
+                            $view .= "证件号由:{$content[$key.'_old']}修改为:{$val}<br\>";
+                        }
+                        if($key == 'password'){
+                            $view .= "登录密码修改为:{$val}<br\>";
+                        }
+                        if($key == 'transaction_password'){
+                            $view .= "操作密码修改为:{$val}<br\>";
+                        }
+                    }
+                    break;
+                case 2:
 
-        switch ($type){
-            case 1:
-                $nation = Member::getNations();
-                $certificate_type = Member::getNtlw();
-                foreach ($content as $key => $val){
-                    if($key == 'nation'){
-                        $view .= "国家由:{$nation[$content[$key.'_old']]}改为:{$nation[$val]}<br\>";
-                    }
-                    if($key == 'certificate_type'){
-                        $view .= "证件类型由:{$certificate_type[$content[$key.'_old']]}改为:{$certificate_type[$val]}<br\>";
-                    }
-                    if($key == 'mobile'){
-                        $view .= "手机号由:{$content[$key.'_old']}修改为:{$val}<br\>";
-                    }
-                    if($key == 'real_name'){
-                        $view .= "姓名由:{$content[$key.'_old']}修改为:{$val}<br\>";
-                    }
-                    if($key == 'id_number'){
-                        $view .= "证件号由:{$content[$key.'_old']}修改为:{$val}<br\>";
-                    }
-                    if($key == 'password'){
-                        $view .= "登录密码修改为:{$val}<br\>";
-                    }
-                    if($key == 'transaction_password'){
-                        $view .= "操作密码修改为:{$val}<br\>";
-                    }
-                }
-                break;
-            case 2:
+                    if(isset($content['level_before']) && isset($content['level_after'])){
+                        $view = "原等级:【{$content['level_before']}】调整为等级【{$content['level_after']}】";
 
-                if(isset($content['level_before']) && isset($content['level_after'])){
-                    $view = "原等级:【{$content['level_before']}】调整为等级【{$content['level_after']}】";
+                    }
+                    break;
+                case 3:
+                    if(isset($content['amount'])){
+                        if($content['amount']>0 ){
+                            $view = "增加消费券:". abs($content['amount']);
+                        }else{
+                            $view = "减少消费券:". abs($content['amount']);
+                        }
 
-                }
-                break;
-            case 3:
-                if(isset($content['amount'])){
-                    if($content['amount']>0 ){
-                        $view = "增加消费券:". abs($content['amount']);
-                    }else{
-                        $view = "减少消费券:". abs($content['amount']);
                     }
+                    break;
+                case 4:
+                    if(isset($content['amount'])){
+                        if($content['amount']>0 ){
+                            $view = "增加营业额:". abs($content['amount']);
+                        }else{
+                            $view = "减少营业额:". abs($content['amount']);
+                        }
+                    }
+                    break;
+                case 5:
+                    if(isset($content['status_before']) && isset($content['status_after'])){
+                        $status_name = Member::IS_DISABLED_MAP;
+                        $view = "申请会员状态【{$status_name[$content['status_before']]}】变更成【{$status_name[$content['status_after']]}】";
+                    }
+                    break;
+                case 6:
+                    if(isset($content['pid_before']) && isset($content['pid_after'])){
+                        $mobile_before = Member::whereId($content['pid_before'])->value('mobile');
+                        $mobile_after = Member::whereId($content['pid_after'])->value('mobile');
+                        $view = "上级{$mobile_before}变更成{$mobile_after}";
+                    }
+                    break;
+                case 7:
+                    if(isset($content['level_before']) && isset($content['level_after'])){
+                        $view = "社群原等级:【{$content['level_before']}】调整为等级【{$content['level_after']}】";
+                        if(!empty($content['zuohao'])){
+                            $view .= '组号为：'.$content['zuohao'];
+                        }
+                    }
+                    break;
+                case 8:
+                    if(isset($content['status_before']) && isset($content['status_after'])){
+                        $status_name = Member::LOCK_SHOP_LEVEL_MAP;
+                        $view = "申请社群防降级【{$status_name[$content['status_before']]}】变更成【{$status_name[$content['status_after']]}】";
+                    }
+                    break;
+                case 9:
+                    if(isset($content['amount'])){
+                        if($content['amount']>0 ){
+                            $view = "增加冻结消费劵:". abs($content['amount']);
+                        }else{
+                            $view = "减少冻结消费劵:". abs($content['amount']);
+                        }
 
-                }
-                break;
-            case 4:
-                if(isset($content['amount'])){
-                    if($content['amount']>0 ){
-                        $view = "增加营业额:". abs($content['amount']);
-                    }else{
-                        $view = "减少营业额:". abs($content['amount']);
                     }
-                }
-                break;
-            case 5:
-                if(isset($content['status_before']) && isset($content['status_after'])){
-                    $status_name = Member::IS_DISABLED_MAP;
-                    $view = "申请会员状态【{$status_name[$content['status_before']]}】变更成【{$status_name[$content['status_after']]}】";
-                }
-                break;
-            case 6:
-                if(isset($content['pid_before']) && isset($content['pid_after'])){
-                    $mobile_before = Member::whereId($content['pid_before'])->value('mobile');
-                    $mobile_after = Member::whereId($content['pid_after'])->value('mobile');
-                    $view = "上级{$mobile_before}变更成{$mobile_after}";
-                }
-                break;
-            case 7:
-                if(isset($content['level_before']) && isset($content['level_after'])){
-                    $view = "社群原等级:【{$content['level_before']}】调整为等级【{$content['level_after']}】";
-                    if(!empty($content['zuohao'])){
-                        $view .= '组号为：'.$content['zuohao'];
-                    }
-                }
-                break;
-            case 8:
-                if(isset($content['status_before']) && isset($content['status_after'])){
-                    $status_name = Member::LOCK_SHOP_LEVEL_MAP;
-                    $view = "申请社群防降级【{$status_name[$content['status_before']]}】变更成【{$status_name[$content['status_after']]}】";
-                }
-                break;
-            case 9:
-                if(isset($content['amount'])){
-                    if($content['amount']>0 ){
-                        $view = "增加冻结消费劵:". abs($content['amount']);
-                    }else{
-                        $view = "减少冻结消费劵:". abs($content['amount']);
-                    }
+                    break;
+                case 10:
+                    if(isset($content['amount'])){
+                        if($content['amount']>0 ){
+                            $view = "增加可用消费劵:". abs($content['amount']);
+                        }else{
+                            $view = "减少可用消费劵:". abs($content['amount']);
+                        }
 
-                }
-                break;
-            case 10:
-                if(isset($content['amount'])){
-                    if($content['amount']>0 ){
-                        $view = "增加可用消费劵:". abs($content['amount']);
-                    }else{
-                        $view = "减少可用消费劵:". abs($content['amount']);
                     }
-
-                }
-                break;
-            case 11:
-                if(isset($content['amount'])){
-                    if($content['amount']>0 ){
-                        $view = "增加个人已结算营业额:". abs($content['amount']);
-                    }else{
-                        $view = "减少个人已结算营业额:". abs($content['amount']);
+                    break;
+                case 11:
+                    if(isset($content['amount'])){
+                        if($content['amount']>0 ){
+                            $view = "增加个人已结算营业额:". abs($content['amount']);
+                        }else{
+                            $view = "减少个人已结算营业额:". abs($content['amount']);
+                        }
                     }
-                }
-                break;
-            default:
-                return false;
+                    break;
+                default:
+                    return false;
 
+            }
+        }catch (\Exception $e){
+            $view = '错误数据：'.var_export($content,true);
         }
+
+
 
         return  $view;
 

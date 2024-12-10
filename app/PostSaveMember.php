@@ -61,6 +61,7 @@ class PostSaveMember extends Model
         8 => '社区等级防降级',
         9 => '冻结消费券修改',
         10 => '可用消费券修改',
+        11 => '个人结算业绩修改',
     ];
 
 
@@ -72,6 +73,7 @@ class PostSaveMember extends Model
         '社区等级' => 7,
         '冻结消费券' => 9,
         '可用消费券' => 10,
+        '个人结算业绩' => 11,
     ];
 
     public function operator()
