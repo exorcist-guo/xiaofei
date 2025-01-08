@@ -31,7 +31,7 @@ class AdminAddMember extends Form
         $mobile = $request->input('mobile','');
         $real_name = $request->input('real_name','');
         $id_number = $request->input('id_number','');
-        $password = $request->input('password ','');
+        $password = $request->input('password','');
 
         try{
             $parent = Member::whereMobile($pid_mobile)->orWhere('number',$pid_mobile)->first();
