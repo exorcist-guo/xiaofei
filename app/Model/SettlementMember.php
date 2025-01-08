@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Traits\BelongsToMember;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -42,6 +43,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SettlementMember extends Model
 {
+    use BelongsToMember;
     protected $table = 'settlement_member';
 
     public static function getSettlementMember($member,$bonus_settlement_id)

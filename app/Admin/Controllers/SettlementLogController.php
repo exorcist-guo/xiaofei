@@ -52,6 +52,7 @@ class SettlementLogController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('bonus_settlement_id', __('Bonus settlement id'));
         $grid->column('member_id', __('Member id'));
+        $grid->column('member.number', __('Number'));
         $grid->column('type', __('Type'))->using(SettlementLog::TYPE_MAP);
         $grid->column('amount', __('Amount'))->totalRow();
         $grid->column('balance_after', __('Balance after'));

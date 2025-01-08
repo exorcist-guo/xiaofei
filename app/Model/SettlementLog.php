@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Traits\BelongsToMember;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -41,6 +42,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SettlementLog extends Model
 {
+    use BelongsToMember;
     protected $table = 'settlement_log';
 
     const TYPE_MAP = [

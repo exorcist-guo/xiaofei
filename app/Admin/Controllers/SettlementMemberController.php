@@ -51,6 +51,7 @@ class SettlementMemberController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('bonus_settlement_id', __('Bonus settlement id'));
         $grid->column('member_id', __('Member id'));
+        $grid->column('member.number', __('Number'));
         $grid->column('shop_member_id', __('Shop member id'));
         $grid->column('status', __('Status'));
         $grid->column('jh', __('Jh'));

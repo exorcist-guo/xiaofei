@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\MessageBag;
 
 class ShopNumberController extends AdminController
 {
@@ -75,6 +76,39 @@ class ShopNumberController extends AdminController
     protected function form()
     {
         $form = new Form(new ShopNumber());
+
+        $form->saving(function (Form $form) {
+            //保存前回掉
+
+            //获取提交数据
+            $data = \request()->input();
+
+            $message = '';
+            if(!empty($data['number'])){
+                if(strlen($data['number']) != 4){
+                    $message = '组号必须是4位';
+
+                }
+
+                $a = ShopNumber::whereNumber($data['number'])->first();
+                if($a){
+                    $message = '组号不能重复';
+
+                }
+            }
+            if($message){
+                $error = new MessageBag([
+                    'title'   => '错误',
+                    'message' => $message,
+                ]);
+                return back()->with(compact('error'));
+            }
+
+
+        });
+
+
+
 
 //        $form->number('member_id', __('Member id'));
         $form->number('number', __('Number Z'));
