@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Model\Levellog;
+use App\Model\LevelLog;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -24,7 +24,7 @@ class LevelLogController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Levellog());
+        $grid = new Grid(new LevelLog());
         $grid->model()->where('type',1)->orderByDesc('id');
         $grid->disableCreateButton();
         $grid->disableColumnSelector();
@@ -41,7 +41,7 @@ class LevelLogController extends AdminController
 
             });
             $filter->column(1/2, function(Grid\Filter $filter){
-                $filter->equal('action', '类型')->select(Levellog::ACTION_MAP);
+                $filter->equal('action', '类型')->select(LevelLog::ACTION_MAP);
                 $filter->between('created_at',__('Created at'))->datetime();
             });
         });
@@ -49,7 +49,7 @@ class LevelLogController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
-        $grid->column('action', __('Action'))->using(Levellog::ACTION_MAP);
+        $grid->column('action', __('Action'))->using(LevelLog::ACTION_MAP);
 //        $grid->column('type', __('Type'));
         $grid->column('level_before', __('Level before'));
         $grid->column('level_after', __('Level after'));
@@ -67,7 +67,7 @@ class LevelLogController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Levellog::findOrFail($id));
+        $show = new Show(LevelLog::findOrFail($id));
 
         $show->field('id', __('Id'));
         $show->field('member_id', __('Member id'));
@@ -88,7 +88,7 @@ class LevelLogController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Levellog());
+        $form = new Form(new LevelLog());
 
 //        $form->number('member_id', __('Member id'));
 //        $form->number('action', __('Action'));
