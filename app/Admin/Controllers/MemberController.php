@@ -8,6 +8,7 @@ use App\Admin\Actions\Member\AdminAdjustMemberAssetAction;
 use App\Admin\Actions\Member\AdminAdjustMemberLevelAction;
 use App\Admin\Actions\Member\AdminAdjustMemberStatusAction;
 use App\Admin\Actions\Member\AdminAdjustShopLevelAction;
+use App\Admin\Actions\Member\AdminDikouquanTransfer;
 use App\Admin\Actions\Member\AdminSaveMemberAction;
 use App\Admin\Actions\Member\AdminSavePidAction;
 use App\Admin\Actions\MemberIsDisabledAction;
@@ -71,6 +72,10 @@ class MemberController extends AdminController
 
             if (Admin::user()->can('change-shop-level')) {
                 $actions->add(new AdminAdjustShopLevelAction());
+            }
+
+            if (Admin::user()->can('dikouquan-transfer')) {
+                $actions->add(new AdminDikouquanTransfer());
             }
         });
 

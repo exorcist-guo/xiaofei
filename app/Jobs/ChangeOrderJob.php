@@ -12,11 +12,13 @@ use App\Model\ShopNumber;
 use App\PostSaveMember;
 use App\PvLogs;
 use App\ShopLevel;
+use App\Transfer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Redis;
 
 class ChangeOrderJob implements ShouldQueue
 {
@@ -173,7 +175,7 @@ class ChangeOrderJob implements ShouldQueue
                     $user->save();
                     $change_order->status = $success_status;
                 }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     \Log::channel('user')->info('网体移动失败', [$e->getMessage()]);
                 }
                 break;
@@ -236,6 +238,46 @@ class ChangeOrderJob implements ShouldQueue
                 if($result){
                     Member::checkAdminLevel($user);
                     $change_order->status = $success_status;
+                }
+                break;
+            case 12:
+                //转账消费券
+                if($content['amount'] > 0){
+                    try{
+                        \DB::transaction(function() use ($content, $user){
+                            $to_user = Member::where('number',$content['to_number'])->first();
+                            $amount = $content['amount'];
+                            if($amount <= 0){
+                                throw new BizException('数量有误');
+                            }
+                            $member = Member::whereId($user->id)->first();
+                            if($member->dikouquan_k < $amount){
+                                throw new BizException('数量不足');
+                            }
+                            //生成转账记录
+                            $ransfer = new Transfer();
+                            $ransfer->member_id = $member->id;
+                            $ransfer->c_member_id = $to_user->id;
+                            $ransfer->amount = $amount;
+                            $ransfer->fee = 0;
+                            $ransfer->actual_amount = $amount;
+                            $ransfer->save();
+                            $related_id = $ransfer->id;
+                            //数量变动
+                            $remark = '转出到'.$to_user->mobile;
+                            DikouquanLog::changeIntegralK($amount,$member,0,16,$related_id,$remark);
+                            $remark = $member->mobile.'转入';
+                            DikouquanLog::changeIntegralK($amount,$to_user,1,6,$related_id,$remark);
+                        });
+                        $change_order->status = $success_status;
+
+                    } catch (\Exception $e) {
+                        $change_order->status = 0;
+                        $content['error_msg'] = $e->getMessage();
+                        $change_order->content = json_encode($content);
+                    }
+
+
                 }
                 break;
 

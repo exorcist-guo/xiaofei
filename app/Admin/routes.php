@@ -37,6 +37,7 @@ Route::group([
     $router->resource('change-orders-d', ChangeOrderDController::class); //消费券变动申请
     $router->resource('change-orders-l', ChangeOrderLController::class); //会员等级变动申请
     $router->resource('change-orders-shop', ChangeOrderShopController::class); //社区等级修改
+    $router->resource('change-orders-tr', ChangeOrderTrController::class); //消费券转账申请
 
     //导入
     $router->resource('post-members', PostMemberController::class);  //会员导入

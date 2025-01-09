@@ -49,6 +49,7 @@ class ChangeOrder extends Model
         9 => '冻结消费券修改',
         10 => '可用消费券修改',
         11 => '个人结算业绩修改',
+        12 => '消费券转账申请',
     ];
 
     const ASSET_TYPE = [
@@ -212,6 +213,23 @@ class ChangeOrder extends Model
 
     }
 
+    public static function Transfer($user,$amount,$to_user)
+    {
+        $content = [
+            'amount' => $amount,
+            'to_number' => $to_user->number
+        ];
+        $content = json_encode($content);
+        $change_order = new ChangeOrder();
+        $change_order->type = 12;
+        $change_order->member_id = $user->id;
+        $change_order->admin_id = ADMIN_ID;
+        $change_order->audite_admin_id = 0;
+        $change_order->status = 0;
+        $change_order->content = $content;
+        return $change_order->save();
+    }
+
     public static function getContentView($content,$type){
         $view = '';
         $content = json_decode($content,true);
@@ -326,12 +344,20 @@ class ChangeOrder extends Model
                         }
                     }
                     break;
+                case 12:
+                    if(isset($content['amount']) && isset($content['to_number'])){
+                        $view = "转账消费券：{$content['amount']} 到账号：{$content['to_number']}";
+                    }
+                    break;
                 default:
                     return false;
 
             }
         }catch (\Exception $e){
             $view = '错误数据：'.var_export($content,true);
+        }
+        if(isset($content['error_msg'])){
+            $view .= '通过失败原因：'.$content['error_msg'];
         }
 
 
