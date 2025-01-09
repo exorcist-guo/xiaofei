@@ -56,6 +56,7 @@ Route::group([
     $router->resource('shop-numbers', ShopNumberController::class); //组号列表
 
     $router->resource('member-examines', MemberExamineController::class); //待审核会员
+    $router->resource('messages', MessageController::class); //留言管理
 
 
 //php artisan admin:make PostMemberController --model=App\PostMember  --title=会员导入

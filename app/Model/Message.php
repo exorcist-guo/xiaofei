@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Traits\BelongsToMember;
+use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -47,5 +48,15 @@ class Message extends Model
         2 => '提现',
         3 => '其他问题咨询',
     ];
+
+    const  STATUS_MAP = [
+        0 => '待回复',
+        1 => '已回复',
+    ];
+
+    public function operator()
+    {
+        return $this->belongsTo(Administrator::class, 'admin_id', 'id');
+    }
 
 }
