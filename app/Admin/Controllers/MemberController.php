@@ -43,7 +43,7 @@ class MemberController extends AdminController
         $grid->expandFilter();
         $grid->enableHotKeys();
 
-        $grid->actions(function (Grid\Displayers\Actions $actions) {
+        $grid->actions(function (Grid\Displayers\DropdownActions $actions) {
             $actions->disableDelete();
             $actions->disableEdit();
             $actions->disableView();

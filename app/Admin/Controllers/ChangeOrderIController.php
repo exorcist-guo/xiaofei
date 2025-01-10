@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Batch\BatchCheckChangeOrder;
 use App\Admin\Actions\Member\CheckChangeOrder;
 use App\ChangeOrder;
 use Encore\Admin\Facades\Admin;
@@ -49,8 +50,8 @@ class ChangeOrderIController extends AdminController
         });
         $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
             $batchActions->disableDelete();
-            if (Admin::user()->can('disable-member')) {
-//                $batchActions->add(new AdminBatchRemoveMembersToBlackList());
+            if (Admin::user()->can('check_save-member')) {
+                $batchActions->add(new BatchCheckChangeOrder());
             }
 
         });
