@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'h5url' => env('H5_URL', 'http://q.queryagency.com'),
 
     'asset_url' => env('ASSET_URL', null),
     'foreign' => [

@@ -379,7 +379,12 @@ class UserController extends Controller
             $id_number = $request->input('id_number');
             $real_name = $request->input('real_name');
 
-
+            if(!empty($id_number)){
+                $is_user = Member::where('is_disabled','<',9)->Where('id_number',$id_number)->first();
+                if($is_user){
+                    throw new BizException('该证件号已被注册');
+                }
+            }
 
             /** @var Member $parent */
             $inviteCode = strtolower($inviteCode);

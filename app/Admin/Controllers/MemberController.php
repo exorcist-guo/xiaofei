@@ -9,10 +9,12 @@ use App\Admin\Actions\Member\AdminAdjustMemberLevelAction;
 use App\Admin\Actions\Member\AdminAdjustMemberStatusAction;
 use App\Admin\Actions\Member\AdminAdjustShopLevelAction;
 use App\Admin\Actions\Member\AdminDikouquanTransfer;
+use App\Admin\Actions\Member\AdminLoginMemberAction;
 use App\Admin\Actions\Member\AdminSaveMemberAction;
 use App\Admin\Actions\Member\AdminSavePidAction;
 use App\Admin\Actions\MemberIsDisabledAction;
 use App\Admin\Actions\Post\ImportMemberPost;
+use App\Auth\JwtUserProvider;
 use App\Level;
 use App\Member;
 use Encore\Admin\Controllers\AdminController;
@@ -42,6 +44,7 @@ class MemberController extends AdminController
         $grid->disableCreateButton();
         $grid->expandFilter();
         $grid->enableHotKeys();
+        $grid->fixColumns(3, -1);
 
         $grid->actions(function (Grid\Displayers\DropdownActions $actions) {
             $actions->disableDelete();
@@ -77,6 +80,10 @@ class MemberController extends AdminController
             if (Admin::user()->can('dikouquan-transfer')) {
                 $actions->add(new AdminDikouquanTransfer());
             }
+
+            if (Admin::user()->can('save-member')) {
+                $actions->add(new AdminLoginMemberAction());
+            }
         });
 
         $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
@@ -93,11 +100,11 @@ class MemberController extends AdminController
         $grid->filter(function (Grid\Filter $filter) {
 
             $filter->column(1 / 2, function (Grid\Filter $filter) {
-                $filter->contains('mobile', '手机');
+                $filter->contains('mobile', '注册邮箱');
                 $filter->equal('pid', 'PID');
                 $filter->equal('number',  __('Number'));
                 $filter->between('created_at', __('Created at'))->datetime();
-
+                $filter->equal('nation',  __('Nation'))->select(Member::getNations());
                 $filter->where(function ($query) {
                     $parent = Member::find($this->input);
                     if (!$parent) {
@@ -123,6 +130,9 @@ class MemberController extends AdminController
                 $filter->contains('real_name',__('Real name'));
                 $filter->contains('id_number',__('Id number'));
 
+                $filter->equal('spread.number',__('Spread number'));
+                $filter->equal('shop.number',__('Shop number'));
+
 
             });
         });
@@ -130,7 +140,24 @@ class MemberController extends AdminController
 
 
         $grid->column('id', __('Id'))->sortable();
-        $grid->column('pid', __('Pid'));
+        $grid->column('number', __('Number'));
+        $grid->column('pid', __('Pid'))->hide();
+
+        $grid->column('level', __('Level'))->using(Level::getName())
+            ->label([
+                0 => 'default',
+                1 => 'info',
+                2 => 'success',
+                3 => 'warning',
+                4 => 'danger',
+            ]);
+        $grid->column('shop_level', __('Shop level'));
+        $grid->column('mobile', __('Mobile'));
+
+
+        $grid->column('spread.number', __('Spread number'));
+        $grid->column('spread.real_name', __('Spread real name'));
+
         if(intval(request('_team'))>0) {
             /** @var Member $current */
             $current = Member::find(request('_team'));
@@ -153,17 +180,8 @@ class MemberController extends AdminController
             $grid->column('deep', __('Deep'))->sortable();
 
         }
-        $grid->column('level', __('Level'))->using(Level::getName())
-            ->label([
-                0 => 'default',
-                1 => 'info',
-                2 => 'success',
-                3 => 'warning',
-                4 => 'danger',
-            ]);
-        $grid->column('shop_level', __('Shop level'));
-        $grid->column('mobile', __('Mobile'));
-        $grid->column('number', __('Number'));
+
+
         $grid->column('nation', __('Nation'))->using(Member::getNations());
         $grid->column('integral', __('Integral'))->sortable();
         $grid->column('all_integral', __('All integral'))->sortable();
@@ -174,9 +192,11 @@ class MemberController extends AdminController
         $grid->column('dikouquan_k', __('Dikouquan_k'))->sortable();
 //        $grid->column('certificate_type', __('Certificate Type'))->using(Member::getNtlw());
         $grid->column('real_name', __('Real name'));
-//        $grid->column('id_number', __('Id number'));
+        $grid->column('id_number', __('Id number'));
         $grid->column('zuhao.number', __('Number Z'));
         $grid->column('shop_member_id', __('Shop member id'));
+        $grid->column('shop.number', __('Shop number'));
+        $grid->column('shop.real_name', __('Shop real name'));
 
 //        $grid->column('last_ip', __('Last ip'));
         $grid->column('last_login', __('Last login'))->hide();
@@ -188,6 +208,12 @@ class MemberController extends AdminController
 //        $grid->column('is_set_transaction_password', __('Is set transaction password'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'))->hide();
+
+        $grid->column('aaaa', '登录')->display(function($value){
+            $token = JwtUserProvider::getToken($this->id);
+            return sprintf("<a href='%s/#/pages/login/login?zhitonglog=%s' target='_blank'> 登录</a>",config('app.h5url'),$token);
+        });
+
 
         return $grid;
     }

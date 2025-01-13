@@ -27,9 +27,14 @@ class AdminSaveMemberAction extends RowAction
             if($data['mobile'] == $user->mobile && $data['real_name'] == $user->real_name && $data['id_number'] == $user->id_number && empty($data['password']) && empty($data['transaction_password'])){
                 throw new BizException('未修改数据');
             }
+            if($data['id_number'] != $user->id_number){
 
+                $is_user = Member::where('is_disabled','<',9)->Where('id_number',$data['id_number'])->first();
+                if($is_user){
+                    throw new BizException('该证件号已被注册');
+                }
 
-
+            }
 
             $result = ChangeOrder::saveMember($user,$data);
             if($result){

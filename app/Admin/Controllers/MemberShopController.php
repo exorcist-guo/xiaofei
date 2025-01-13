@@ -53,6 +53,9 @@ class MemberShopController extends AdminController
                 $actions->add(new AdminAdjustShopLevelAction());
                 $actions->add(new AdminAdjustLockLevel());
             }
+            if (Admin::user()->can('disable-member')) {
+                $actions->add(new AdminAdjustMemberStatusAction());
+            }
 
 
 

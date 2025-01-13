@@ -55,7 +55,7 @@ class ImportMemberPost extends Action
                         'group_number' => $val[2],
                         'number' => $val[3],
                         'real_name' => $val[4],
-                        'id_number' => '',
+                        'id_number' => $val[5],
                     ];
                     PostMemberJob::dispatch($data);
                 }

@@ -42,6 +42,13 @@ class AdminAddMember extends Form
             if($user){
                 throw new BizException('该手机号已注册');
             }
+            if(!empty($id_number)){
+                $is_user = Member::where('is_disabled','<',9)->Where('id_number',$id_number)->first();
+                if($is_user){
+                    throw new BizException('该证件号已被注册');
+                }
+            }
+
             $pid = $parent->id;
             $pid_shop_member_id = $parent->pid_shop_member_id;
             $shop_member_id = $parent->shop_member_id;
@@ -70,7 +77,7 @@ class AdminAddMember extends Form
         }
 
         admin_success('添加成功');
-        return redirect(sprintf('%s/members',config('admin.route.prefix')));
+        return redirect(sprintf('%s/add-member',config('admin.route.prefix')));
     }
 
     /**

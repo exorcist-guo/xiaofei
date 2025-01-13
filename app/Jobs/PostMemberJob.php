@@ -45,10 +45,11 @@ class PostMemberJob implements ShouldQueue
                 $path = '';
                 $group_number = $post_member->group_number;
                 $pid_shop_member_id = 0;
+                $shop_member_id = 0;
                 if($post_member->pid_id_number){
-                    $pp = PostMember::where('status','>',1)->where('number',$post_member->pid_id_number)->first();
-                    if($pp){
-                        $parent = Member::whereNumber($pp->number)->first();
+
+                    $parent = Member::whereNumber($post_member->pid_id_number)->where('status','<',9)->first();
+                    if($parent){
                         $pid = $parent->id;
                         $deep =  $parent->deep + 1;
                         $group_number = $parent->group_number;
@@ -57,10 +58,14 @@ class PostMemberJob implements ShouldQueue
                         }else{
                             $path = '/'.$pid.'/';
                         }
-
-
                         $pid_shop_member_id = $parent->pid_shop_member_id;
+                        $shop_member_id = $parent->shop_member_id;
                     }
+
+
+
+
+
                     if(empty($pid)){
                         $post_member->status = 6;
                         $pid = 0;
@@ -78,9 +83,10 @@ class PostMemberJob implements ShouldQueue
                     'path' => $path,
                     'shop_level' => 0,
                     'group_number' => $group_number,
-                    'password' => \Hash::make(substr($post_member->id_number,-6)),
+                    'password' => \Hash::make(substr($post_member->mobile,-6)),
                     'pid' => $pid,
                     'pid_shop_member_id' => $pid_shop_member_id,
+                    'shop_member_id' => $shop_member_id,
                     'number' => $post_member->number,
                     'real_name' => $post_member->real_name,
                     'id_number' => $post_member->id_number,

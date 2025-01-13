@@ -52,9 +52,20 @@ class Test extends Command
      */
     public function handle()
     {
+        $number = '2408252589';
+        $m_number = Member::where('number','like',$number.'%')
+            ->orderByDesc('id')
+            ->value('number');
 
+        if($m_number){
+            $num = substr($m_number,10) + 1;
 
+        }
+        $num = str_pad($num,3,'0',STR_PAD_LEFT);
+        $number .= $num;
+        var_dump($num,$number);
 
+        exit;
         $member = Member::whereId(1)->first();
 
         Member::checkLevel($member);

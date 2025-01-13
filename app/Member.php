@@ -122,6 +122,16 @@ class Member extends Authenticatable
         return $this->hasMany(static::class, 'pid', 'id');
     }
 
+    public function spread()
+    {
+        return $this->hasOne(static::class, 'id', 'pid');
+    }
+
+    public function shop()
+    {
+        return $this->hasOne(static::class, 'id', 'shop_member_id');
+    }
+
     public function zuhao()
     {
         return $this->belongsTo(ShopNumber::class, 'shop_member_id', 'member_id');
@@ -208,7 +218,8 @@ class Member extends Authenticatable
 
         $zuohao = Redis::hget($redis_num_key,$member_id);
         if(empty($redis_num)){
-            $zuohao = ShopNumber::whereMemberId($member_id)->value('number');
+            $zuohao = ShopNumber::whereMemberId($member_id)
+                ->value('number');
             if(empty($zuohao)){
                 $member_id = 0;
                 $zuohao = '1000';
@@ -221,9 +232,11 @@ class Member extends Authenticatable
         Redis::expire($redis_key,86400);
         $number = date('ymd').$zuohao;
         if($num == 1){
-            $m_number = Member::where('number','like',$number.'%')->value('number');
+            $m_number = Member::where('number','like',$number.'%')
+                ->orderByDesc('id')
+                ->value('number');
             if($m_number){
-                $num = substr($m_number,9) + 1;
+                $num = substr($m_number,10) + 1;
                 Redis::set($redis_key,$num);
             }
         }
