@@ -48,7 +48,7 @@ class PostMemberJob implements ShouldQueue
                 $shop_member_id = 0;
                 if($post_member->pid_id_number){
 
-                    $parent = Member::whereNumber($post_member->pid_id_number)->where('status','<',9)->first();
+                    $parent = Member::whereNumber($post_member->pid_id_number)->where('is_disabled','<',9)->first();
                     if($parent){
                         $pid = $parent->id;
                         $deep =  $parent->deep + 1;
@@ -105,20 +105,60 @@ class PostMemberJob implements ShouldQueue
 
             }elseif(in_array($post_member->status,[0,3,6])){
                 //验证数据
+                $post_member->status = 4;
+                if(empty($post_member->number)){
+                    $post_member->status = 3;
+                    $error .= '账号不能为空';
+                }
+
                 if($post_member->pid_id_number){
                     $pp = PostMember::where('status','>',1)->where('number',$post_member->pid_id_number)->first();
-                    $pp2 = Member::whereNumber($post_member->is_disabled)->where('status','<','9')->first();
+                    $pp2 = Member::whereNumber($post_member->pid_id_number)->where('is_disabled','<','9')->first();
+
+
+
                     if(empty($pp) && empty($pp2)){
                         $post_member->status = 3;
                         $error .= '上级推荐人不存在。';
                     }
 
+                }else{
+                    if(empty($post_member->group_number)){
+                        $post_member->status = 3;
+                        $error .= '顶级组号不能为空';
+                    }else{
+                        $zh = Member::where('group_number',$post_member->group_number)->where('is_disabled','<','9')->first();
+                        if($zh){
+                            $post_member->status = 3;
+                            $error .= '组号与已有的重复';
+                        }
+                        if($post_member->group_number < 1000 || $post_member->group_number > 9999) {
+                            $post_member->status = 3;
+                            $error .= '组号范围必须是1000-9999';
+                        }
+                    }
                 }
-//                $a = Member::isIdCard($post_member->id_number);
-//                if(!$a){
-//                    $post_member->status = 3;
-//                    $error .= '身份证号异常。';
-//                }
+
+                $pp = PostMember::where('status','>',1)->where('mobile',$post_member->mobile)
+                    ->where('id','<>',$post_member->id)
+                    ->first();
+                $pp2 = Member::where('is_disabled','<',9)->where('mobile',$post_member->mobile)->first();
+                if($pp || $pp2){
+                    $post_member->status = 3;
+                    $error .= '该邮箱已经存在';
+                }
+
+                $pp = PostMember::where('status','>',1)
+                    ->where('number',$post_member->number)
+                    ->where('id','<>',$post_member->id)
+                    ->first();
+                $pp2 = Member::where('is_disabled','<',9)->where('number',$post_member->number)->first();
+                if($pp || $pp2){
+                    $post_member->status = 3;
+                    $error .= '该账号已经存在';
+                }
+
+
             }
 
             $post_member->error = $error;

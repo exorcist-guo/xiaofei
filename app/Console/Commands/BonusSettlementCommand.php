@@ -296,7 +296,7 @@ class BonusSettlementCommand extends Command
     }
 
     //极差奖励
-    public function jicha(Member $user,PvOrder $pv_order,$bonus_settlement_id,$levels){
+    public function jicha($user,PvOrder $pv_order,$bonus_settlement_id,$levels){
         $user_ids = array_reverse(explode('/',$user->path));
         $user_ids[0] = $user->id;
         $level = 0;
