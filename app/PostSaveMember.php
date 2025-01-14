@@ -88,12 +88,12 @@ class PostSaveMember extends Model
 
     public function audite()
     {
-        return $this->belongsTo(Administrator::class, 'audite_admin_id', 'id');
+        return $this->belongsTo(Administrator::class, 'admin_id', 'id');
     }
 
     public function scopeAuditeMember(Builder $query, $memberId)
     {
-        $query->where('audite_admin_id', $memberId);
+        $query->where('admin_id', $memberId);
     }
 
 }
