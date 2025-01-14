@@ -38,7 +38,7 @@ class BonusSettlementController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('status', __('Status'))->using(BonusSettlement::STATUS_MAP);
-        $grid->column('operator.username', __('Admin username'));
+        $grid->column('operator.name', __('Admin username'));
         $grid->column('start_time', __('Start time'));
         $grid->column('end_time', __('End time'));
         $grid->column('created_at', __('Created at'));

@@ -60,6 +60,8 @@ class WithdrawalController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('status', __('Status'))->using(Withdrawal::STATUS_MAP);
         $grid->column('amount', __('Amount'));
         $grid->column('fee', __('Fee'));

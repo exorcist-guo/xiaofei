@@ -51,6 +51,8 @@ class DikouquanLogController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('member_id', __('Member id'));
+        $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
         $grid->column('action', __('Action'))->using(DikouquanLog::STATUS_MAP);
         $grid->column('type', '消费券类型')->using(DikouquanLog::TYPE_MAP);
         $grid->column('amount', __('Amount'));

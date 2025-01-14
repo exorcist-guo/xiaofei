@@ -52,6 +52,8 @@ class TransferController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('c_member_id', __('C member id'));
         $grid->column('cmember.number','收款'. __('Number'));
         $grid->column('amount', __('Amount'));

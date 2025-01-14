@@ -63,9 +63,11 @@ class MessageController extends AdminController
         $grid->column('id', __('Id'));
 //        $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('type', __('Type'))->using(Message::TYPE_MAP);
 //        $grid->column('admin_id', __('Admin id'));
-        $grid->column('operator.username', __('Reply username'));
+        $grid->column('operator.name', __('Reply username'));
         $grid->column('mobile', '联系手机');
         $grid->column('name', __('Name'));
         $grid->column('status', __('Status'))->using(Message::STATUS_MAP);

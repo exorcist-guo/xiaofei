@@ -40,7 +40,7 @@ class AdminAddMember extends Form
             }
             $user = Member::findByMobile($mobile);
             if($user){
-                throw new BizException('该手机号已注册');
+                throw new BizException('注册邮箱已注册');
             }
             if(!empty($id_number)){
                 $is_user = Member::where('is_disabled','<',9)->Where('id_number',$id_number)->first();
@@ -85,11 +85,11 @@ class AdminAddMember extends Form
      */
     public function form()
     {
-        $this->text('pid_mobile','上级手机号/账号')->required();
-        $this->email('mobile','邮箱')->required();
+        $this->text('pid_mobile','上级注册邮箱/账号')->required();
+        $this->email('mobile','注册邮箱')->required();
         $this->text('password','登录密码')->required();
         $this->text('real_name','姓名')->required();
-        $this->text('id_number','身份证号')->required();
+        $this->text('id_number','证件号')->required();
     }
 
     /**

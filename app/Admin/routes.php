@@ -58,6 +58,7 @@ Route::group([
 
     $router->resource('member-examines', MemberExamineController::class); //待审核会员
     $router->resource('messages', MessageController::class); //留言管理
+    $router->resource('member-tree', MemberTreeController::class); //用户树状图
 
 
 //php artisan admin:make PostMemberController --model=App\PostMember  --title=会员导入

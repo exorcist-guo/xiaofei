@@ -63,8 +63,8 @@ class ChangeOrder extends Model
     const STATUS_MAP = [
         0 => '待审核',
         1 => '审核失败',
-        2 => '审核通过',
-        3 => '修改完成',
+        2 => '已审核',
+        3 => '审核通过',
         4 => '修改失败',
     ];
 

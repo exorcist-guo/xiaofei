@@ -69,7 +69,7 @@ class PostSaveMemberController extends AdminController
                 return  $content;
             }
         });
-        $grid->column('operator.username', __('Admin username'));
+        $grid->column('operator.name', __('Admin username'));
         $grid->column('error', __('Error'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));

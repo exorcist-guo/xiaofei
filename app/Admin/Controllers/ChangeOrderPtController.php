@@ -75,6 +75,7 @@ class ChangeOrderPtController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
 
         $grid->column('status', __('Status'))->using(
             ChangeOrder::STATUS_MAP
@@ -88,8 +89,8 @@ class ChangeOrderPtController extends AdminController
                 return  $content;
             }
         });
-        $grid->column('operator.username', __('Admin username'));
-        $grid->column('audite.username', __('Audite username'));
+        $grid->column('operator.name', __('Admin username'));
+        $grid->column('audite.name', __('Audite username'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
