@@ -90,6 +90,9 @@ class BonusSettlementCommand extends Command
                                     $pv_order->save();
 
                                     $user = Member::whereId($pv_order->member_id)->first();
+                                    if(!$user){
+                                        continue;
+                                    }
 
                                     //极差奖励
                                     $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);
@@ -100,8 +103,8 @@ class BonusSettlementCommand extends Command
                                     //增加结算业绩
                                     $this->addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels);
 
-                                    //
-                                    $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
+                                    //激活奖励
+//                                    $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
 
                                     //限时促销
                                     if($is_open_chuxiao == 1){
@@ -239,7 +242,7 @@ class BonusSettlementCommand extends Command
                     $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                     $ratio = $shop_levels[$member->shop_level]['jc_ratio'];
                     if($shop_level){
-                        $ratio_j = $shop_level[$shop_level]['jc_ratio'];
+                        $ratio_j = $shop_levels[$shop_level]['jc_ratio'];
                         $remark = "社群UID:{$user->id}UID:{$member->id}比率:{$ratio}极差UID:{$member_id_j}比率:{$ratio_j}";
                         $type = 8; //服务补贴
                     } else{
@@ -262,26 +265,34 @@ class BonusSettlementCommand extends Command
 
     //限时促销
     public function chuxiao($user,$pv_order,$bonus_settlement_id){
-        $y_ratio = 0.03;
-        $settlement_member = SettlementMember::getSettlementMember($user,$bonus_settlement_id);
-        $s_amount = bcmul($y_ratio, $pv_order->cash_amount,2);
-        SettlementLog::addLog($s_amount,$pv_order->cash_amount,$y_ratio,$settlement_member,6,$pv_order->id);
+        $user = Member::whereId($user->id)->first();
+        if($user->divvy_pv - $pv_order->cash_amount >= 400){
 
-        if($user->pid){
-            $member = Member::whereId($user->pid)->first();
-            $count = Member::whereId($user->pid)->where('divvy_pv','>=',400)->count();
-            if($count){
-                $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
-                $y_ratio = bcmul(0.01 , $count,2);
-                if($y_ratio > 0.03){
-                    $y_ratio = 0.03;
+            $y_ratio = 0.03;
+            $settlement_member = SettlementMember::getSettlementMember($user,$bonus_settlement_id);
+            $s_amount = bcmul($y_ratio, $pv_order->cash_amount,2);
+            SettlementLog::addLog($s_amount,$pv_order->cash_amount,$y_ratio,$settlement_member,6,$pv_order->id);
+
+            if($user->pid){
+                $member = Member::whereId($user->pid)->first();
+                $count = Member::wherePid($user->pid)->where('divvy_pv','>=',400)->count();
+                if($count){
+                    $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
+                    $y_ratio = bcmul(0.01 , $count,2);
+                    if($y_ratio > 0.03){
+                        $y_ratio = 0.03;
+                    }
+
+                    $s_amount = bcmul($y_ratio, $pv_order->cash_amount,2);
+
+                    SettlementLog::addLog($s_amount,$pv_order->cash_amount,$y_ratio,$settlement_member,9,$pv_order->id,"邀请合格人数{$count}");
                 }
-
-                $s_amount = bcmul($y_ratio, $pv_order->cash_amount,2);
-
-                SettlementLog::addLog($s_amount,$pv_order->cash_amount,$y_ratio,$settlement_member,9,$pv_order->id,"邀请合格人数{$count}");
             }
+
+
+
         }
+
 
     }
 
