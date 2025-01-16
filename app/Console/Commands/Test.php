@@ -12,6 +12,8 @@ use App\Services\VerifyService;
 use App\ShopLevel;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redis;
 use think\api\Client;
 
@@ -52,6 +54,19 @@ class Test extends Command
      */
     public function handle()
     {
+        $lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
+        $msg = '操作失败';
+        $auto = File::get($lang_path);
+        if(!Lang::has('auto.'.$msg)){
+            $str = "'%s'=>'%s',".PHP_EOL."];";
+            $str = sprintf($str,$msg,$msg);
+            $auto = str_replace('];', $str, $auto);
+            File::put($lang_path,$auto);
+        }
+
+//        echo Lang::get('auto.test99');
+        var_dump($auto);
+        exit;
         $number = '2408252589';
         $m_number = Member::where('number','like',$number.'%')
             ->orderByDesc('id')

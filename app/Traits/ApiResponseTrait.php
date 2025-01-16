@@ -4,6 +4,9 @@
 namespace App\Traits;
 
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
+
 trait ApiResponseTrait
 {
     protected function success($msg = '', $data = [])
@@ -18,6 +21,18 @@ trait ApiResponseTrait
 
     protected function message($msg, $data = [], $code = 0)
     {
+//        var_dump($msg);
+        if($msg && !Lang::has('auto.'.$msg)){
+            $lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
+            $auto = File::get($lang_path);
+            $str = "'%s'=>'%s',".PHP_EOL."];";
+            $str = sprintf($str,$msg,$msg);
+            $auto = str_replace('];', $str, $auto);
+            File::put($lang_path,$auto);
+        }else{
+            $msg = Lang::get('auto.'.$msg);
+        }
+
         return response()->json(compact('msg', 'code', 'data'));
     }
 }

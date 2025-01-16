@@ -337,9 +337,9 @@ class UserController extends Controller
 //            'lang' => [
 //                'required',
 //            ],
-            'name' => [
-                'required',
-            ],
+//            'name' => [
+//                'required',
+//            ],
 //            'id_number' => [
 //                'required',
 //            ],
@@ -487,7 +487,7 @@ class UserController extends Controller
                 $Member = $request->user();
                 $sendTo = $Member->mobile;
                 if (!$sendTo) {
-                    throw new BizException('手机号码或邮箱为必填');
+                    throw new BizException('邮箱为必填');
                 }
 
             }
@@ -498,7 +498,7 @@ class UserController extends Controller
                 $sendTo = $request->input('mobile');
                 $user = Member::findByMobile($sendTo);
                 if($user){
-                    throw new BizException('该手机号已注册账号');
+                    throw new BizException('该邮箱号已注册账号');
                 }
             }
 

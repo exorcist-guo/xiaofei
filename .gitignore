@@ -19,3 +19,4 @@ dump.rdb
 #/app/Console/Commands
 /public/nginx.htaccess
 /public/web.config
+auto.php
