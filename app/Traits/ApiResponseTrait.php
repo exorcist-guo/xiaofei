@@ -22,11 +22,12 @@ trait ApiResponseTrait
     protected function message($msg, $data = [], $code = 0)
     {
 //        var_dump($msg);
-        if($msg && !Lang::has('auto.'.$msg)){
+        $md5_msg = md5($msg);
+        if($msg && !Lang::has('auto.'.$md5_msg)){
             $lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
             $auto = File::get($lang_path);
             $str = "'%s'=>'%s',".PHP_EOL."];";
-            $str = sprintf($str,$msg,$msg);
+            $str = sprintf($str,$md5_msg,$msg);
             $auto = str_replace('];', $str, $auto);
             File::put($lang_path,$auto);
         }else{
