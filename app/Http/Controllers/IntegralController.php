@@ -375,10 +375,10 @@ class IntegralController extends Controller
                 //限制网体互转
                 if($to_user->shop_level && $user->shop_level){
                         if($user->group_number != $to_user->group_number){
-                            throw new BizException('不再同一个市场不能互转');
+                            throw new BizException('不在同一个市场不能互转');
                         }
                 }elseif($user->shop_member_id != $to_user->shop_member_id){
-                    throw new BizException('不再同一个社群不能互转');
+                    throw new BizException('不在同一个社群不能互转');
                 }
 
             }

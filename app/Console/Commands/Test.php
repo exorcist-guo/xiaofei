@@ -10,6 +10,8 @@ use App\PostMember;
 use App\Services\ForeignService;
 use App\Services\VerifyService;
 use App\ShopLevel;
+use Hongyukeji\LaravelTranslate\Translate;
+use Hongyukeji\LaravelTranslate\Translators\YouDaoTranslator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -54,6 +56,10 @@ class Test extends Command
      */
     public function handle()
     {
+        $a = new YouDaoTranslator();
+        $b = $a->setSource('zh-CN')->setTarget('en')->translate('你好');
+        var_dump($b);
+        exit;
         $lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
         $msg = '操作失败';
         $auto = File::get($lang_path);
