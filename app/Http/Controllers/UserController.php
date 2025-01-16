@@ -214,14 +214,16 @@ class UserController extends Controller
             $user = Member::where('mobile',$mobile)
 //                ->orWhere('number',$mobile)
                 ->orWhere('id_number',$mobile)->first();
+
+            if (!$user || $user->is_disabled > 8) {
+                throw new BizException(__('messages.user_not_found'));
+            }
+
             if($user->is_disabled == 8){
                 $msg = MemberExamine::whereMemberId($user->id)->orderByDesc('id')->value('msg');
                 throw new BizException('审核失败，请重新注册。失败原因：'.$msg);
             }elseif ($user->is_disabled == 7){
                 throw new BizException('等待管理员审核');
-            }
-            if (!$user || $user->is_disabled > 8) {
-                throw new BizException(__('messages.user_not_found'));
             }
 
             if($user->is_disabled) {
