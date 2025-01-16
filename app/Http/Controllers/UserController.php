@@ -194,7 +194,7 @@ class UserController extends Controller
                 ],
             ];
             $messages = [
-                'required' => __('messages.required'),
+                'required' => '请完善信息',
             ];
 
             $mobile = $request->input('mobile');
@@ -216,7 +216,7 @@ class UserController extends Controller
                 ->orWhere('id_number',$mobile)->first();
 
             if (!$user || $user->is_disabled > 8) {
-                throw new BizException(__('messages.user_not_found'));
+                throw new BizException('用户不存在或密码错误');
             }
 
             if($user->is_disabled == 8){
@@ -227,13 +227,13 @@ class UserController extends Controller
             }
 
             if($user->is_disabled) {
-                throw new BizException(__('messages.fenghao'));
+                throw new BizException('您已经被封号无法登录');
             }
 
             if (!$user->verifyPassword($request->input('password'))) {
                 $current = Redis::incrby($key, 1);
                 Redis::expire($key, 2 * 60 * 60); //
-                throw new BizException(__('messages.user_not_found').'2');
+                throw new BizException('您已经被封号无法登录');
             }
             $ip = VerifyService::getClientIp();
 
@@ -267,9 +267,9 @@ class UserController extends Controller
         ];
 
         $messages = [
-            'required' => __('messages.required'),
-            'exists' => __('messages.user_not_exist'),
-            'verify.verify_code' => __('messages.code_error'),
+            'required' => '请完善信息',
+            'exists' => '用户不存在',
+            'verify.verify_code' => '验证码错误',
             'password.between' => '密码长度必须为6~12位',
         ];
 
