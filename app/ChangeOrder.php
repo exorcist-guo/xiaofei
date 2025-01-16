@@ -108,7 +108,7 @@ class ChangeOrder extends Model
 
     public static function adjustMemberShopLevel($user,$toLevel,$zuohao = 0){
         $content = [
-            'level_before' => $user->level,
+            'level_before' => $user->shop_level,
             'level_after' => $toLevel,
             'zuohao' => $zuohao
         ];
