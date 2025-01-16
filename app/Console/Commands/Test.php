@@ -55,7 +55,26 @@ class Test extends Command
      * @return mixed
      */
     public function handle()
-    {
+    {	
+var_dump( Lang::get('auto.数量不足'));
+exit;
+	$lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
+        $msg = '交易密码错误';
+var_dump($msg &&!Lang::has('auto.'.$msg));
+exit;
+        $auto = File::get($lang_path);
+        if(!Lang::has('auto.'.$msg)){
+            $str = "'%s'=>'%s',".PHP_EOL."];";
+            $str = sprintf($str,$msg,$msg);
+            $auto = str_replace('];', $str, $auto);
+            File::put($lang_path,$auto);
+        }
+
+//        echo Lang::get('auto.test99');
+        var_dump($auto);
+        exit;
+
+exit;
         $a = new YouDaoTranslator();
         $b = $a->setSource('zh-CN')->setTarget('en')->translate('你好');
         var_dump($b);
