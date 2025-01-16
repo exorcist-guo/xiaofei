@@ -40,6 +40,7 @@ class SettlementLogController extends AdminController
 
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('member_id', '账号ID');
+                $filter->equal('member.number',  __('Number'));
                 $filter->equal('bonus_settlement_id', __('Bonus settlement id'));
                 $filter->equal('related_id', __('Related id'));
             });
@@ -53,6 +54,8 @@ class SettlementLogController extends AdminController
         $grid->column('bonus_settlement_id', __('Bonus settlement id'));
         $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('type', __('Type'))->using(SettlementLog::TYPE_MAP);
         $grid->column('amount', __('Amount'))->totalRow();
         $grid->column('balance_after', __('Balance after'));

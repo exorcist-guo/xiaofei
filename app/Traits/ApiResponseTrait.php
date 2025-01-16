@@ -21,8 +21,6 @@ trait ApiResponseTrait
 
     protected function message($msg, $data = [], $code = 0)
     {
-       // var_dump(!Lang::has('auto.'.'½»Ò×ÃÜÂë´íÎó'));
-        //$md5_msg = md5($msg);
         if($msg && !Lang::has('auto.'.$msg)){
             $lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
             $auto = File::get($lang_path);

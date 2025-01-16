@@ -39,7 +39,7 @@ class LoginLogController extends AdminController
 
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('member_id', '账号ID');
-                $filter->contains('member.mobile', '手机号');
+                $filter->contains('member.mobile', '邮箱');
             });
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->contains('member.number', '账号');
@@ -50,6 +50,8 @@ class LoginLogController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('账号'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('ip', __('Ip'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));

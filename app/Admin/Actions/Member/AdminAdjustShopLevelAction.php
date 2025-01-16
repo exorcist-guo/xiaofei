@@ -26,13 +26,14 @@ class AdminAdjustShopLevelAction extends RowAction
             }
 
             $toLevel = $request->input('to_level');
-            if($toLevel == $model->level){
+            if($toLevel == $model->shop_level){
                 throw new BizException('未变动等级');
             }
 
             if(!in_array($toLevel, array_keys(ShopLevel::getName()))) {
                 throw new BizException('非法的等级');
             }
+            $zuohao = 0;
             if(!$model->shop_level){
                 $zuohao = $request->input('zuohao','');
                 if(empty($zuohao)){
@@ -67,11 +68,12 @@ class AdminAdjustShopLevelAction extends RowAction
     {
         $this->select('to_level', '目标等级')
             ->options(ShopLevel::getName())
-            ->default($user->level)
+            ->default($user->shop_level)
             ->rules('required');
         if(!$user->shop_level){
             $this->text('zuohao',__('Number Z'));
         }
+//        $this->text('kkkk','测试')->default('');
 
     }
 

@@ -19,6 +19,9 @@ class LangExamine
     public function handle($request, Closure $next)
     {
         if($locale = $request->header('Language')){
+            if(!in_array($locale,['zh-CN','en','ko'])){
+                $locale = 'zh-CN';
+            }
             \App::setLocale($locale);
         }
         return $next($request);

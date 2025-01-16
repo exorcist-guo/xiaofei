@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Traits\BelongsToMember;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ShopNumber extends Model
 {
+    use BelongsToMember;
     protected $table = 'shop_number';
 
 }

@@ -39,6 +39,7 @@ class SettlementMemberController extends AdminController
 
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('member_id', '账号ID');
+                $filter->equal('member.number',  __('Number'));
                 $filter->equal('bonus_settlement_id', __('Bonus settlement id'));
 
             });
@@ -52,6 +53,8 @@ class SettlementMemberController extends AdminController
         $grid->column('bonus_settlement_id', __('Bonus settlement id'));
         $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('shop_member_id', __('Shop member id'));
         $grid->column('status', __('Status'));
         $grid->column('jh', __('Jh'));

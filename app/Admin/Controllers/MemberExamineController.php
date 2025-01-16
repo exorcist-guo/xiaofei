@@ -55,7 +55,7 @@ class MemberExamineController extends AdminController
 
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('member_id', '账号ID');
-                $filter->contains('member.number', '账号');
+                $filter->contains('number', '账号');
                 $filter->contains('operator.name', '操作员');
             });
             $filter->column(1/2, function(Grid\Filter $filter){
@@ -71,8 +71,9 @@ class MemberExamineController extends AdminController
         )->label([7=>'default',8=>'danger',6=>'success']);
         $grid->column('member_id', __('Member id'));
         $grid->column('number', __('Number'));
-        $grid->column('mobile', __('Mobile'));
         $grid->column('real_name', __('Real name'));
+        $grid->column('mobile', __('Mobile'));
+
         $grid->column('id_number', __('Id number'));
         $grid->column('nation', __('Nation'))->using(Member::getNations());
         $grid->column('certificate_type', __('Certificate type'))->using(Member::getNtlw());

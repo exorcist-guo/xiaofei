@@ -296,9 +296,9 @@ class Member extends Authenticatable
                 }
 
                 $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
-                $all_divvy_pv = $all_divvy_pv + $member->divvy_pv;
+                $all_divvy_pv = $all_divvy_pv + $member->divvy_pv + $member->divvy_pv_t;
                 foreach ($levels as $level){
-                    if(($all_divvy_pv + $member->divvy_pv_t) > $level['pv']){
+                    if($all_divvy_pv >= $level['pv']){
                         $level_j = $level['id'];
                         break;
                     }

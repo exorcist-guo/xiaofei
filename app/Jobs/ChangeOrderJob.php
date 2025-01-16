@@ -292,11 +292,12 @@ class ChangeOrderJob implements ShouldQueue
 
     public function migrateMemberPath($member)
     {
-        $children = $member->children;
-        foreach($children as $child) {
+        $list = Member::wherePid($member->id)->get();
+        foreach($list as $child) {
             $child->deep = $member->deep + 1;
-            $child->path = $member->path . $member->getKey().'/';
+            $child->path = $member->path? $member->path . $member->id.'/':'/'.$member->id.'/';
             $child->save();
+
             $this->migrateMemberPath($child);
         }
     }

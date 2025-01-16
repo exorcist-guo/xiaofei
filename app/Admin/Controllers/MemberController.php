@@ -188,8 +188,19 @@ class MemberController extends AdminController
         $grid->column('integral', __('Integral'))->sortable();
         $grid->column('all_integral', __('All integral'))->sortable();
         $grid->column('pv', __('Pv'))->sortable();
+        $grid->column('divvy_pv_t', __('Divvy Pv T'));
+        $grid->column('pv_leiji', '累计业绩')->display(function() {
+            if($this->path){
+                $path = $this->path . $this->id.'/';
+            }else{
+                $path = '/'.$this->id.'/';
+            }
+            $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
+            $all_divvy_pv = $all_divvy_pv + $this->divvy_pv + $this->divvy_pv_t;
+            return $all_divvy_pv;
+        });
         $grid->column('divvy_pv', __('Divvy Pv'))->hide();
-        $grid->column('divvy_pv_t', __('Divvy Pv T'))->hide();
+
         $grid->column('dikouquan', __('Dikouquan'))->sortable();
         $grid->column('dikouquan_k', __('Dikouquan_k'))->sortable();
 //        $grid->column('certificate_type', __('Certificate Type'))->using(Member::getNtlw());

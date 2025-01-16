@@ -61,6 +61,7 @@ class PostSaveMemberController extends AdminController
         )->label([0=>'default',1=>'danger',2=>'success',3=>'success',4=>'warning']);
         $grid->column('pici', '批次');
         $grid->column('member.number', '账号');
+        $grid->column('member.real_name', __('Real name'));
         $grid->column('content', __('Content'))->display(function ($content){
             $view =ChangeOrder::getContentView($content,$this->type);
             if($view){

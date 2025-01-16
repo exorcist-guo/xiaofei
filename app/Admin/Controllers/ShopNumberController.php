@@ -34,12 +34,27 @@ class ShopNumberController extends AdminController
 //            $actions->disableEdit();
             $actions->disableView();
 
+        });
 
+        $grid->filter(function(Grid\Filter $filter){
 
+            $filter->disableIdFilter();
+
+            $filter->column(1/2, function(Grid\Filter $filter){
+                $filter->equal('number', __('Number Z'));
+                $filter->equal('member.number', '账号');
+
+            });
+            $filter->column(1/2, function(Grid\Filter $filter){
+                $filter->between('created_at',__('Created at'))->datetime();
+            });
         });
 
         $grid->column('id', __('Id'));
         $grid->column('member_id', __('Member id'));
+        $grid->column('member.number', __('Number'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('number', __('Number Z'));
 //        $grid->column('status', __('Status'));
         $grid->column('created_at', __('Created at'));

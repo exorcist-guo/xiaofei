@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\BelongsToMember;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -28,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PushIntegral extends Model
 {
+    use BelongsToMember;
     protected $table = 'push_integral';
-    
+
 }

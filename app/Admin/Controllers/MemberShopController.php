@@ -51,7 +51,7 @@ class MemberShopController extends AdminController
 
             if (Admin::user()->can('change-shop-level')) {
                 $actions->add(new AdminAdjustShopLevelAction());
-                $actions->add(new AdminAdjustLockLevel());
+//                $actions->add(new AdminAdjustLockLevel());
             }
             if (Admin::user()->can('disable-member')) {
                 $actions->add(new AdminAdjustMemberStatusAction());
@@ -125,6 +125,8 @@ class MemberShopController extends AdminController
         ;
         $grid->column('mobile', __('Mobile'));
         $grid->column('number', __('Number'));
+        $grid->column('real_name', __('Real name'));
+
         $grid->column('integral', __('Integral'))->sortable();
 //        $grid->column('all_integral', __('All integral'))->sortable();
         $grid->column('pv', __('Pv'))->sortable();

@@ -55,8 +55,8 @@ class Test extends Command
      * @return mixed
      */
     public function handle()
-    {	
-var_dump( Lang::get('auto.数量不足'));
+    {
+var_dump( ShopLevel::getName());
 exit;
 	$lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
         $msg = '交易密码错误';

@@ -28,6 +28,10 @@ class PushIntegralController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('member_id', __('Member id'));
+
+        $grid->column('member.number', __('账号'));
+        $grid->column('member.real_name', __('Real name'));
+
         $grid->column('status', __('Status'));
         $grid->column('amount', __('Amount'));
         $grid->column('star_amount', __('Star amount'));
