@@ -76,8 +76,8 @@ class MemberShopController extends AdminController
         $grid->filter(function (Grid\Filter $filter) {
 
             $filter->column(1 / 2, function (Grid\Filter $filter) {
-                $filter->contains('mobile', '手机');
-                $filter->equal('pid', 'PID');
+                $filter->contains('mobile', '注册邮箱');
+                $filter->equal('shop_level', __('Shop level'))->select(ShopLevel::getName());
                 $filter->equal('number',  __('Number'));
                 $filter->between('created_at', __('Created at'))->datetime();
 
@@ -98,7 +98,7 @@ class MemberShopController extends AdminController
             $filter->column(1 / 2, function (Grid\Filter $filter) {
                 $filter->equal('level', __('Level'))->select(Level::getName());
 
-                $filter->equal('is_disabled', '封号？')->select([1 => '已封', 0 => '未封']);
+                $filter->equal('is_disabled', '状态')->select(Member::getStatusSu());
                 $filter->contains('real_name',__('Real name'));
                 $filter->contains('id_number',__('Id number'));
 
@@ -120,9 +120,9 @@ class MemberShopController extends AdminController
             ]);
 
         $grid->column('shop_level', __('Shop level'))->using(ShopLevel::getName());
-        $grid->column('lock_shop_level', '降级？')
-            ->using(Member::LOCK_SHOP_LEVEL_MAP)
-        ;
+//        $grid->column('lock_shop_level', '降级？')
+//            ->using(Member::LOCK_SHOP_LEVEL_MAP)
+//        ;
         $grid->column('mobile', __('Mobile'));
         $grid->column('number', __('Number'));
         $grid->column('real_name', __('Real name'));

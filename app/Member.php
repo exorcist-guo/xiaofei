@@ -117,6 +117,13 @@ class Member extends Authenticatable
         1 => '禁用'
     ];
 
+    public static function getStatusSu()
+    {
+        $status = self::IS_DISABLED_MAP;
+        unset($status[7],$status[8]);
+        return $status;
+    }
+
     public function children()
     {
         return $this->hasMany(static::class, 'pid', 'id');
@@ -297,6 +304,7 @@ class Member extends Authenticatable
 
                 $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
                 $all_divvy_pv = $all_divvy_pv + $member->divvy_pv + $member->divvy_pv_t;
+
                 foreach ($levels as $level){
                     if($all_divvy_pv >= $level['pv']){
                         $level_j = $level['id'];
@@ -330,7 +338,7 @@ class Member extends Authenticatable
             $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
             $all_divvy_pv = $all_divvy_pv + $member->divvy_pv + $member->divvy_pv_t;
             foreach ($levels as $level){
-                if($all_divvy_pv > $level['pv']){
+                if($all_divvy_pv >= $level['pv']){
                     $level_j = $level['id'];
                     break;
                 }

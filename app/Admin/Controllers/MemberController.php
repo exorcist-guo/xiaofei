@@ -17,6 +17,7 @@ use App\Admin\Actions\Post\ImportMemberPost;
 use App\Auth\JwtUserProvider;
 use App\Level;
 use App\Member;
+use App\ShopLevel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
@@ -81,9 +82,9 @@ class MemberController extends AdminController
                 $actions->add(new AdminDikouquanTransfer());
             }
 
-            if (Admin::user()->can('save-member')) {
-                $actions->add(new AdminLoginMemberAction());
-            }
+//            if (Admin::user()->can('save-member')) {
+//                $actions->add(new AdminLoginMemberAction());
+//            }
         });
 
         $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
@@ -101,7 +102,7 @@ class MemberController extends AdminController
 
             $filter->column(1 / 2, function (Grid\Filter $filter) {
                 $filter->contains('mobile', '注册邮箱');
-                $filter->equal('pid', 'PID');
+                $filter->equal('pid', '下级查询')->placeholder('输入账号查询下级');
                 $filter->equal('number',  __('Number'));
                 $filter->between('created_at', __('Created at'))->datetime();
                 $filter->equal('nation',  __('Nation'))->select(Member::getNations());
@@ -125,6 +126,7 @@ class MemberController extends AdminController
             });
             $filter->column(1 / 2, function (Grid\Filter $filter) {
                 $filter->equal('level', __('Level'))->select(Level::getName());
+                $filter->equal('shop_level', __('Shop level'))->select(ShopLevel::getName());
 
                 $filter->equal('is_disabled', '状态')->select(Member::IS_DISABLED_MAP);
                 $filter->contains('real_name',__('Real name'));
@@ -152,7 +154,7 @@ class MemberController extends AdminController
                 3 => 'warning',
                 4 => 'danger',
             ]);
-        $grid->column('shop_level', __('Shop level'));
+        $grid->column('shop_level', __('Shop level'))->using(ShopLevel::getName());
         $grid->column('mobile', __('Mobile'));
 
 

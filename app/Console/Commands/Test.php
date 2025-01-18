@@ -56,7 +56,15 @@ class Test extends Command
      */
     public function handle()
     {
-var_dump( ShopLevel::getName());
+        $list = Member::orderBy('id','asc')
+            ->where('id',89)
+            ->get();
+        $levels = Level::getLevels();
+        foreach ($list as $user){
+            $member = Member::find($user->id);
+            Member::checkLevel($member,$levels);
+        }
+
 exit;
 	$lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
         $msg = '交易密码错误';

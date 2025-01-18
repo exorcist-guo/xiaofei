@@ -56,12 +56,13 @@ class MemberExamineController extends AdminController
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('member_id', '账号ID');
                 $filter->contains('number', '账号');
-                $filter->contains('operator.name', '操作员');
+                $filter->contains('audite.name', '审核员');
+
             });
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('is_disabled', '状态')->select(MemberExamine::IS_DISABLED_MAP);
                 $filter->between('created_at',__('Created at'))->datetime();
-                $filter->contains('audite.name', '审核员');
+
             });
         });
 
@@ -77,6 +78,7 @@ class MemberExamineController extends AdminController
         $grid->column('id_number', __('Id number'));
         $grid->column('nation', __('Nation'))->using(Member::getNations());
         $grid->column('certificate_type', __('Certificate type'))->using(Member::getNtlw());
+        $grid->column('audite.name', __('Audite username'));
         $grid->column('msg', __('Msg'));
         $grid->column('certificate_image', __('Certificate Image'))
         ->display(function ($pictures) {

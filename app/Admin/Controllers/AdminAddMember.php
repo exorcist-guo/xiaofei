@@ -57,6 +57,7 @@ class AdminAddMember extends Form
             }else{
                 $path = '/'.$pid.'/';
             }
+            $deep = $parent->deep + 1;
 
             $user = new Member();
             $user->pid = $pid;
@@ -64,6 +65,7 @@ class AdminAddMember extends Form
             $user->pid_shop_member_id = $pid_shop_member_id;
             $user->shop_member_id = $shop_member_id;
             $user->path = $path;
+            $user->deep = $deep;
             $user->number = Member::createMemberNumber($shop_member_id);
             $user->real_name = $real_name;
             $user->id_number = $id_number;

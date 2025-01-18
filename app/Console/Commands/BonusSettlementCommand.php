@@ -8,6 +8,7 @@ use App\Level;
 use App\Member;
 use App\Model\BonusSettlement;
 use App\Model\DikouquanLog;
+use App\Model\LevelLog;
 use App\Model\NewPerformance;
 use App\Model\SettlementLog;
 use App\Model\SettlementMember;
@@ -79,10 +80,13 @@ class BonusSettlementCommand extends Command
                     $levels = Level::getLevels();
                     //获取可结算业绩
 
+                    //团队奖励结算
+                    $shop_levels = ShopLevel::getLevels();
+
                     //whereBetween('created_at',[$start_time,$end_time])-> 时间限制，正式需要调用
                     PvOrder::where('status',1)
                         ->orderBy('id', 'asc')
-                        ->chunk(1000, function ($pv_orders)use($levels,$bonus_settlement_id,$is_open_chuxiao) {
+                        ->chunk(1000, function ($pv_orders)use($levels,$shop_levels,$bonus_settlement_id,$is_open_chuxiao) {
                             //模拟进单顺序结算
                             foreach ($pv_orders as $pv_order){
                                 try{
@@ -99,6 +103,9 @@ class BonusSettlementCommand extends Command
 
                                     //推荐奖励
                                     $this->tuijian($user,$pv_order,$bonus_settlement_id,$levels);
+
+                                    //服务奖励，服务补贴
+                                    $this->fuwu($user,$pv_order,$bonus_settlement_id,$levels);
 
                                     //增加结算业绩
                                     $this->addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels);
@@ -120,22 +127,21 @@ class BonusSettlementCommand extends Command
 
                         });
 
-                    //团队奖励结算
-                    $shop_levels = ShopLevel::getLevels();
 
-                    Member::where('shop_level','>',0)->chunk(500, function ($members)use($shop_levels,$bonus_settlement_id) {
-                        //模拟进单顺序结算
-                        foreach ($members as $user){
-                            try{
-                                //服务奖励，服务补贴
-                                $this->tuandui($user,$bonus_settlement_id,$shop_levels);
 
-                            }catch (\Exception $e){
-                                \Log::channel('bonus_settlement')->info('团队结算中异常',[$e->getMessage()]);
-                            }
-                        }
-
-                    });
+//                    Member::where('shop_level','>',0)->chunk(500, function ($members)use($shop_levels,$bonus_settlement_id) {
+//                        //模拟进单顺序结算
+//                        foreach ($members as $user){
+//                            try{
+//                                //服务奖励，服务补贴
+//                                $this->tuandui($user,$bonus_settlement_id,$shop_levels);
+//
+//                            }catch (\Exception $e){
+//                                \Log::channel('bonus_settlement')->info('团队结算中异常',[$e->getMessage()]);
+//                            }
+//                        }
+//
+//                    });
 
                     //发放奖励
                     SettlementMember::where('bonus_settlement_id',$bonus_settlement_id)->where('status',0)->chunk(500, function ($SettlementMember) {
@@ -173,6 +179,62 @@ class BonusSettlementCommand extends Command
 
 
 
+    }
+
+
+    public function fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels){
+        $user_ids = array_reverse(explode('/',$user->path));
+        $user_ids[0] = $user->id;
+        $user_ids = array_filter($user_ids);
+        $shop_level = 0;
+        $member_id_j = 0;
+        $member_id_list = Member::getIdMember($user_ids);
+        $all_pv = $pv_order->amount;
+        if(empty($all_pv)){
+            return true;
+        }
+        foreach ($user_ids as $usre_id){
+            if(!empty($member_id_list[$usre_id])){
+                /** @var Member $member */
+                $member = $member_id_list[$usre_id];
+                if($member->shop_level > $shop_level){
+                    if($member->shop_level_time < $pv_order->created_at){
+                        //成为社区时间小于业绩时间
+                        $level_logs = LevelLog::whereMemberId($member->id)->orderByDesc('id')->get();
+                        $is_stop = true;
+                        //寻找合适的时间
+                        foreach ($level_logs as $level_log){
+                            if($level_log->created_at > $pv_order->created_at){
+                                $is_stop = false;
+                                $member->shop_level = $level_log->level_after;
+
+                            }
+                        }
+                        if($is_stop){
+                            continue;
+                        }
+                    }
+                    $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
+                    $ratio = $shop_levels[$member->shop_level]['jc_ratio'];
+                    if($shop_level){
+                        $ratio_j = $shop_levels[$shop_level]['jc_ratio'];
+                        $remark = "账号:{$member->number}比率:{$ratio}极差账号:{$member_id_j}比率:{$ratio_j}";
+                        $type = 8; //服务补贴
+                    } else{
+                        $ratio_j = 0;
+                        $remark = '';
+                        $type = 7;  //服务费
+                    }
+                    $y_ratio = bcsub($ratio,$ratio_j,2);
+                    $s_amount = bcmul($y_ratio, $all_pv,2);
+                    SettlementLog::addLog($s_amount,$all_pv,$y_ratio,$settlement_member,$type,$user->id,$remark);
+                    $shop_level = $member->shop_level;
+                    $member_id_j = $member->number;
+                }
+
+
+            }
+        }
     }
 
     //$this->fafang();
@@ -224,50 +286,14 @@ class BonusSettlementCommand extends Command
 
     //服务奖励，服务补贴
     public function tuandui($user,$bonus_settlement_id,$shop_levels){
-        $user_ids = array_reverse(explode('/',$user->path));
-        $user_ids[0] = $user->id;
-        $user_ids = array_filter($user_ids);
-        $shop_level = 0;
-        $member_id_j = 0;
-        $member_id_list = Member::getIdMember($user_ids);
-        $all_pv = SettlementMember::where('shop_member_id',$user->id)->where('bonus_settlement_id',$bonus_settlement_id)->sum('yj');
-        if(empty($all_pv)){
-            return true;
-        }
-        foreach ($user_ids as $usre_id){
-            if(!empty($member_id_list[$usre_id])){
-                /** @var Member $member */
-                $member = $member_id_list[$usre_id];
-                if($member->shop_level > $shop_level){
-                    $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
-                    $ratio = $shop_levels[$member->shop_level]['jc_ratio'];
-                    if($shop_level){
-                        $ratio_j = $shop_levels[$shop_level]['jc_ratio'];
-                        $remark = "社群UID:{$user->id}UID:{$member->id}比率:{$ratio}极差UID:{$member_id_j}比率:{$ratio_j}";
-                        $type = 8; //服务补贴
-                    } else{
-                        $ratio_j = 0;
-                        $remark = '';
-                        $type = 7;  //服务费
-                    }
-                    $y_ratio = bcsub($ratio,$ratio_j,2);
-                    $s_amount = bcmul($y_ratio, $all_pv,2);
-                    SettlementLog::addLog($s_amount,$all_pv,$y_ratio,$settlement_member,$type,$user->id,$remark);
-                    $shop_level = $member->shop_level;
-                    $member_id_j = $member->id;
-                }
 
-
-            }
-        }
 
     }
 
     //限时促销
     public function chuxiao($user,$pv_order,$bonus_settlement_id){
         $user = Member::whereId($user->id)->first();
-        if($user->divvy_pv - $pv_order->cash_amount >= 400){
-
+        if($user->is_chuxiao){
             $y_ratio = 0.03;
             $settlement_member = SettlementMember::getSettlementMember($user,$bonus_settlement_id);
             $s_amount = bcmul($y_ratio, $pv_order->cash_amount,2);
@@ -275,6 +301,10 @@ class BonusSettlementCommand extends Command
 
             if($user->pid){
                 $member = Member::whereId($user->pid)->first();
+                if(!$member->is_chuxiao){
+                    //未激活，不给奖励
+                    return true;
+                }
                 $count = Member::wherePid($user->pid)->where('divvy_pv','>=',400)->count();
                 if($count){
                     $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
@@ -291,6 +321,12 @@ class BonusSettlementCommand extends Command
 
 
 
+        }else{
+            $sum_xj = PvOrder::whereMemberId($user->id)->where('status',2)->sum('cash_amount');
+            if($sum_xj >= 400){
+                $user->is_chuxiao = 1;
+                $user->save();
+            }
         }
 
 
@@ -312,6 +348,7 @@ class BonusSettlementCommand extends Command
         $user_ids[0] = $user->id;
         $level = 0;
         $member_id_j = 0;
+
         foreach ($user_ids as $user_id){
             if(!$user_id) continue;
             $member = Member::whereId($user_id)->first();
@@ -325,10 +362,20 @@ class BonusSettlementCommand extends Command
                 }
                 $y_ratio = bcsub($ratio,$ratio_j,2);
                 $s_amount = bcmul($y_ratio, $pv_order->amount,2);
-                $remark = "UID:{$member->id}比率:{$ratio}极差UID:{$member_id_j}比率:{$ratio_j}";
-                SettlementLog::addLog($s_amount,$pv_order->amount,$y_ratio,$settlement_member,3,$pv_order->id,$remark);
+
+                if($user->id == $member->id){
+                    $type = 10;
+                    $remark = "自购比率:{$ratio}";
+                }else{
+                    $type = 3;
+                    $remark = "账号:{$member->number}比率:{$ratio}极差:{$member_id_j}比率:{$ratio_j}";
+                }
+
+
+                SettlementLog::addLog($s_amount,$pv_order->amount,$y_ratio,$settlement_member,$type,$pv_order->id,$remark);
                 $level = $member->level;
-                $member_id_j = $member->id;
+                $member_id_j = $member->number;
+
             }
         }
     }

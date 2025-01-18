@@ -63,6 +63,10 @@ class SettlementMemberController extends AdminController
         $grid->column('fw', __('Fw'));
         $grid->column('bt', __('Bt'));
         $grid->column('cx', __('Cx'));
+        $grid->column('jl_all', __('Jl All'))->display(function(){
+            $js_all =  $this->jc + $this->tj + $this->fw + $this->bt + $this->cx;
+            return $js_all;
+        });
         $grid->column('yj', __('Yj'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));

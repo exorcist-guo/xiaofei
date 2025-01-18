@@ -55,6 +55,7 @@ class LevelLog extends Model
         }else{
             $level_before = $member->shop_level;
             $member->shop_level = $level;
+            $member->shop_level_time = date('Y-m-d H:i:s');
         }
 
         $level_log = new LevelLog();

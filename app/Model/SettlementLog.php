@@ -50,6 +50,8 @@ class SettlementLog extends Model
         2 => '消费奖励',
 
         3 => '极差奖励',
+        10 => '福利奖励',
+
         4 => '推荐奖励',
 
         5 => '结算业绩',
@@ -69,6 +71,7 @@ class SettlementLog extends Model
                 $balance_after = bcadd((string)$settlement_member->jh,(string)$amount,2);
                 $settlement_member->jh = $balance_after;
                 break;
+            case 10:
             case 3:
                 $balance_after = bcadd((string)$settlement_member->jc,(string)$amount,2);
                 $settlement_member->jc = $balance_after;
