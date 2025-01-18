@@ -57,8 +57,8 @@ class BonusSettlementCommand extends Command
             var_dump('已有进程');
             return ;
         }
-        Redis::set($reids_lock,1,'ex',60);
-
+//        Redis::set($reids_lock,1,'ex',60);
+//
         while (true){
             $redis_start = 'command:bonus-settlement-start';
             $bonus_settlement_id =  Redis::get($redis_start);
@@ -105,7 +105,7 @@ class BonusSettlementCommand extends Command
                                     $this->tuijian($user,$pv_order,$bonus_settlement_id,$levels);
 
                                     //服务奖励，服务补贴
-                                    $this->fuwu($user,$pv_order,$bonus_settlement_id,$levels);
+                                    $this->fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels);
 
                                     //增加结算业绩
                                     $this->addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels);
@@ -121,8 +121,9 @@ class BonusSettlementCommand extends Command
 
 
                                 }catch (\Exception $e){
-                                    \Log::channel('bonus_settlement')->info('结算中异常',[$e->getMessage()]);
+                                    \Log::channel('bonus_settlement')->info('结算中异常',[$e->getMessage(),$e->getLine(),$e->getFile()]);
                                 }
+
                             }
 
                         });
@@ -153,7 +154,7 @@ class BonusSettlementCommand extends Command
                                 $this->fafang($settlement_member);
 
                             }catch (\Exception $e){
-                                \Log::channel('bonus_settlement')->info('发放奖励',[$e->getMessage()]);
+                                \Log::channel('bonus_settlement')->info('发放奖励',[$e->getMessage(),$e->getLine(),$e->getFile()]);
                             }
                         }
 
@@ -177,8 +178,6 @@ class BonusSettlementCommand extends Command
 
 
 
-
-
     }
 
 
@@ -193,20 +192,26 @@ class BonusSettlementCommand extends Command
         if(empty($all_pv)){
             return true;
         }
+        $o_created_at = $pv_order->created_at->format('Y-m-d H:i:s');
         foreach ($user_ids as $usre_id){
             if(!empty($member_id_list[$usre_id])){
                 /** @var Member $member */
                 $member = $member_id_list[$usre_id];
                 if($member->shop_level > $shop_level){
-                    if($member->shop_level_time < $pv_order->created_at){
+
+                    if($member->shop_level_time > $o_created_at){
+
                         //成为社区时间小于业绩时间
-                        $level_logs = LevelLog::whereMemberId($member->id)->orderByDesc('id')->get();
+                        $level_logs = LevelLog::whereMemberId($member->id)
+                            ->where('type',2)
+                            ->orderByDesc('id')->get();
                         $is_stop = true;
                         //寻找合适的时间
                         foreach ($level_logs as $level_log){
-                            if($level_log->created_at > $pv_order->created_at){
+                            if($level_log->level_after > $shop_level && $level_log->created_at->format('Y-m-d H:i:s') < $o_created_at){
                                 $is_stop = false;
                                 $member->shop_level = $level_log->level_after;
+                                break;
 
                             }
                         }
@@ -227,7 +232,7 @@ class BonusSettlementCommand extends Command
                     }
                     $y_ratio = bcsub($ratio,$ratio_j,2);
                     $s_amount = bcmul($y_ratio, $all_pv,2);
-                    SettlementLog::addLog($s_amount,$all_pv,$y_ratio,$settlement_member,$type,$user->id,$remark);
+                    SettlementLog::addLog($s_amount,$all_pv,$y_ratio,$settlement_member,$type,$pv_order->id,$remark);
                     $shop_level = $member->shop_level;
                     $member_id_j = $member->number;
                 }

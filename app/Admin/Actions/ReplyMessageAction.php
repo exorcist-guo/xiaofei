@@ -22,7 +22,7 @@ class ReplyMessageAction extends RowAction
     {
 
         try {
-            $redis_key = 'withdrawal_lock'.$model->id;
+            $redis_key = 'batch_reply_message_lock_batch'.$model->id;
             if(!Redis::set($redis_key, 1, 'ex', 30, 'nx')) {
                 throw new BizException('操作太频繁');
             }
@@ -35,6 +35,7 @@ class ReplyMessageAction extends RowAction
                 }
                 $model->reply = $reply;
                 $model->status = 1;
+                $model->admin_id = ADMIN_ID;
                 $model->save();
             });
 

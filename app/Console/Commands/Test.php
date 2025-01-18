@@ -5,8 +5,10 @@ namespace App\Console\Commands;
 use App\Jobs\ChangeOrderJob;
 use App\Level;
 use App\Member;
+use App\Model\BonusSettlement;
 use App\Model\LevelLog;
 use App\PostMember;
+use App\PvOrder;
 use App\Services\ForeignService;
 use App\Services\VerifyService;
 use App\ShopLevel;
@@ -56,16 +58,47 @@ class Test extends Command
      */
     public function handle()
     {
+
+
         $list = Member::orderBy('id','asc')
-            ->where('id',89)
+            ->where('shop_level','>',0)
             ->get();
-        $levels = Level::getLevels();
+
         foreach ($list as $user){
-            $member = Member::find($user->id);
-            Member::checkLevel($member,$levels);
+            $log = LevelLog::where('type',2)->where('member_id',$user->id)
+                ->orderByDesc('id')
+                ->first();
+            if($log){
+                $user->shop_level_time = $log->created_at;
+                $user->save();
+            }
         }
 
-exit;
+        exit;
+
+
+        $bonus_settlement_id = 39;
+        $is_open_chuxiao = 1;
+        $bonus_settlement = BonusSettlement::whereId(39)->first();
+        $levels = Level::getLevels();
+        $shop_levels = ShopLevel::getLevels();
+        PvOrder::where('status',2)
+            ->where('id',128)
+            ->orderBy('id', 'asc')
+            ->chunk(1000, function ($pv_orders)use($levels,$shop_levels,$bonus_settlement_id,$is_open_chuxiao) {
+
+                foreach ($pv_orders as $pv_order){
+                    $user = Member::whereId($pv_order->member_id)->first();
+                    if(!$user){
+                        continue;
+                    }
+                    $a = new BonusSettlementCommand();
+                    $a->fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels);
+                }
+
+            });
+
+        exit;
 	$lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
         $msg = '交易密码错误';
 var_dump($msg &&!Lang::has('auto.'.$msg));

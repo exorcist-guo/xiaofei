@@ -36,4 +36,8 @@ class PvOrder extends Model
     const ACTION_MAP = [
         1 => '商城增加',
     ];
+
+//    protected function asDateTime($value) {
+//        return $value;
+//    }
 }

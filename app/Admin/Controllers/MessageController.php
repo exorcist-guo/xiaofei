@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Batch\BatchReplyMessageAction;
 use App\Admin\Actions\ReplyMessageAction;
 use App\Model\Message;
 use Encore\Admin\Controllers\AdminController;
@@ -30,7 +31,7 @@ class MessageController extends AdminController
         $grid->model()->orderByDesc('id');
         $grid->disableCreateButton();
         $grid->disableColumnSelector();
-        $grid->disableRowSelector();
+//        $grid->disableRowSelector();
         $grid->expandFilter();
 //        $grid->disableActions();
         $grid->filter(function(Grid\Filter $filter){
@@ -57,6 +58,13 @@ class MessageController extends AdminController
             $actions->disableView();
 
             $actions->add(new ReplyMessageAction());
+
+        });
+        $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
+            $batchActions->disableDelete();
+
+                $batchActions->add(new BatchReplyMessageAction());
+
 
         });
 
