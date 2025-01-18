@@ -102,7 +102,15 @@ class MemberController extends AdminController
 
             $filter->column(1 / 2, function (Grid\Filter $filter) {
                 $filter->contains('mobile', '注册邮箱');
-                $filter->equal('pid', '下级查询')->placeholder('输入账号查询下级');
+//                $filter->where(function ($query) {
+//
+//                    $parent = Member::whereNumber($this->input)->first();
+//                    if (!$parent) {
+//                        admin_error('用户不存在', '用户不存在');
+//                    } else {
+//                        $query->where('pid',$parent->id);
+//                    }
+//                }, '下级查询', 'pid_number')->placeholder('输入账号查询下级');
                 $filter->equal('number',  __('Number'));
                 $filter->between('created_at', __('Created at'))->datetime();
                 $filter->equal('nation',  __('Nation'))->select(Member::getNations());
