@@ -49,7 +49,16 @@ class Test extends Command
 
 
 
+    public function detectAndConvertToUtf8($string) {
+        $encodings = ['UTF-8', 'GBK', 'BIG5', 'ISO-8859-1'];
+        $detectedEncoding = mb_detect_encoding($string, $encodings, true);
 
+        if ($detectedEncoding && $detectedEncoding !== 'UTF-8') {
+            var_dump(666);
+            return mb_convert_encoding($string, 'UTF-8', $detectedEncoding);
+        }
+        return $string; // 如果已经是 UTF-8 或无法检测，则返回原字符串
+    }
 
     /**
      * Execute the console command.
@@ -58,8 +67,12 @@ class Test extends Command
      */
     public function handle()
     {
-
-
+        $s = $this->detectAndConvertToUtf8('这是编码问题,请修改');
+        var_dump($s);
+        $a = new YouDaoTranslator();
+        $b = $a->setSource('zh-CN')->setTarget('en')->translate($s);
+        var_dump($b);
+        exit;
         $list = Member::orderBy('id','asc')
             ->where('shop_level','>',0)
             ->get();
@@ -116,10 +129,7 @@ exit;
         exit;
 
 exit;
-        $a = new YouDaoTranslator();
-        $b = $a->setSource('zh-CN')->setTarget('en')->translate('你好');
-        var_dump($b);
-        exit;
+
         $lang_path = base_path().DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.'zh-CN'.DIRECTORY_SEPARATOR.'auto.php';
         $msg = '操作失败';
         $auto = File::get($lang_path);
