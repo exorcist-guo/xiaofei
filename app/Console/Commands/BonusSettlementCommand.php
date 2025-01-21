@@ -201,6 +201,9 @@ class BonusSettlementCommand extends Command
             if(!empty($member_id_list[$usre_id])){
                 /** @var Member $member */
                 $member = $member_id_list[$usre_id];
+                if($member->is_chuxiao == 0){
+                    continue;
+                }
                 if($member->shop_level > $shop_level){
 
                     if($member->shop_level_time > $o_created_at){
