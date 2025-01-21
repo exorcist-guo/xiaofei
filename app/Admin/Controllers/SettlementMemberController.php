@@ -57,14 +57,16 @@ class SettlementMemberController extends AdminController
 
         $grid->column('shop_member_id', __('Shop member id'));
         $grid->column('status', __('Status'));
+
         $grid->column('jh', __('Jh'));
+        $grid->column('fl', __('Fl'));
         $grid->column('jc', __('Jc'));
         $grid->column('tj', __('Tj'));
         $grid->column('fw', __('Fw'));
         $grid->column('bt', __('Bt'));
         $grid->column('cx', __('Cx'));
         $grid->column('jl_all', __('Jl All'))->display(function(){
-            $js_all =  $this->jc + $this->tj + $this->fw + $this->bt + $this->cx;
+            $js_all =  $this->fl + $this->jc + $this->tj + $this->fw + $this->bt + $this->cx;
             return $js_all;
         });
         $grid->column('yj', __('Yj'));

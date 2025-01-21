@@ -98,8 +98,7 @@ class BonusSettlementCommand extends Command
                                         continue;
                                     }
 
-                                    //极差奖励
-                                    $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);
+
 
                                     //推荐奖励
                                     $this->tuijian($user,$pv_order,$bonus_settlement_id,$levels);
@@ -107,16 +106,21 @@ class BonusSettlementCommand extends Command
                                     //服务奖励，服务补贴
                                     $this->fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels);
 
+                                    //限时促销
+                                    if($is_open_chuxiao == 1){
+                                        $this->chuxiao($user,$pv_order,$bonus_settlement_id);
+                                    }
+
                                     //增加结算业绩
                                     $this->addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels);
 
                                     //激活奖励
 //                                    $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
 
-                                    //限时促销
-                                    if($is_open_chuxiao == 1){
-                                        $this->chuxiao($user,$pv_order,$bonus_settlement_id);
-                                    }
+
+
+                                    //极差奖励
+                                    $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);
 
 
 
@@ -265,6 +269,10 @@ class BonusSettlementCommand extends Command
                 IntegralLogs::changeIntegral($settlement_member->jc,$member,1,4,$settlement_member->id);
             }
 
+            if($settlement_member->fl > 0){
+                IntegralLogs::changeIntegral($settlement_member->fl,$member,1,10,$settlement_member->id);
+            }
+
             if($settlement_member->tj  > 0){
                 IntegralLogs::changeIntegral($settlement_member->tj,$member,1,5,$settlement_member->id);
             }
@@ -326,12 +334,6 @@ class BonusSettlementCommand extends Command
 
 
 
-        }else{
-            $sum_xj = PvOrder::whereMemberId($user->id)->where('status',2)->sum('cash_amount');
-            if($sum_xj >= 400){
-                $user->is_chuxiao = 1;
-                $user->save();
-            }
         }
 
 
@@ -345,6 +347,13 @@ class BonusSettlementCommand extends Command
         SettlementLog::addLog($amount,$pv_order->amount,1,$settlement_member,5,$pv_order->id);
 
         Member::checkLevel($user,$levels);
+        if($user->is_chuxiao == 0){
+            $sum_xj = PvOrder::whereMemberId($user->id)->where('status',2)->sum('cash_amount');
+            if($sum_xj >= 400){
+                $user->is_chuxiao = 1;
+                $user->save();
+            }
+        }
     }
 
     //极差奖励
@@ -388,7 +397,7 @@ class BonusSettlementCommand extends Command
     public function tuijian(Member $user,PvOrder $pv_order,$bonus_settlement_id,$levels){
         if($user->pid){
             $member = Member::whereId($user->pid)->first();
-            if(!empty( $levels[$member->level]['jc_ratio'])){
+            if($member->is_chuxiao && !empty( $levels[$member->level]['jc_ratio'])){
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                 $y_ratio =  $levels[$member->level]['tj_ratio'];
                 $s_amount = bcmul($y_ratio, $pv_order->amount,2);

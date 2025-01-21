@@ -59,12 +59,24 @@ class SettlementLogController extends AdminController
         $grid->column('type', __('Type'))->using(SettlementLog::TYPE_MAP);
         $grid->column('amount', __('Amount'))->totalRow();
         $grid->column('balance_after', __('Balance after'));
-        $grid->column('related_id', __('Related id'));
+
         $grid->column('yuan_amount', __('Yuan amount'));
         $grid->column('ratio', __('Ratio'));
         $grid->column('remark', __('Remark'));
+        $grid->column('related_id', __('Related id'));
+        $grid->column('related_number', '产生账号')
+            ->display(function () {
+                return $this->related->member->number;
+            })
+        ;
+        $grid->column('related_real_name', '产生姓名')
+            ->display(function () {
+                return $this->related->member->real_name;
+            })
+        ;
+
         $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+//        $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }

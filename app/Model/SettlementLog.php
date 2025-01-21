@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\PvOrder;
 use App\Traits\BelongsToMember;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,6 +46,7 @@ class SettlementLog extends Model
     use BelongsToMember;
     protected $table = 'settlement_log';
 
+
     const TYPE_MAP = [
         1 => '推新奖励',
         2 => '消费奖励',
@@ -62,6 +64,11 @@ class SettlementLog extends Model
 
     ];
 
+    public function related()
+    {
+        return $this->hasOne(PvOrder::class, 'id', 'related_id');
+    }
+
     public static function addLog($amount,$yuan_amount,$ratio,$settlement_member,$type,$related_id = 0,$remark = ''){
         /** @var SettlementMember $settlement_member */
         $amount = abs($amount);
@@ -72,6 +79,9 @@ class SettlementLog extends Model
                 $settlement_member->jh = $balance_after;
                 break;
             case 10:
+                $balance_after = bcadd((string)$settlement_member->fl,(string)$amount,2);
+                $settlement_member->fl = $balance_after;
+                break;
             case 3:
                 $balance_after = bcadd((string)$settlement_member->jc,(string)$amount,2);
                 $settlement_member->jc = $balance_after;

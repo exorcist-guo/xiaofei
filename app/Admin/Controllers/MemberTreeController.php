@@ -12,12 +12,14 @@ class MemberTreeController extends Controller
     public function index(Content $content)
     {
         $tree = new Tree(new MemberTree());
+        $tree->disableSave();
+        $tree->disableCreate();
 //        $tree->query(function ($model) {
 //            return $model->where('type', 1);
 //        });
 
         return $content
-            ->header('树状模型')
+            ->header('会员树')
             ->body($tree);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\BelongsToMember;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PvOrder extends Model
 {
+    use BelongsToMember;
     protected $table = 'pv_order';
     const ACTION_MAP = [
         1 => '商城增加',

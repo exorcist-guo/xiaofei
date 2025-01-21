@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Member;
 use App\PvLogs;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -44,6 +45,19 @@ class PvLogController extends AdminController
             });
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('action', '动作')->select(PvLogs::STATUS_MAP);
+
+                $filter->where(function ($query) {
+
+                    $parent = Member::whereNumber($this->input)->first();
+                    if (!$parent) {
+                        admin_error('用户不存在', '用户不存在');
+                    } else {
+
+                        $ids = Member::where('shop_member_id',$parent->id)->pluck('id');
+
+                        $query->whereIn('member_id',$ids);
+                    }
+                }, __('Shop number'), 'shop_number')->placeholder(__('Shop number'));
                 $filter->between('created_at',__('Created at'))->datetime();
             });
         });
@@ -52,6 +66,15 @@ class PvLogController extends AdminController
         $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
         $grid->column('member.real_name', __('Real name'));
+
+        $grid->column('shop_number', __('Shop number'))->display(function (){
+            return $this->member->shop->number;
+        });
+        $grid->column('zu_real_name', __('Shop real name'))->display(function (){
+            return $this->member->shop->real_name;
+        });
+
+
 
         $grid->column('action', __('Action'))->using(PvLogs::STATUS_MAP);
         $grid->column('amount', __('Amount'))->totalRow();
