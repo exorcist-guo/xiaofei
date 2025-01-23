@@ -59,7 +59,7 @@ class UserController extends Controller
 
     public function info(Request $request){
         $user = \Auth::user();
-        $data = \Arr::only($user->toArray(), ['id', 'shop_level','level','mobile','number','integral','all_integral','pv','dikouquan','dikouquan_k','is_set_transaction_password']);
+        $data = \Arr::only($user->toArray(), ['id','is_chuxiao', 'shop_level','level','mobile','number','integral','all_integral','pv','dikouquan','dikouquan_k','is_set_transaction_password']);
         $data['mobile'] = substr_replace($data['mobile'], '****', 3, 4);
 //        $data['is_real'] = $user->real_name?1:0;
 //        $data['is_mobile'] = $user->mobile?1:0;
@@ -396,6 +396,10 @@ class UserController extends Controller
 
             if(empty($parent)){
                 throw new BizException('邀请人不存在');
+            }
+
+            if($parent->is_chuxiao){
+                throw new BizException('邀请人未激活,无法邀请');
             }
 
             $pid = $parent->id;

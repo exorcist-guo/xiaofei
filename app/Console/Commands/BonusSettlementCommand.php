@@ -97,30 +97,36 @@ class BonusSettlementCommand extends Command
                                     if(!$user){
                                         continue;
                                     }
+                                    if($user->is_chuxiao){
+                                        //推荐奖励
+                                        $this->tuijian($user,$pv_order,$bonus_settlement_id,$levels);
 
+                                        //服务奖励，服务补贴
+                                        $this->fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels);
 
-
-                                    //推荐奖励
-                                    $this->tuijian($user,$pv_order,$bonus_settlement_id,$levels);
-
-                                    //服务奖励，服务补贴
-                                    $this->fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels);
-
-                                    //限时促销
-                                    if($is_open_chuxiao == 1){
-                                        $this->chuxiao($user,$pv_order,$bonus_settlement_id);
+                                        //限时促销
+                                        if($is_open_chuxiao == 1){
+                                            $this->chuxiao($user,$pv_order,$bonus_settlement_id);
+                                        }
                                     }
 
+
+
+
+
+
                                     //增加结算业绩
-                                    $this->addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels);
+                                    $user = $this->addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels);
 
                                     //激活奖励
 //                                    $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
 
+                                    if($user->is_chuxiao){
+                                        //极差奖励
+                                        $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);
+                                    }
 
 
-                                    //极差奖励
-                                    $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);
 
 
 
@@ -357,6 +363,7 @@ class BonusSettlementCommand extends Command
                 $user->save();
             }
         }
+        return $user;
     }
 
     //极差奖励
@@ -369,7 +376,7 @@ class BonusSettlementCommand extends Command
         foreach ($user_ids as $user_id){
             if(!$user_id) continue;
             $member = Member::whereId($user_id)->first();
-            if($member && $member->level > $level){
+            if($member && $member->is_chuxiao && $member->level > $level){
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                 $ratio = $levels[$member->level]['jc_ratio'];
                 if($level){

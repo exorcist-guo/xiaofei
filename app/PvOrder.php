@@ -39,6 +39,11 @@ class PvOrder extends Model
         1 => '商城增加',
     ];
 
+    const STATUS_MAP = [
+        1 => '待结算',
+        2 => '已结算',
+    ];
+
 //    protected function asDateTime($value) {
 //        return $value;
 //    }

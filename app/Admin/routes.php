@@ -60,6 +60,8 @@ Route::group([
     $router->resource('messages', MessageController::class); //留言管理
     $router->resource('member-tree', MemberTreeController::class); //用户树状图
 
+    $router->resource('pv-orders', PvOrderController::class);
+
 
 //php artisan admin:make PostMemberController --model=App\PostMember  --title=会员导入
 });
