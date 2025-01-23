@@ -66,12 +66,12 @@ class SettlementLogController extends AdminController
         $grid->column('related_id', __('Related id'));
         $grid->column('related_number', '产生账号')
             ->display(function () {
-                return $this->related->member->number;
+                return isset($this->related->member->number)?$this->related->member->number:'';
             })
         ;
         $grid->column('related_real_name', '产生姓名')
             ->display(function () {
-                return $this->related->member->real_name;
+                return isset($this->related->member->real_name)?$this->related->member->real_name:'';
             })
         ;
 
