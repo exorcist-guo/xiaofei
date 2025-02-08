@@ -7,6 +7,7 @@ use App\Level;
 use App\Member;
 use App\Model\BonusSettlement;
 use App\Model\LevelLog;
+use App\Model\ShopNumber;
 use App\PostMember;
 use App\PvOrder;
 use App\Services\ForeignService;
@@ -67,6 +68,10 @@ class Test extends Command
      */
     public function handle()
     {
+        $this->cleanAllData();
+
+
+        exit;
         $pv_order = PvOrder::where('id',170)->first();
         $user = Member::whereId($pv_order->member_id)->first();
         $user->is_chuxiao = 1;
@@ -221,6 +226,62 @@ exit;
 //        $locale = \App::getLocale();
 //        var_dump($locale);
 //        var_dump(Member::getNations());
+
+    }
+
+    public function cleanAllData()
+    {
+        $data = [
+            'bonus_settlement' => 0,
+            'change_order' => 0,
+            'dikouquan_log' => 0,
+            'divvy_pv_logs' => 0,
+            'failed_jobs' => 0,
+            'integral_logs' => 0,
+            'integral_logs_' => ['t'=>19,'id'=>0],
+            'integral_order' => 0,
+            'level_log' => 0,
+            'login_log' => 0,
+            'member_examine' => 0,
+            'members' => 0,
+            'message'  => 0,
+            'migrations' => 0,
+            'post_member' => 0,
+            'post_save_member' =>  0,
+            'push_dikouquan' => 0,
+            'push_integral' => 0,
+            'push_order' => 0,
+            'pv_logs' => 0,
+            'pv_logs_' => ['t'=>19,'id'=>0],
+            'pv_order' => 0,
+            'settlement_log' => 0,
+            'settlement_member' => 0,
+            'shop_number' => 0,
+            'transfer' => 0,
+            'withdrawal' => 0,
+        ];
+
+        foreach ($data as $key => $value){
+            if(is_array($value)){
+                for($i=0;$i<=$value['t'];$i++){
+                    DB::table($key.$i)->where('id','>',$value['id'])->delete();
+                }
+            }else{
+                DB::table($key)->where('id','>',$value)->delete();
+
+            }
+
+
+        }
+        DB::table('shop_number')->insert([
+            'id' => 1,
+            'number' => '1000',
+            'status' => 1,
+            'member_id' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
 
     }
 }
