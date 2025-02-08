@@ -49,6 +49,12 @@ class PushPvJob implements ShouldQueue
             if($push_order->status == 0){
                 \DB::transaction(function() use($push_order){
                     $user = Member::whereId($push_order->member_id)->first();
+                    if(empty($user)){
+                        //未找到用户
+                        $push_order->status = 7;
+                        $push_order->save();
+                        return true;
+                    }
                     $push_order->status = 1;
                     $push_order->save();
                     //增加业绩

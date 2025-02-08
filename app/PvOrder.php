@@ -42,6 +42,7 @@ class PvOrder extends Model
     const STATUS_MAP = [
         1 => '待结算',
         2 => '已结算',
+        7 => '未找到用户',
     ];
 
 //    protected function asDateTime($value) {

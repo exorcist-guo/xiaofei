@@ -81,7 +81,7 @@ class ForeignController extends Controller
         $mobile = $request->input('mobile','');
         $amount = $request->input('amount',0);
         $cash_amount = $request->input('cash_amount',0);
-        $redis_key = 'push_mobile'.$mobile;
+        $redis_key = 'push_mobile'.$order_no;
 
         try {
             if(!Redis::set($redis_key, 1, 'ex', 15, 'nx')) {
@@ -94,8 +94,12 @@ class ForeignController extends Controller
                 throw new BizException('订单号或证件号不能为空');
             }
             $user = Member::whereMobile($mobile)->first();
+
             if(empty($user)){
-                return $this->error('用户不存在');
+                $user_id = 0;
+//                return $this->error('用户不存在');
+            }else{
+                $user_id = $user->id;
             }
             $order =  PvOrder::whereOrderNo($order_no)->first();
             if($order){
@@ -110,7 +114,7 @@ class ForeignController extends Controller
                 //插入订单
                 $time = date("Y-m-d H:i:s");
                 $order_id = PvOrder::insertGetId([
-                    'member_id' => $user->id,
+                    'member_id' => $user_id,
                     'mobile' => $mobile,
                     'order_no' => $order_no,
                     'amount' => $amount,
