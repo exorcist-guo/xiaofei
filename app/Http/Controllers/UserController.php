@@ -398,7 +398,7 @@ class UserController extends Controller
                 throw new BizException('邀请人不存在');
             }
 
-            if($parent->is_chuxiao){
+            if(!$parent->is_chuxiao){
                 throw new BizException('邀请人未激活,无法邀请');
             }
 
