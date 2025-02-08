@@ -2,9 +2,9 @@
 
 return [
     'china' => '中国',
-    'korea' => '韩国',
+    'korea' => '한국',
 
-    'passport' => '护照',
-    'mobile' => '手机',
-    'rests' => '其他',
+    'passport' => '여권',
+    'mobile' => '핸드폰',
+    'rests' => '기타',
 ];
