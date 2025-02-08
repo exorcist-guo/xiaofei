@@ -68,6 +68,7 @@ class Test extends Command
      */
     public function handle()
     {
+        exit;
         $this->cleanAllData();
 
 
