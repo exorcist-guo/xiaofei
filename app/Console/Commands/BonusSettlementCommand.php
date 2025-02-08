@@ -360,6 +360,7 @@ class BonusSettlementCommand extends Command
             $sum_xj = PvOrder::whereMemberId($user->id)->where('status',2)->sum('cash_amount');
             if($sum_xj >= 400){
                 $user->is_chuxiao = 1;
+                $user->chuxiao_time = $pv_order->created_at;
                 $user->save();
             }
         }

@@ -222,6 +222,11 @@ class MemberController extends AdminController
         $grid->column('shop.real_name', __('Shop real name'));
 
 //        $grid->column('last_ip', __('Last ip'));
+        $grid->column('is_chuxiao', '激活')
+            ->display(function($value){
+                return $value ? '已激活' : '未激活';
+            })
+        ;
         $grid->column('last_login', __('Last login'))->hide();
         $grid->column('is_disabled', __('Is disabled'))->using(
             Member::IS_DISABLED_MAP

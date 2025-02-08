@@ -67,6 +67,14 @@ class Test extends Command
      */
     public function handle()
     {
+        $pv_order = PvOrder::where('id',170)->first();
+        $user = Member::whereId($pv_order->member_id)->first();
+        $user->is_chuxiao = 1;
+        $user->chuxiao_time = $pv_order->created_at;
+        $user->save();
+        var_dump($user->id);
+
+        exit;
         $s = $this->detectAndConvertToUtf8('这是编码问题,请修改');
         var_dump($s);
         $a = new YouDaoTranslator();
