@@ -168,7 +168,7 @@ class PostMemberJob implements ShouldQueue
             $post_member->status = 4;
             $post_member->pici = $data['pici'];
             $post_member->mobile = $data['mobile'];
-            $post_member->pid_id_number = $data['pid_id_number'];
+            $post_member->pid_id_number = $data['pid_id_number']??'';
             $post_member->real_name = $data['real_name'];
             $post_member->id_number = $data['id_number'];
             $post_member->group_number = $data['group_number'];
@@ -188,16 +188,16 @@ class PostMemberJob implements ShouldQueue
             }else{
                 if(empty($post_member->group_number)){
                     $post_member->status = 3;
-                    $error .= '顶级组号不能为空';
+                    $error .= '顶点号不能为空';
                 }else{
                     $zh = Member::where('group_number',$post_member->group_number)->where('is_disabled','<','9')->first();
                     if($zh){
                         $post_member->status = 3;
-                        $error .= '组号与已有的重复';
+                        $error .= '订点号与已有的重复';
                     }
                     if($post_member->group_number < 1000 || $post_member->group_number > 9999) {
                         $post_member->status = 3;
-                        $error .= '组号范围必须是1000-9999';
+                        $error .= '订点号范围必须是1000-9999';
                     }
                 }
             }

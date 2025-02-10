@@ -57,7 +57,7 @@ class ImportMemberPost extends Action
                         'real_name' => $val[4],
                         'id_number' => $val[5],
                     ];
-                    PostMemberJob::dispatch($data);
+                    PostMemberJob::dispatchNow($data);
                 }
             }
 
