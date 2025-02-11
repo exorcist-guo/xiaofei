@@ -289,7 +289,7 @@ class ChangeOrderJob implements ShouldQueue
                         $user->is_chuxiao = $is_chuxiao;
                         $user->save();
                     }
-
+                    $change_order->status = $success_status;
                 }
                 break;
         }
