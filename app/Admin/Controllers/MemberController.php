@@ -9,6 +9,7 @@ use App\Admin\Actions\Member\AdminAdjustMemberLevelAction;
 use App\Admin\Actions\Member\AdminAdjustMemberStatusAction;
 use App\Admin\Actions\Member\AdminAdjustShopLevelAction;
 use App\Admin\Actions\Member\AdminDikouquanTransfer;
+use App\Admin\Actions\Member\AdminJiHuo;
 use App\Admin\Actions\Member\AdminLoginMemberAction;
 use App\Admin\Actions\Member\AdminSaveMemberAction;
 use App\Admin\Actions\Member\AdminSavePidAction;
@@ -80,6 +81,10 @@ class MemberController extends AdminController
 
             if (Admin::user()->can('dikouquan-transfer')) {
                 $actions->add(new AdminDikouquanTransfer());
+            }
+
+            if (Admin::user()->can('save-member')) {
+                $actions->add(new AdminJiHuo());
             }
 
 //            if (Admin::user()->can('save-member')) {

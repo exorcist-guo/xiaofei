@@ -68,6 +68,17 @@ class Test extends Command
      */
     public function handle()
     {
+        $user = Member::whereId(131)->first();
+        if($user->path){
+            $path = $user->path . $user->id.'/';
+        }else{
+            $path = '/'.$user->id.'/';
+        }
+        $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
+        var_dump($all_divvy_pv, $user->divvy_pv , $user->divvy_pv_t);
+        $all_divvy_pv = $all_divvy_pv + $user->divvy_pv + $user->divvy_pv_t;
+
+        var_dump($all_divvy_pv);
         exit;
         $this->cleanAllData();
 

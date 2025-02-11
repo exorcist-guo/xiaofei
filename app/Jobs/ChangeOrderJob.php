@@ -275,12 +275,23 @@ class ChangeOrderJob implements ShouldQueue
                         $change_order->status = 0;
                         $content['error_msg'] = $e->getMessage();
                         $change_order->content = json_encode($content);
+                        $change_order->status = $success_status;
                     }
 
 
                 }
                 break;
+            case 13:
+                //激活设置
+                if(isset($content['is_chuxiao_after'])){
+                    $is_chuxiao = $content['is_chuxiao_after'];
+                    if(!($is_chuxiao == 0 && $user->divvy_pv >= 400)){
+                        $user->is_chuxiao = $is_chuxiao;
+                        $user->save();
+                    }
 
+                }
+                break;
         }
 
         $change_order->save();

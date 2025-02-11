@@ -75,7 +75,7 @@ class PushPvJob implements ShouldQueue
                     ];
                     $in_log = PvLogs::setSuffix($user->id,1)->insertGetId($log_data);
                     $user->pv = $balance_after;
-                    $user->divvy_pv = bcadd($user->divvy_pv,$amount,2);
+//                    $user->divvy_pv = bcadd($user->divvy_pv,$amount,2);
                     $success = $in_log && $user->save();
                     if(!$success) {
                         throw new BizException('业绩增加失败');

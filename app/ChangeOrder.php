@@ -50,6 +50,7 @@ class ChangeOrder extends Model
         10 => '可用消费券修改',
         11 => '个人结算业绩修改',
         12 => '消费券转账申请',
+        13 => '激活设置',
     ];
 
     const ASSET_TYPE = [
@@ -147,6 +148,22 @@ class ChangeOrder extends Model
         $content = json_encode($content);
         $change_order = new ChangeOrder();
         $change_order->type = 6;
+        $change_order->member_id = $user->id;
+        $change_order->admin_id = ADMIN_ID;
+        $change_order->audite_admin_id = 0;
+        $change_order->status = 0;
+        $change_order->content = $content;
+        return $change_order->save();
+    }
+
+    public static function saveIsChuxiao($user,$is_chuxiao){
+        $content = [
+            'is_chuxiao_before' => $user->is_chuxiao,
+            'is_chuxiao_after' => $is_chuxiao
+        ];
+        $content = json_encode($content);
+        $change_order = new ChangeOrder();
+        $change_order->type = 13;
         $change_order->member_id = $user->id;
         $change_order->admin_id = ADMIN_ID;
         $change_order->audite_admin_id = 0;
@@ -347,6 +364,12 @@ class ChangeOrder extends Model
                 case 12:
                     if(isset($content['amount']) && isset($content['to_number'])){
                         $view = "转账消费券：{$content['amount']} 到账号：{$content['to_number']}";
+                    }
+                    break;
+                case 13:
+                    if(isset($content['is_chuxiao_after'])){
+                        $is_chuxiao_mag = $content['is_chuxiao_after'] ? '已激活' : '未激活';
+                        $view = "用户激活状态设置为：". $is_chuxiao_mag ;
                     }
                     break;
                 default:

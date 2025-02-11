@@ -68,10 +68,10 @@ class PvLogController extends AdminController
         $grid->column('member.real_name', __('Real name'));
 
         $grid->column('shop_number', __('Shop number'))->display(function (){
-            return $this->member->shop->number;
+            return isset($this->member->shop->number)?$this->member->shop->number:'';
         });
         $grid->column('zu_real_name', __('Shop real name'))->display(function (){
-            return $this->member->shop->real_name;
+            return isset($this->member->shop->real_name)?$this->member->shop->real_name:'';
         });
 
 
