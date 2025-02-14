@@ -43,7 +43,7 @@ class AdminAddMember extends Form
                 throw new BizException('注册邮箱已注册');
             }
             if(!empty($id_number)){
-                $is_user = Member::where('is_disabled','<',9)->Where('id_number',$id_number)->first();
+                $is_user = Member::Where('id_number',$id_number)->first();
                 if($is_user){
                     throw new BizException('该证件号已被注册');
                 }

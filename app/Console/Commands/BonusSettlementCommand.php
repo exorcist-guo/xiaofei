@@ -94,16 +94,10 @@ class BonusSettlementCommand extends Command
                                     $pv_order->save();
 
                                     $user = Member::whereId($pv_order->member_id)->first();
-                                    if(!$user){
+                                    if(!$user || $user->is_disabled == 9){
                                         continue;
                                     }
                                     if($user->is_chuxiao){
-                                        //推荐奖励
-                                        $this->tuijian($user,$pv_order,$bonus_settlement_id,$levels);
-
-                                        //服务奖励，服务补贴
-                                        $this->fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels);
-
                                         //限时促销
                                         if($is_open_chuxiao == 1){
                                             $this->chuxiao($user,$pv_order,$bonus_settlement_id);
@@ -124,6 +118,12 @@ class BonusSettlementCommand extends Command
                                     if($user->is_chuxiao){
                                         //极差奖励
                                         $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);
+
+                                        //推荐奖励
+                                        $this->tuijian($user,$pv_order,$bonus_settlement_id,$levels);
+
+                                        //服务奖励，服务补贴
+                                        $this->fuwu($user,$pv_order,$bonus_settlement_id,$shop_levels);
                                     }
 
 
@@ -207,7 +207,7 @@ class BonusSettlementCommand extends Command
             if(!empty($member_id_list[$usre_id])){
                 /** @var Member $member */
                 $member = $member_id_list[$usre_id];
-                if($member->is_chuxiao == 0){
+                if(!$member || $member->is_chuxiao == 0 || $member->is_disabled == 9){
                     continue;
                 }
                 if($member->shop_level > $shop_level){
@@ -323,7 +323,7 @@ class BonusSettlementCommand extends Command
 
             if($user->pid){
                 $member = Member::whereId($user->pid)->first();
-                if(!$member->is_chuxiao){
+                if(!$member || !$member->is_chuxiao || $member->is_disabled == 9){
                     //未激活，不给奖励
                     return true;
                 }
@@ -377,7 +377,7 @@ class BonusSettlementCommand extends Command
         foreach ($user_ids as $user_id){
             if(!$user_id) continue;
             $member = Member::whereId($user_id)->first();
-            if($member && $member->is_chuxiao && $member->level > $level){
+            if($member && $member->is_chuxiao && $member->level > $level && $member->is_disabled < 9){
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                 $ratio = $levels[$member->level]['jc_ratio'];
                 if($level){
@@ -408,7 +408,7 @@ class BonusSettlementCommand extends Command
     public function tuijian(Member $user,PvOrder $pv_order,$bonus_settlement_id,$levels){
         if($user->pid){
             $member = Member::whereId($user->pid)->first();
-            if($member->is_chuxiao && !empty( $levels[$member->level]['jc_ratio'])){
+            if($member && $member->is_chuxiao &&  !empty( $levels[$member->level]['jc_ratio']) && $member->is_disabled < 9){
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                 $y_ratio =  $levels[$member->level]['tj_ratio'];
                 $s_amount = bcmul($y_ratio, $pv_order->amount,2);

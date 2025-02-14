@@ -233,7 +233,7 @@ class UserController extends Controller
             if (!$user->verifyPassword($request->input('password'))) {
                 $current = Redis::incrby($key, 1);
                 Redis::expire($key, 2 * 60 * 60); //
-                throw new BizException('您已经被封号无法登录');
+                throw new BizException('用户不存在或密码错误');
             }
             $ip = VerifyService::getClientIp();
 
@@ -382,7 +382,7 @@ class UserController extends Controller
             $real_name = $request->input('real_name');
 
             if(!empty($id_number)){
-                $is_user = Member::where('is_disabled','<',9)->Where('id_number',$id_number)->first();
+                $is_user = Member::Where('id_number',$id_number)->first();
                 if($is_user){
                     throw new BizException('该证件号已被注册');
                 }

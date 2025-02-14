@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
             $query = \DB::table($parameters[0])
                 ->where($parameters[1], '=', $value);
             if($parameters[0] == 'members'){
-                $query =$query->where('is_disabled','<',9);
+//                $query =$query->where('is_disabled','<',9);
             }
             if(count($parameters) == 5) {
                 $query = $query->where($parameters[2], $parameters[3], $parameters[4]);

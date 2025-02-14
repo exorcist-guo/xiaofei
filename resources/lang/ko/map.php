@@ -7,4 +7,5 @@ return [
     'passport' => '여권',
     'mobile' => '핸드폰',
     'rests' => '기타',
+    'id_card' => '신분증',
 ];

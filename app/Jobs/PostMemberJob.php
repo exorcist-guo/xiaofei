@@ -142,7 +142,7 @@ class PostMemberJob implements ShouldQueue
                 $pp = PostMember::where('status','>',1)->where('mobile',$post_member->mobile)
                     ->where('id','<>',$post_member->id)
                     ->first();
-                $pp2 = Member::where('is_disabled','<',9)->where('mobile',$post_member->mobile)->first();
+                $pp2 = Member::where('mobile',$post_member->mobile)->first();
                 if($pp || $pp2){
                     $post_member->status = 3;
                     $error .= '该邮箱已经存在';
@@ -208,14 +208,14 @@ class PostMemberJob implements ShouldQueue
 //                $error .= '身份证号异常';
 //            }
             $pp = PostMember::where('status','>',1)->where('mobile',$post_member->mobile)->first();
-            $pp2 = Member::where('is_disabled','<',9)->where('mobile',$post_member->mobile)->first();
+            $pp2 = Member::where('mobile',$post_member->mobile)->first();
             if($pp || $pp2){
                 $post_member->status = 3;
                 $error .= '该邮箱已经存在';
             }
 
             $pp = PostMember::where('status','>',1)->where('number',$post_member->number)->first();
-            $pp2 = Member::where('is_disabled','<',9)->where('number',$post_member->number)->first();
+            $pp2 = Member::where('number',$post_member->number)->first();
             if($pp || $pp2){
                 $post_member->status = 3;
                 $error .= '该账号已经存在';
