@@ -138,7 +138,7 @@ class BonusSettlementCommand extends Command
 
                         });
 
-
+                    SettlementMember::where('bonus_settlement_id',$bonus_settlement_id)->where('status',0)->update(['status'=>1]);
 
 //                    Member::where('shop_level','>',0)->chunk(500, function ($members)use($shop_levels,$bonus_settlement_id) {
 //                        //模拟进单顺序结算
@@ -154,21 +154,7 @@ class BonusSettlementCommand extends Command
 //
 //                    });
 
-                    //发放奖励
-                    SettlementMember::where('bonus_settlement_id',$bonus_settlement_id)->where('status',0)->chunk(500, function ($SettlementMember) {
-                        //模拟进单顺序结算
-                        foreach ($SettlementMember as $settlement_member){
-                            try{
 
-                                //发放奖励
-                                $this->fafang($settlement_member);
-
-                            }catch (\Exception $e){
-                                \Log::channel('bonus_settlement')->info('发放奖励',[$e->getMessage(),$e->getLine(),$e->getFile()]);
-                            }
-                        }
-
-                    });
 
 
 
@@ -183,7 +169,30 @@ class BonusSettlementCommand extends Command
                 $new_bonus_settlement->save();
 
             }
-            sleep(3);
+            sleep(2);
+            //发放奖励
+            $redis_send = 'command:bonus-settlement-send';
+            $bonus_settlement_id = Redis::get($redis_send);
+            if($bonus_settlement_id){
+                Redis::del($redis_send);
+
+                SettlementMember::where('bonus_settlement_id',$bonus_settlement_id)->where('status',1)->chunk(500, function ($SettlementMember) {
+                    //模拟进单顺序结算
+                    foreach ($SettlementMember as $settlement_member){
+                        try{
+
+                            //发放奖励
+                            $this->fafang($settlement_member);
+
+                        }catch (\Exception $e){
+                            \Log::channel('bonus_settlement')->info('发放奖励',[$e->getMessage(),$e->getLine(),$e->getFile()]);
+                        }
+                    }
+
+                });
+
+            }
+            sleep(2);
         }
 
 
@@ -258,9 +267,9 @@ class BonusSettlementCommand extends Command
     //$this->fafang();
     public function fafang($settlement_member){
         /** @var SettlementMember $settlement_member */
-        if($settlement_member->status == 0){
+        if($settlement_member->status == 1){
             $member = Member::whereId($settlement_member->member_id)->first();
-            $settlement_member->status = 1;
+            $settlement_member->status = 2;
             $settlement_member->save();
 
             if($settlement_member->jh  > 0){

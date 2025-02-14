@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\AdminSendSettlementMember;
 use App\Model\SettlementMember;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -32,6 +33,9 @@ class SettlementMemberController extends AdminController
         $grid->disableRowSelector();
         $grid->expandFilter();
         $grid->disableActions();
+        $grid->tools(function (Grid\Tools $tools) {
+            $tools->append(new AdminSendSettlementMember());
+        });
 
         $grid->filter(function(Grid\Filter $filter){
 
@@ -45,6 +49,7 @@ class SettlementMemberController extends AdminController
             });
             $filter->column(1/2, function(Grid\Filter $filter){
                 $filter->equal('shop_member_id', '所属社群ID');
+                $filter->equal('status', __('Status'))->select(SettlementMember::STATUS_MAP);
                 $filter->between('created_at',__('Created at'))->datetime();
             });
         });
@@ -56,7 +61,7 @@ class SettlementMemberController extends AdminController
         $grid->column('member.real_name', __('Real name'));
 
         $grid->column('shop_member_id', __('Shop member id'));
-        $grid->column('status', __('Status'));
+        $grid->column('status', __('Status'))->using(SettlementMember::STATUS_MAP);
 
         $grid->column('jh', __('Jh'));
         $grid->column('fl', __('Fl'));

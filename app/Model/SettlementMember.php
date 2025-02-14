@@ -46,6 +46,12 @@ class SettlementMember extends Model
     use BelongsToMember;
     protected $table = 'settlement_member';
 
+    const STATUS_MAP = [
+        0 => '结算中',
+        1 => '待发放',
+        2 => '已发放',
+    ];
+
     public static function getSettlementMember($member,$bonus_settlement_id)
     {
          $settlement_member = self::whereMemberId($member->id)->whereBonusSettlementId($bonus_settlement_id)->first();
