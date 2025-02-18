@@ -112,10 +112,12 @@ class BonusSettlementCommand extends Command
                                     //增加结算业绩
                                     $user = $this->addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels);
 
-                                    //激活奖励
-//                                    $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
+
 
                                     if($user->is_chuxiao){
+                                        //激活奖励
+                                        $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
+
                                         //极差奖励
                                         $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);
 
@@ -432,7 +434,7 @@ class BonusSettlementCommand extends Command
     {
 
         //推荐三个人消费400给奖励400
-        if($user->pid){
+        /*if($user->pid){
             $member = Member::whereId($user->pid)->first();
             if($member->is_active < 3){
                 $count = Member::wherePid($member->id)->where('divvy_pv','>=',400)->count();
@@ -448,7 +450,7 @@ class BonusSettlementCommand extends Command
                 }
             }
 
-        }
+        }*/
 
         //老会员本人及网体下人员，每期消费都可以激活现金消费部分的25%的消费券到可用余额
         $user_ids = explode('/',$user->path);
@@ -458,7 +460,7 @@ class BonusSettlementCommand extends Command
         foreach ($user_ids as $user_id){
             if(!$user_id) continue;
             $member = Member::whereId($user_id)->first();
-            if($member && $member->dikouquan > 0){
+            if($member && $member->is_chuxiao && $member->is_disabled < 9 && $member->dikouquan > 0){
                 //有冻结消费券的用户
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                 SettlementLog::addLog($jihuo_amount,$pv_order->amount,$jihuo_ratio,$settlement_member,2,$pv_order->id);

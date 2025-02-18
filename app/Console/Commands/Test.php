@@ -9,6 +9,7 @@ use App\Model\BonusSettlement;
 use App\Model\LevelLog;
 use App\Model\ShopNumber;
 use App\PostMember;
+use App\PvLogs;
 use App\PvOrder;
 use App\Services\ForeignService;
 use App\Services\VerifyService;
@@ -68,6 +69,32 @@ class Test extends Command
      */
     public function handle()
     {
+
+        $push_orders = PvOrder::where('status',2)->get();
+        foreach ($push_orders as $push_order){
+            $user = Member::whereId($push_order->member_id)->first();
+            $time = date("Y-m-d H:i:s");
+            $amount = $push_order->amount;
+            $balance_before = $user->pv;
+            $balance_after = bcadd($balance_before,$amount,2);
+            $log_data = [
+                'member_id' => $user->id,
+                'action' => 1,
+                'amount' => $amount,
+                'balance_before' => $balance_before,
+                'balance_after' => $balance_after,
+                'remark' => '',
+                'related_id' => $push_order->id,
+                'created_at' => $time,
+                'updated_at' => $time,
+            ];
+            $in_log = PvLogs::setSuffix($user->id,1)->insertGetId($log_data);
+            $user->pv = $balance_after;
+            $success = $in_log && $user->save();
+        }
+
+
+        exit;
         $user = Member::whereId(131)->first();
         if($user->path){
             $path = $user->path . $user->id.'/';
