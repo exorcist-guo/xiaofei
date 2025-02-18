@@ -70,6 +70,9 @@ class Test extends Command
     public function handle()
     {
 
+
+        var_dump('2025-01-26 00:30:01' > '2025-01-26 00:11:10');
+        exit;
         $push_orders = PvOrder::where('status',2)->get();
         foreach ($push_orders as $push_order){
             $user = Member::whereId($push_order->member_id)->first();

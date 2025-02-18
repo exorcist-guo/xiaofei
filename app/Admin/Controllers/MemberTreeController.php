@@ -16,24 +16,14 @@ class MemberTreeController extends Controller
         $tree = new Tree(new MemberTree());
         $tree->disableSave();
         $tree->disableCreate();
+        $tree->disableRefresh();
 
 
-        // 添加搜索框
-        $form = new Form();
-        $form->text('search', '搜索')->placeholder('请输入搜索内容');
 
-        // 设置搜索条件
-        $tree->query(function ($model) use ($form) {
-            $search = request()->get('search');
-            if ($search) {
-                return $model->where('number', 'like', $search );
-            }
-            return $model;
-        });
 
         return $content
             ->header('会员树')
-            ->body($form->render())
+
             ->body($tree);
     }
 

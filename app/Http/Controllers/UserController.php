@@ -325,9 +325,9 @@ class UserController extends Controller
 //            'certificate_type' => [
 //                'required',
 //            ],
-            'nation' => [
-                'required',
-            ],
+//            'nation' => [
+//                'required',
+//            ],
             'certificate_image' => [
                 'required',
             ],
@@ -375,6 +375,7 @@ class UserController extends Controller
             $certificate_image = $request->input('certificate_image');
             $certificate_type = $request->input('certificate_type');
             $nation = $request->input('nation');
+            $nation = $nation??1;
 //            $mobile_nation = $request->input('mobile_nation');
             $lang = \App::getLocale();
             $name = $request->input('name');
