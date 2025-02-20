@@ -13,6 +13,7 @@ use Encore\Admin\Widgets\Form; // 引入 Form 类
 
 class MemberTreeV2Controller extends Controller
 {
+
     public function index(Content $content, Request $request)
     {
         $content->title('用户结构');
@@ -52,11 +53,12 @@ class MemberTreeV2Controller extends Controller
 
     public function getMemberData(Request $request)
     {
+        $select = ['id', 'number', 'pid', 'real_name','level'];
         $id = $request->input('id');
         if ($id) {
-            $members = Member::with(['children' => function ($query) {
-                $query->select(['id', 'number', 'pid', 'real_name']);
-            }])->wherePid($id)->select(['id', 'number', 'pid', 'real_name'])->get();
+            $members = Member::with(['children' => function ($query)use($select) {
+                $query->select($select);
+            }])->wherePid($id)->select($select)->get();
 
 
             $data = [

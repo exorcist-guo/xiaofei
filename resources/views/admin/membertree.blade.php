@@ -55,7 +55,7 @@
                             @foreach ($data as $member)
                                 <li class="dd-item" data-id="{{$member->id}}">
                                     <div class="dd-handle">
-                                        {{$member->id}} - {{$member->number}} - {{$member->real_name}}
+                                        {{$member->id}} - {{$member->number}} - {{$member->real_name}} - L{{$member->level}}
                                     </div>
                                     @if(!empty($member->children))
                                         <ol class="dd-list">
@@ -65,7 +65,7 @@
                                                         <button data-action="getexpand"  data-id="{{$child->id}}" type="button">Expand</button>
                                                     @endif
                                                     <div class="dd-handle">
-                                                        {{$child->id}} - {{$child->number}} - {{$child->real_name}}
+                                                        {{$child->id}} - {{$child->number}} - {{$child->real_name}} - L{{$child->level}}
                                                     </div>
 
                                                 </li>
@@ -360,7 +360,7 @@
                                         if(member.children.length){
                                             str = str +  '<button data-action="getexpand"  data-id="'+ member.id+'" type="button">Expand</button>';
                                         }
-                                        str = str+  '<div class="dd-handle">' + member.id + ' - ' + member.number + ' - ' + member.real_name ;
+                                        str = str+  '<div class="dd-handle">' + member.id + ' - ' + member.number + ' - ' + member.real_name + ' -L' + member.level;
                                         str = str+  ' </ div></li> ';
 
                                     });
