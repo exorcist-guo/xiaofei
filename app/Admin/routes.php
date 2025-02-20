@@ -60,6 +60,9 @@ Route::group([
     $router->resource('member-examines', MemberExamineController::class); //待审核会员
     $router->resource('messages', MessageController::class); //留言管理
     $router->resource('member-tree', MemberTreeController::class); //用户树状图
+    $router->any('member-treev2', 'MemberTreeV2Controller@index')->name('index'); //新版树状图
+    $router->resource('treev2/get', MemberTreeV2Controller::class); //新版树状图
+    $router->any('treev2/get', 'MemberTreeV2Controller@getMemberData')->name('getMemberData');
 
     $router->resource('pv-orders', PvOrderController::class); //营业额订单
 

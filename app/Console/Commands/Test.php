@@ -70,8 +70,21 @@ class Test extends Command
     public function handle()
     {
 
+        $members = Member::with(['children' => function ($query) {
+            $query->select(['id', 'number', 'pid', 'real_name']);
+        }])->wherePid(0)->select(['id', 'number', 'pid', 'real_name'])->get();
+        foreach ($members as $member){
+            if(!empty($member->children)){
+                foreach ($member->children as $child){
+                    $childs = Member::with(['children' => function ($query) {
+                        $query->select(['id', 'number', 'pid', 'real_name']);
+                    }])->wherePid($child->id)->select(['id', 'number', 'pid', 'real_name'])->get();
+                    $child->children = $childs;
+                }
+            }
+        }
 
-        var_dump('2025-01-26 00:30:01' > '2025-01-26 00:11:10');
+        var_dump(json_decode(json_encode($member),true));
         exit;
         $push_orders = PvOrder::where('status',2)->get();
         foreach ($push_orders as $push_order){
