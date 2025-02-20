@@ -1,5 +1,5 @@
 <section class="content">
-    <div class="row"><div class="col-md-12"><form id="widget-form-67b684958e9d1" method="POST" action="" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
+    <div class="row"><div class="col-md-12"><form id="widget-form-67b684958e9d1" method="GET" action="" class="form-horizontal" accept-charset="UTF-8" pjax-container="1">
                 <div class="box-body fields-group">
                     <div class="form-group  ">
                         <label for="number" class="col-sm-2  control-label">账号</label>

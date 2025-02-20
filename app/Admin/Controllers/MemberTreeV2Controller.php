@@ -16,7 +16,7 @@ class MemberTreeV2Controller extends Controller
 
     public function index(Content $content, Request $request)
     {
-        $content->title('用户结构');
+        $content->title('网络图');
 
 
         // 添加搜索表单
