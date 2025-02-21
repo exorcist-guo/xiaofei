@@ -27,20 +27,20 @@ class MemberTreeV2Controller extends Controller
         $select = ['id', 'number', 'pid', 'real_name','level'];
         $number = $request->input('number','');
         if ($number) {
-            $members = Member::with(['children' => function ($query) {
-                $query->select();
-            }])->where('number', $number)->select($select)->get();
+            $members = Member::with(['children' => function ($query) use($select){
+                $query->where('is_disabled','<',8)->select($select);
+            }])->where('number', $number)->where('is_disabled','<',8)->select($select)->get();
         } else {
-            $members = Member::with(['children' => function ($query) {
-                $query->select();
-            }])->wherePid(0)->select($select)->get();
+            $members = Member::with(['children' => function ($query)use($select) {
+                $query->where('is_disabled','<',8)->select($select);
+            }])->wherePid(0)->where('is_disabled','<',8)->select($select)->get();
         }
         foreach ($members as $member){
             if(!empty($member->children)){
                 foreach ($member->children as $child){
                     $childs = Member::with(['children' => function ($query)use($select) {
-                        $query->select($select);
-                    }])->wherePid($child->id)->select($select)->get();
+                        $query->where('is_disabled','<',8)->select($select);
+                    }])->wherePid($child->id)->where('is_disabled','<',8)->select($select)->get();
                     $child->children = $childs;
                 }
             }
@@ -57,8 +57,8 @@ class MemberTreeV2Controller extends Controller
         $id = $request->input('id');
         if ($id) {
             $members = Member::with(['children' => function ($query)use($select) {
-                $query->select($select);
-            }])->wherePid($id)->select($select)->get();
+                $query->where('is_disabled','<',8)->select($select);
+            }])->wherePid($id)->where('is_disabled','<',8)->select($select)->get();
 
 
             $data = [
