@@ -13,11 +13,13 @@ use App\PostSaveMember;
 use App\PvLogs;
 use App\ShopLevel;
 use App\Transfer;
+use App\Withdrawal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
 
 class ChangeOrderJob implements ShouldQueue
@@ -95,14 +97,18 @@ class ChangeOrderJob implements ShouldQueue
                     $user->id_number = $content['id_number'];
                 }
                 if(!empty($content['password'])){
-                    $user->password = \Hash::make($content['password']);
+                    $user->password = Hash::make($content['password']);
                 }
                 if(!empty($content['transaction_password'])){
-                    $user->transaction_password = \Hash::make($content['transaction_password']);
+
+                    $user->transaction_password = Hash::make($content['transaction_password']);
+                    $user->is_set_transaction_password = 1;
                 }
                 $user->save();
                 $change_order->status = $success_status;
+
                 break;
+
             case 2:
                 if(isset($content['level_after'])){
                     LevelLog::addLevelLog($user,$content['level_after'],2,1);
@@ -289,6 +295,43 @@ class ChangeOrderJob implements ShouldQueue
                         $user->is_chuxiao = $is_chuxiao;
                         $user->save();
                     }
+                    $change_order->status = $success_status;
+                }
+                break;
+            case 21:
+                //提现审核
+                if(isset($content['status'])){
+                    $status = $content['status'];
+                    $w = Withdrawal::where('order_no',$change_order->order_no)->first();
+
+                    if($w->status != 0){
+                        $change_order->error = "该订单不是待审核状态";
+                    }else{
+                        if(empty($status)){
+                            $change_order->error = "导入订单状太不对";
+                        }else{
+                            $w->status = $status;
+                            $w->error_msg = isset($content['error_msg2'])?$content['error_msg2']:'';
+                            if($status == 4){
+                                //打款失败
+                                $user = Member::where('id',$w->member_id)->first();
+                                IntegralLogs::changeIntegral($w->amount,$user,1,3,$w->id,'提现驳回');
+
+                            }
+                            $w->save();
+                            $change_order->status = $success_status;
+                        }
+
+
+
+
+
+                    }
+
+
+
+
+
                     $change_order->status = $success_status;
                 }
                 break;

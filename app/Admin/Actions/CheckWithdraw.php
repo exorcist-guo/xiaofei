@@ -29,7 +29,9 @@ class CheckWithdraw extends RowAction
 
 
             \DB::transaction(function () use ($request, $model) {
-                $status = $request->input('status', 0);
+                $status = $request->input('withdrawal_status', 0);
+                $notes = $request->input('notes', '');
+
                 if($status == 0){
                     throw new \Exception('清选择审核状态');
                 }
@@ -38,6 +40,7 @@ class CheckWithdraw extends RowAction
                     throw new \Exception('已处理');
                 }
                 $model->status = $status;
+                $model->notes = $notes;
                 if($status == 1){
                     //驳回
                     $user = Member::where('id',$model->member_id)->first();
@@ -57,7 +60,8 @@ class CheckWithdraw extends RowAction
     public function form()
     {
 
-        $this->radio('status','审核')->options(['2'=> '已打款',1=>'驳回']);
+        $this->radio('withdrawal_status','审核')->options(['2'=> '已打款',1=>'驳回']);
+        $this->textarea('notes','原因');
 
     }
 

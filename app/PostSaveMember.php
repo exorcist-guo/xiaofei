@@ -62,6 +62,8 @@ class PostSaveMember extends Model
         9 => '冻结消费券修改',
         10 => '可用消费券修改',
         11 => '个人结算业绩修改',
+
+        21 => '提现打款状态',
     ];
 
 
@@ -74,6 +76,7 @@ class PostSaveMember extends Model
         '冻结消费券' => 9,
         '可用消费券' => 10,
         '个人结算业绩' => 11,
+        '提现单号' => 21,
     ];
 
     public function operator()

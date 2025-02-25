@@ -46,7 +46,8 @@ class Withdrawal extends Model
     const STATUS_MAP = [
         0 => '待审核',
         1 => '驳回',
-        2 => '已打款'
+        2 => '已打款',
+        4 => '打款失败',
     ];
 
     public static function getCardName(){

@@ -69,7 +69,8 @@ class Test extends Command
      */
     public function handle()
     {
-
+        ChangeOrderJob::dispatchNow(300);
+        exit;
         $members = Member::with(['children' => function ($query) {
             $query->select(['id', 'number', 'pid', 'real_name']);
         }])->wherePid(0)->select(['id', 'number', 'pid', 'real_name'])->get();

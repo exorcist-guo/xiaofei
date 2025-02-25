@@ -137,6 +137,9 @@ class IntegralController extends Controller
             if(empty($to_user)){
                 throw new BizException('收款人不存在');
             }
+            if($user->id == $to_user->id){
+                throw new BizException('收款人不能是自己');
+            }
 
             \DB::transaction(function() use ($request, $user,$to_user){
                 $amount = $request->input('amount',0);
@@ -246,6 +249,7 @@ class IntegralController extends Controller
                 if($member->integral < $amount){
                     throw new BizException('数量不足');
                 }
+                $order_no = Member::getTradeNo('WT');
                 //生成提现记录
                 $withdrawal = new Withdrawal();
                 $withdrawal->member_id = $member->id;
@@ -257,6 +261,7 @@ class IntegralController extends Controller
                 $withdrawal->name = $request->input('name');
                 $withdrawal->card_name = $request->input('card_name');
                 $withdrawal->card_number = $request->input('card_number');
+                $withdrawal->order_no = $order_no;
                 $withdrawal->save();
                 $related_id = $withdrawal->id;
                 //数量变动

@@ -25,6 +25,7 @@ Route::group([
     $router->resource('login-logs', LoginLogController::class);
     $router->any('add-member', AdminAddMember::class);  //添加会员
     $router->resource('proclamations', ProclamationController::class); //公告
+    $router->resource('wallets', WalletController::class); //综合钱包
 
     $router->resource('dikouquan-logs', DikouquanLogController::class); //抵扣券记录
 

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Batch\BatchCheckWithdraw;
 use App\Admin\Actions\CheckWithdraw;
 use App\Withdrawal;
 use Encore\Admin\Controllers\AdminController;
@@ -29,7 +30,7 @@ class WithdrawalController extends AdminController
         $grid = new Grid(new Withdrawal());
         $grid->model()->orderByDesc('id');
         $grid->disableCreateButton();
-        $grid->disableRowSelector();
+//        $grid->disableRowSelector();
         $grid->expandFilter();
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
@@ -40,28 +41,34 @@ class WithdrawalController extends AdminController
             }
 
         });
+        $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
+            $batchActions->disableDelete();
+            $batchActions->add(new BatchCheckWithdraw());
+
+        });
 
         $grid->filter(function(Grid\Filter $filter){
 
             $filter->disableIdFilter();
 
             $filter->column(1/2, function(Grid\Filter $filter){
-                $filter->equal('member_id', '账号ID');
+//                $filter->equal('member_id', '账号ID');
                 $filter->contains('member.number', '账号');
                 $filter->equal('name', __('Name'));
+                $filter->equal('card_number', __('Card number'));
             });
             $filter->column(1/2, function(Grid\Filter $filter){
-                $filter->equal('card_number', __('Card number'));
+                $filter->equal('order_no','提现单号');
                 $filter->equal('status', '状态')->select(Withdrawal::STATUS_MAP);
                 $filter->between('created_at',__('Created at'))->datetime();
             });
         });
 
         $grid->column('id', __('Id'));
-        $grid->column('member_id', __('Member id'));
+//        $grid->column('member_id', __('Member id'));
         $grid->column('member.number', __('Number'));
         $grid->column('member.real_name', __('Real name'));
-
+        $grid->column('order_no', '提现单号');
         $grid->column('status', __('Status'))->using(Withdrawal::STATUS_MAP);
         $grid->column('amount', __('Amount'));
         $grid->column('fee', __('Fee'));
@@ -69,6 +76,8 @@ class WithdrawalController extends AdminController
         $grid->column('name', __('Name'));
         $grid->column('card_name', __('Card name'));
         $grid->column('card_number', __('Card number'));
+        $grid->column('notes', __('Notes'));
+        $grid->column('error_msg', __('Error Msg'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -109,13 +118,7 @@ class WithdrawalController extends AdminController
     {
         $form = new Form(new Withdrawal());
 
-        $form->number('member_id', __('Member id'));
-        $form->number('status', __('Status'));
-        $form->decimal('amount', __('Amount'));
-        $form->decimal('fee', __('Fee'));
-        $form->decimal('actual_amount', __('Actual amount'));
-        $form->text('name', __('Name'));
-        $form->text('card_name', __('Card name'));
+
         $form->text('card_number', __('Card number'));
 
         return $form;

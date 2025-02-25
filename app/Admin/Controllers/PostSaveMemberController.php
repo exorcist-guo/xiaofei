@@ -70,6 +70,7 @@ class PostSaveMemberController extends AdminController
                 return  $content;
             }
         });
+        $grid->column('order_no', '单号');
         $grid->column('operator.name', __('Admin username'));
         $grid->column('error', __('Error'));
         $grid->column('created_at', __('Created at'));

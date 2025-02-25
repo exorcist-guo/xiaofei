@@ -260,7 +260,12 @@ class ChangeOrder extends Model
                             $view .= "国家由:{$nation[$content[$key.'_old']]}改为:{$nation[$val]}<br\>";
                         }
                         if($key == 'certificate_type'){
-                            $view .= "证件类型由:{$certificate_type[$content[$key.'_old']]}改为:{$certificate_type[$val]}<br\>";
+                            if(isset($certificate_type[$content[$key.'_old']])){
+                                $old_name = $certificate_type[$content[$key.'_old']];
+                            }else{
+                                $old_name = 'NULL';
+                            }
+                            $view .= "证件类型由:{$old_name}改为:{$certificate_type[$val]}<br\>";
                         }
                         if($key == 'mobile'){
                             $view .= "手机号由:{$content[$key.'_old']}修改为:{$val}<br\>";
@@ -370,6 +375,22 @@ class ChangeOrder extends Model
                     if(isset($content['is_chuxiao_after'])){
                         $is_chuxiao_mag = $content['is_chuxiao_after'] ? '已激活' : '未激活';
                         $view = "用户激活状态设置为：". $is_chuxiao_mag ;
+                    }
+                    break;
+                case 21:
+                    if(isset($content['status'])){
+                        if($content['status']){
+                            $status_name = Withdrawal::STATUS_MAP;
+                            $view = "审核状态：{$status_name[$content['status']]}" ;
+                        }else{
+                            $view = "审核状态：未识别" ;
+                        }
+
+                        if(isset($content['error_msg2']) && $content['error_msg2']){
+                            $view = "打款失败原因：{$content['error_msg2']}" ;
+                        }
+
+
                     }
                     break;
                 default:
