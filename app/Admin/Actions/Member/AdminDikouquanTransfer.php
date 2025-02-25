@@ -37,7 +37,9 @@ class AdminDikouquanTransfer extends RowAction
             if($amount == 0){
                 throw new BizException('转账数不能为0');
             }
-
+            if($user->id == $to_user->id){
+                throw new BizException('不能给自己转账');
+            }
 
             $result = ChangeOrder::Transfer($user,$amount,$to_user);
             if($result){
