@@ -70,7 +70,7 @@ class WalletController extends AdminController
             $filter->column(1 / 2, function (Grid\Filter $filter) {
 //                $filter->scope('wallet_type', '钱包类型');
                 $filter->between('integral',__('Integral'));
-                $filter->between('pv',__('Pv'));
+//                $filter->between('pv',__('Pv'));
                 $filter->between('dikouquan',__('Dikouquan'));
                 $filter->between('dikouquan_k',__('Dikouquan_k'));
 
@@ -89,25 +89,25 @@ class WalletController extends AdminController
 
 
         $grid->column('integral', __('Integral'))->sortable();
-        $grid->column('all_integral', __('All integral'))->sortable();
-        $grid->column('pv', __('Pv'))->sortable();
-        $grid->column('divvy_pv_t', __('Divvy Pv T'));
-        $grid->column('pv_leiji', '累计业绩')->display(function() {
-            if($this->path){
-                $path = $this->path . $this->id.'/';
-            }else{
-                $path = '/'.$this->id.'/';
-            }
-            $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
-            $all_divvy_pv = $all_divvy_pv + $this->divvy_pv + $this->divvy_pv_t;
-            return $all_divvy_pv;
-        });
-        $grid->column('divvy_pv', __('Divvy Pv'));
+//        $grid->column('all_integral', __('All integral'))->sortable();
+//        $grid->column('pv', __('Pv'))->sortable();
+//        $grid->column('divvy_pv_t', __('Divvy Pv T'));
+//        $grid->column('pv_leiji', '累计业绩')->display(function() {
+//            if($this->path){
+//                $path = $this->path . $this->id.'/';
+//            }else{
+//                $path = '/'.$this->id.'/';
+//            }
+//            $all_divvy_pv = Member::where('path', 'like', "{$path}%")->sum('divvy_pv');
+//            $all_divvy_pv = $all_divvy_pv + $this->divvy_pv + $this->divvy_pv_t;
+//            return $all_divvy_pv;
+//        });
+//        $grid->column('divvy_pv', __('Divvy Pv'));
 
         $grid->column('dikouquan', __('Dikouquan'))->sortable();
         $grid->column('dikouquan_k', __('Dikouquan_k'))->sortable();
 
-        $grid->column('created_at', __('Created at'));
+//        $grid->column('created_at', __('Created at'));
 
 
 
@@ -131,9 +131,9 @@ class WalletController extends AdminController
         $show->field('mobile', __('Mobile'));
         $show->field('number', __('Number'));
         $show->field('integral', __('Integral'));
-        $show->field('all_integral', __('All integral'));
+//        $show->field('all_integral', __('All integral'));
         $show->field('pv', __('Pv'));
-        $show->field('avatar', __('Avatar'));
+//        $show->field('avatar', __('Avatar'));
         $show->field('real_name', __('Real name'));
         $show->field('id_number', __('Id number'));
         $show->field('password', __('Password'));
