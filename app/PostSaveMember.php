@@ -53,7 +53,7 @@ class PostSaveMember extends Model
     const TYPE_MAP = [
         1 => '会员信息修改',
         2 => '会员等级修改',
-        3 => '会员积分修改',
+        3 => '会员奖励金修改',
         4 => '修改营业额',
         5 => '修改状态',
         6 => '修改上级',
@@ -69,7 +69,7 @@ class PostSaveMember extends Model
 
     const TITLE_MAP = [
         '会员等级' => 2,
-        '积分' => 3,
+        '奖励金' => 3,
         '营业额' => 4,
         '会员状态' => 5,
         '社区等级' => 7,

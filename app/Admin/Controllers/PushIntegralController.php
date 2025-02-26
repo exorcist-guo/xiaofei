@@ -15,7 +15,7 @@ class PushIntegralController extends AdminController
      *
      * @var string
      */
-    protected $title = '积分推送';
+    protected $title = '奖励金推送';
 
     /**
      * Make a grid builder.

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $member_id
  * @property int $admin_id 操作员ID
- * @property int $type 1会员信息修改,2修改等级，3修改积分,4修改营业额
+ * @property int $type 1会员信息修改,2修改等级，3修改奖励金,4修改营业额
  * @property int $status 0待审核,1审核失败,2审核通过,3修改完成
  * @property string $content 内容
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -40,7 +40,7 @@ class ChangeOrder extends Model
     const TYPE_MAP = [
         1 => '会员信息修改',
         2 => '会员等级修改',
-        3 => '会员积分修改',
+        3 => '会员奖励金修改',
         4 => '修改营业额',
         5 => '修改状态',
         6 => '修改上级',
@@ -54,7 +54,7 @@ class ChangeOrder extends Model
     ];
 
     const ASSET_TYPE = [
-        3 => '积分',
+        3 => '奖励金',
         4 => '营业额',
         9 => '冻结消费券',
         10 => '可用消费券',

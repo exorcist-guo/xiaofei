@@ -118,7 +118,7 @@ class ChangeOrderJob implements ShouldQueue
                 }
                 break;
             case 3:
-                //积分变动
+                //奖励金变动
                 if($content['amount'] > 0){
                     $result = IntegralLogs::changeIntegral(abs($content['amount']),$user,1,7,$change_order->id);
                 }else{
