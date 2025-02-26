@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder whereStatus($value)
  * @property float|null $cash_amount
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder whereCashAmount($value)
+ * @property-read \App\Member $member
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder filterMember($memberId)
  */
 class PvOrder extends Model
 {

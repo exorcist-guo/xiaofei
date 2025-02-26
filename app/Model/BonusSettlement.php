@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\BonusSettlement whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\BonusSettlement whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Encore\Admin\Auth\Database\Administrator $operator
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\BonusSettlement operatorMember($memberId)
  */
 class BonusSettlement extends Model
 {

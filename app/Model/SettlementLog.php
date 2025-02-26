@@ -40,6 +40,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementLog whereStatus($value)
  * @property float $balance_after 变动后数量
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementLog whereBalanceAfter($value)
+ * @property-read \App\Member $member
+ * @property-read \App\PvOrder|null $related
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementLog filterMember($memberId)
  */
 class SettlementLog extends Model
 {

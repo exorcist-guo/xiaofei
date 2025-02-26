@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopNumber whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopNumber whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Member|null $member
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopNumber filterMember($memberId)
  */
 class ShopNumber extends Model
 {

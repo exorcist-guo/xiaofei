@@ -4,6 +4,7 @@ namespace App;
 
 use App\Traits\BelongsToMember;
 use Encore\Admin\Auth\Database\Administrator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -31,6 +32,12 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int $audite_admin_id 审核员ID
  * @method static \Illuminate\Database\Eloquent\Builder|\App\ChangeOrder whereAuditeAdminId($value)
+ * @property-read \Encore\Admin\Auth\Database\Administrator $audite
+ * @property-read \App\Member $member
+ * @property-read \Encore\Admin\Auth\Database\Administrator $operator
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ChangeOrder auditeMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ChangeOrder filterMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\ChangeOrder operatorMember($memberId)
  */
 class ChangeOrder extends Model
 {

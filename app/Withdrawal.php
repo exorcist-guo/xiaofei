@@ -37,6 +37,14 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Withdrawal whereUpdatedAt($value)
  * @property-read \App\Member $member
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Withdrawal filterMember($memberId)
+ * @property string|null $notes 原因
+ * @property string|null $error_msg 失败原因
+ * @property string|null $order_no
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Withdrawal whereErrorMsg($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Withdrawal whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Withdrawal whereOrderNo($value)
+ * @property string|null $rate 汇率
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Withdrawal whereRate($value)
  */
 class Withdrawal extends Model
 {

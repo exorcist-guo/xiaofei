@@ -4,6 +4,7 @@ namespace App;
 
 use App\Traits\BelongsToMember;
 use Encore\Admin\Auth\Database\Administrator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -35,6 +36,15 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PostSaveMember whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PostSaveMember whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $order_no 订单号
+ * @property-read \Encore\Admin\Auth\Database\Administrator $audite
+ * @property-read \App\Member $member
+ * @property-read \Encore\Admin\Auth\Database\Administrator $operator
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PostSaveMember auditeMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PostSaveMember filterMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PostSaveMember operatorMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PostSaveMember whereOrderNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PostSaveMember whereVal($value)
  */
 class PostSaveMember extends Model
 {

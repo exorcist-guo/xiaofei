@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Encore\Admin\Auth\Database\Administrator;
+use Illuminate\Database\Eloquent\Builder;
 
 trait AdminOperatorTrait
 {

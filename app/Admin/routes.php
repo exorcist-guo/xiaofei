@@ -67,6 +67,7 @@ Route::group([
     $router->any('treev2/get', 'MemberTreeV2Controller@getMemberData')->name('getMemberData');
 
     $router->resource('pv-orders', PvOrderController::class); //营业额订单
+    $router->resource('exchange-rates', ExchangeRateController::class); // 汇率设置
 
 
 //php artisan admin:make PostMemberController --model=App\PostMember  --title=会员导入

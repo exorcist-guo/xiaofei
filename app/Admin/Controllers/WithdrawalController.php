@@ -73,6 +73,12 @@ class WithdrawalController extends AdminController
         $grid->column('amount', __('Amount'));
         $grid->column('fee', __('Fee'));
         $grid->column('actual_amount', __('Actual amount'));
+        $grid->column('rate', __('Rate'));
+        $grid->column('rate_amount', '转换到账金额')->display(function(){
+            $rate = $this->rate ?? 0;
+            $rate_amount = bcmul($this->rate,$this->actual_amount,2);
+            return $rate_amount;
+        });
         $grid->column('name', __('Name'));
         $grid->column('card_name', __('Card name'));
         $grid->column('card_number', __('Card number'));

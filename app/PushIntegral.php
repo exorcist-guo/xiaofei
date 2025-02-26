@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PushIntegral whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PushIntegral whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Member $member
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PushIntegral filterMember($memberId)
  */
 class PushIntegral extends Model
 {

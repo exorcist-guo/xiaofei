@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \App\Member $member
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Message filterMember($memberId)
+ * @property-read \Encore\Admin\Auth\Database\Administrator $operator
  */
 class Message extends Model
 {

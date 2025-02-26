@@ -94,6 +94,16 @@ use Illuminate\Support\Facades\Redis;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereTransactionPassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $shop_level_time 社群时间
+ * @property float|null $divvy_pv_t 特殊已结算业绩，只对自己有效
+ * @property int|null $is_chuxiao 0 不发放促销  1 发放促销
+ * @property string|null $chuxiao_time 激活时间
+ * @property-read \App\Member|null $shop
+ * @property-read \App\Member|null $spread
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereChuxiaoTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereDivvyPvT($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereIsChuxiao($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Member whereShopLevelTime($value)
  */
 class Member extends Authenticatable
 {

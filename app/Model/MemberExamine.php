@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Traits\BelongsToMember;
 use Encore\Admin\Auth\Database\Administrator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -33,6 +34,20 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine whereRealName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int|null $is_disabled
+ * @property string|null $msg
+ * @property string|null $certificate_image
+ * @property int|null $audite_admin_id
+ * @property-read \Encore\Admin\Auth\Database\Administrator|null $audite
+ * @property-read \App\Member|null $member
+ * @property-read \Encore\Admin\Auth\Database\Administrator $operator
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine auditeMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine filterMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine operatorMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine whereAuditeAdminId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine whereCertificateImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine whereIsDisabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberExamine whereMsg($value)
  */
 class MemberExamine extends Model
 {

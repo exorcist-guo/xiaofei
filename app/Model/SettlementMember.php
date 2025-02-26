@@ -40,6 +40,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\model\SettlementMember whereStatus($value)
  * @property int $shop_member_id 所属社区
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementMember whereShopMemberId($value)
+ * @property float|null $fl 福利
+ * @property-read \App\Member $member
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementMember filterMember($memberId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SettlementMember whereFl($value)
  */
 class SettlementMember extends Model
 {

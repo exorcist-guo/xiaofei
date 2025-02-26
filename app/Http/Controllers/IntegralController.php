@@ -9,6 +9,7 @@ use App\IntegralLogs;
 use App\Jobs\PushPvJob;
 use App\Member;
 use App\Model\DikouquanLog;
+use App\Model\ExchangeRate;
 use App\PushDikouquan;
 use App\PushIntegral;
 use App\PushOrder;
@@ -250,6 +251,8 @@ class IntegralController extends Controller
                     throw new BizException('数量不足');
                 }
                 $order_no = Member::getTradeNo('WT');
+                $rate = ExchangeRate::whereStatus(0)->value('rate');
+                $rate = $rate??0;
                 //生成提现记录
                 $withdrawal = new Withdrawal();
                 $withdrawal->member_id = $member->id;
@@ -262,6 +265,7 @@ class IntegralController extends Controller
                 $withdrawal->card_name = $request->input('card_name');
                 $withdrawal->card_number = $request->input('card_number');
                 $withdrawal->order_no = $order_no;
+                $withdrawal->rate = $rate;
                 $withdrawal->save();
                 $related_id = $withdrawal->id;
                 //数量变动
