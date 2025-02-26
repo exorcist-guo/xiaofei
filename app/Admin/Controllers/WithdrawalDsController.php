@@ -11,7 +11,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
 
-class WithdrawalController extends AdminController
+class WithdrawalDsController extends AdminController
 {
     /**
      * Title for current resource.

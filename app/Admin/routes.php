@@ -17,6 +17,7 @@ Route::group([
     $router->resource('members', MemberController::class); //会员列表
     $router->resource('member-shop', MemberShopController::class); //社区列表
     $router->resource('withdrawals', WithdrawalController::class);
+    $router->resource('withdrawal-ds', WithdrawalDsController::class);
     $router->resource('transfers', TransferController::class);
     $router->resource('push-orders', PushOrderController::class);
     $router->resource('pv-logs', PvLogController::class);
