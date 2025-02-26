@@ -44,7 +44,7 @@ class ExchangeRateController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('rate', __('Rate'));
         $grid->column('status', __('Status'))->using(ExchangeRate::STATUS_MAP);
-        $grid->column('admin_id', __('Admin id'));
+        $grid->column('operator.name', __('Admin username'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -88,6 +88,7 @@ class ExchangeRateController extends AdminController
             if($rate == 0){
                 throw new BizException('汇率不能为0');
             }
+            $form->model()->admin_id = ADMIN_ID;
 
             try{
                 ExchangeRate::whereStatus(0)->update(['status'=>1]);

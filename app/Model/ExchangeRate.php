@@ -37,12 +37,12 @@ class ExchangeRate extends Model
         1 => '停用',
     ];
 
-    public function audite()
+    public function operator()
     {
         return $this->belongsTo(Administrator::class, 'admin_id', 'id');
     }
 
-    public function scopeAuditeMember(Builder $query, $memberId)
+    public function scopeOperatorMember(Builder $query, $memberId)
     {
         $query->where('admin_id', $memberId);
     }
