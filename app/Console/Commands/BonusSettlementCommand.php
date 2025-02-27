@@ -211,7 +211,7 @@ class BonusSettlementCommand extends Command
         $shop_level = 0;
         $member_id_j = 0;
         $member_id_list = Member::getIdMember($user_ids);
-        $all_pv = $pv_order->amount;
+        $all_pv = $pv_order->cash_amount;
         if(empty($all_pv)){
             return true;
         }
@@ -363,10 +363,10 @@ class BonusSettlementCommand extends Command
 
     //增加结算业绩
     public function addDivvyPv($user,$pv_order,$bonus_settlement_id,$levels=[]){
-        $amount = $pv_order->amount;
+        $amount = $pv_order->cash_amount;
         DivvyPvLogs::changeIntegral($amount,$user,1,1,$pv_order->id);
         $settlement_member = SettlementMember::getSettlementMember($user,$bonus_settlement_id);
-        SettlementLog::addLog($amount,$pv_order->amount,1,$settlement_member,5,$pv_order->id);
+        SettlementLog::addLog($amount,$pv_order->cash_amount,1,$settlement_member,5,$pv_order->id);
 
         Member::checkLevel($user,$levels);
         if($user->is_chuxiao == 0){
@@ -399,7 +399,7 @@ class BonusSettlementCommand extends Command
                     $ratio_j = 0;
                 }
                 $y_ratio = bcsub($ratio,$ratio_j,2);
-                $s_amount = bcmul($y_ratio, $pv_order->amount,2);
+                $s_amount = bcmul($y_ratio, $pv_order->cash_amount,2);
 
                 if($user->id == $member->id){
                     $type = 10;
@@ -410,7 +410,7 @@ class BonusSettlementCommand extends Command
                 }
 
 
-                SettlementLog::addLog($s_amount,$pv_order->amount,$y_ratio,$settlement_member,$type,$pv_order->id,$remark);
+                SettlementLog::addLog($s_amount,$pv_order->cash_amount,$y_ratio,$settlement_member,$type,$pv_order->id,$remark);
                 $level = $member->level;
                 $member_id_j = $member->number;
 
@@ -424,8 +424,8 @@ class BonusSettlementCommand extends Command
             if($member && $member->is_chuxiao &&  !empty( $levels[$member->level]['jc_ratio']) && $member->is_disabled < 9){
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                 $y_ratio =  $levels[$member->level]['tj_ratio'];
-                $s_amount = bcmul($y_ratio, $pv_order->amount,2);
-                SettlementLog::addLog($s_amount,$pv_order->amount,$y_ratio,$settlement_member,4,$pv_order->id);
+                $s_amount = bcmul($y_ratio, $pv_order->cash_amount,2);
+                SettlementLog::addLog($s_amount,$pv_order->cash_amount,$y_ratio,$settlement_member,4,$pv_order->id);
             }
         }
     }
@@ -458,14 +458,14 @@ class BonusSettlementCommand extends Command
         $user_ids = explode('/',$user->path);
         $user_ids[0] = $user->id;
         $jihuo_ratio = 0.25; //激活比率
-        $jihuo_amount = bcmul($pv_order->amount,$jihuo_ratio,2);
+        $jihuo_amount = bcmul($pv_order->cash_amount,$jihuo_ratio,2);
         foreach ($user_ids as $user_id){
             if(!$user_id) continue;
             $member = Member::whereId($user_id)->first();
             if($member && $member->is_chuxiao && $member->is_disabled < 9 && $member->dikouquan > 0){
                 //有冻结消费券的用户
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
-                SettlementLog::addLog($jihuo_amount,$pv_order->amount,$jihuo_ratio,$settlement_member,2,$pv_order->id);
+                SettlementLog::addLog($jihuo_amount,$pv_order->cash_amount,$jihuo_ratio,$settlement_member,2,$pv_order->id);
             }
         }
 
