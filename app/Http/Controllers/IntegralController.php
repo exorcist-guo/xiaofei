@@ -52,7 +52,11 @@ class IntegralController extends Controller
             ->get()
             ->map(function(IntegralLogs $log)use($status_map){
                 $data =  $log->only(['id', 'member_id', 'action', 'amount', 'balance_before','balance_after','remark', 'created_at']);
-                $data['action_name'] = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
+
+                $action_name = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
+                $data['action_name'] = __('namemap.'.$action_name);
+
+             
                 $data['created_at'] = date('Y-m-d H:i', $log->created_at->timestamp);
                 return $data;
             })
@@ -89,7 +93,9 @@ class IntegralController extends Controller
             ->get()
             ->map(function(PvLogs $log)use($status_map){
                 $data =  $log->only(['id', 'member_id', 'action', 'amount', 'balance_before','balance_after','remark', 'created_at']);
-                $data['action_name'] = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
+                $action_name = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
+                $data['action_name'] = __('namemap.'.$action_name);
+
                 $data['created_at'] = date('Y-m-d H:i', $log->created_at->timestamp);
                 return $data;
             })
@@ -437,7 +443,8 @@ class IntegralController extends Controller
             ->get()
             ->map(function(DikouquanLog $log)use($status_map){
                 $data =  $log->only(['id', 'member_id', 'action', 'amount', 'balance_before','balance_after','remark', 'created_at']);
-                $data['action_name'] = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
+                $action_name = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
+                $data['action_name'] = __('namemap.'.$action_name);
                 $data['created_at'] = date('Y-m-d H:i', $log->created_at->timestamp);
                 return $data;
             })
