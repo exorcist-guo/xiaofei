@@ -82,6 +82,8 @@ class ForeignController extends Controller
         $amount = $request->input('amount',0);
         $cash_amount = $request->input('cash_amount',0);
         $redis_key = 'push_mobile'.$order_no;
+        $point = $request->input('point',0);
+        $dikou = $request->input('dikou',0);
 
         try {
             if(!Redis::set($redis_key, 1, 'ex', 15, 'nx')) {
@@ -122,6 +124,9 @@ class ForeignController extends Controller
                     'status' => 0,
                     'created_at' => $time,
                     'updated_at' => $time,
+                    'point' => $point,
+                    'dikou' => $dikou,
+                
                 ]);
                 if(!$order_id){
                     throw new BizException('插入订单失败');
