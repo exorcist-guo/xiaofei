@@ -126,7 +126,7 @@ class ForeignController extends Controller
                     'updated_at' => $time,
                     'point' => $point,
                     'dikou' => $dikou,
-                
+
                 ]);
                 if(!$order_id){
                     throw new BizException('插入订单失败');

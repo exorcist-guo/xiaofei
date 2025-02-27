@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $status 0 使用中 1 停用
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ExchangeRate whereStatus($value)
+ * @property-read \Encore\Admin\Auth\Database\Administrator|null $operator
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ExchangeRate operatorMember($memberId)
  */
 class ExchangeRate extends Model
 {

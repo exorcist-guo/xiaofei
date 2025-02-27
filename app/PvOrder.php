@@ -32,6 +32,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder whereCashAmount($value)
  * @property-read \App\Member $member
  * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder filterMember($memberId)
+ * @property float|null $point huan
+ * @property float|null $dikou 抵扣券
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder whereDikou($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PvOrder wherePoint($value)
  */
 class PvOrder extends Model
 {
