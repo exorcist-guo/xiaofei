@@ -69,6 +69,10 @@ class Test extends Command
      */
     public function handle()
     {
+        $key = 'config_card_names';
+        Redis::set($key,0,'ex',60);
+        var_dump(0);
+        exit;
         ChangeOrderJob::dispatchNow(300);
         exit;
         $members = Member::with(['children' => function ($query) {

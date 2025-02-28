@@ -63,7 +63,7 @@ class Withdrawal extends Model
         $names = Redis::get($key);
         if(!$names){
            $names = config('base.card_names');
-           Redis::set($key,$names,60);
+           Redis::set($key,$names,'ex',60);
         }
         return explode(',',$names);
     }
