@@ -47,7 +47,7 @@ class IntegralController extends Controller
         $limit = 16;
         $status_map =  IntegralLogs::STATUS_MAP;
         $data = IntegralLogs::whereMemberId($user->id)
-            ->where('status', 12)
+            ->where('action', 12)
             ->orderBy('id', 'desc')
             ->forPage($page, $limit)
             ->get()
