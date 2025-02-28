@@ -62,6 +62,7 @@ class AdminAddMember extends Form
             $user = new Member();
             $user->pid = $pid;
             $user->mobile = $mobile;
+            $user->group_number = $parent->group_number;
             $user->pid_shop_member_id = $pid_shop_member_id;
             $user->shop_member_id = $shop_member_id;
             $user->path = $path;

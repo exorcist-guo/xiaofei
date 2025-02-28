@@ -415,6 +415,7 @@ class UserController extends Controller
             }else{
                 $path = '/'.$pid.'/';
             }
+            $group_number = $parent->group_number;
             $data = [
                 'mobile' => $mobile,
                 'level' => 0,
@@ -438,6 +439,7 @@ class UserController extends Controller
                 'path' => $path,
                 'is_disabled' => 7,
                 'certificate_image' => $certificate_image,
+                'group_number' => $group_number,
             ];
             $member = DB::table('members')->where('mobile',$mobile)->where('is_disabled',8)->first();
             if($member){

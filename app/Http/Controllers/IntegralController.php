@@ -56,7 +56,7 @@ class IntegralController extends Controller
                 $action_name = isset($status_map[$data['action']])?$status_map[$data['action']]:$data['action'];
                 $data['action_name'] = __('namemap.'.$action_name);
 
-             
+
                 $data['created_at'] = date('Y-m-d H:i', $log->created_at->timestamp);
                 return $data;
             })
@@ -386,12 +386,12 @@ class IntegralController extends Controller
             if($transfer_type == 3){
                 throw new BizException('互转已关闭');
             }
-            if(config('base.transfer_type') == 2){
+            if($transfer_type == 2){
                 //限制网体互转
                 if($to_user->shop_level && $user->shop_level){
-                        if($user->group_number != $to_user->group_number){
-                            throw new BizException('不在同一个市场不能互转');
-                        }
+                    if($user->group_number != $to_user->group_number){
+                        throw new BizException('不在同一个市场不能互转');
+                    }
                 }elseif($user->shop_member_id != $to_user->shop_member_id){
                     throw new BizException('不在同一个社群不能互转');
                 }
@@ -418,9 +418,9 @@ class IntegralController extends Controller
                 $ransfer->save();
                 $related_id = $ransfer->id;
                 //数量变动
-                $remark = '转出到'.$to_user->mobile;
+                $remark = '转出到'.$to_user->number;
                 DikouquanLog::changeIntegralK($amount,$member,0,14,$related_id,$remark);
-                $remark = $member->mobile.'转入';
+                $remark = $member->number.'转入';
                 DikouquanLog::changeIntegralK($amount,$to_user,1,4,$related_id,$remark);
             });
             Redis::expire($redis_key,3);
