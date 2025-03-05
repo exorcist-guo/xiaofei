@@ -219,6 +219,10 @@ class IntegralController extends Controller
                 'required',
             ],
             'name' => 'required',
+            'verify' => [
+                'required',
+                sprintf("verify_code:%s,withdrawal", $user->mobile)
+            ],
             'card_name' => 'required',
             'card_number' => 'required',
             'trade_password' => sprintf('required|verify_trad_password:%s', $user->transaction_password)
@@ -226,6 +230,7 @@ class IntegralController extends Controller
 
         $messages = [
             'required' => '参数不能为空',
+            'verify.verify_code' => '验证码错误',
             'verify_trad_password' => '交易密码错误',
         ];
 
@@ -267,7 +272,6 @@ class IntegralController extends Controller
                 $withdrawal->amount = $amount;
                 $withdrawal->fee = 0;
                 $withdrawal->actual_amount = $amount;
-                $withdrawal->amount = $amount;
                 $withdrawal->name = $request->input('name');
                 $withdrawal->card_name = $request->input('card_name');
                 $withdrawal->card_number = $request->input('card_number');
