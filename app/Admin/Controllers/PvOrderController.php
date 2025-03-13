@@ -54,8 +54,8 @@ class PvOrderController extends AdminController
         $grid->column('member.real_name', __('Real name'));
         $grid->column('amount', __('Amount'));
         $grid->column('cash_amount', __('Cash amount'));
-        $grid->column('point', '环宇星');
-        $grid->column('dikou', '消费券');
+        $grid->column('point', '钻石');
+        $grid->column('dikou', '抵扣券');
         $grid->column('order_no', __('Order no'));
         $grid->column('status', __('Status'))->using(PvOrder::STATUS_MAP);
         $grid->column('created_at', __('Created at'));

@@ -247,7 +247,7 @@ class ChangeOrderJob implements ShouldQueue
                 }
                 break;
             case 12:
-                //转账消费券
+                //转账抵扣券
                 if($content['amount'] > 0){
                     try{
                         \DB::transaction(function() use ($content, $user){

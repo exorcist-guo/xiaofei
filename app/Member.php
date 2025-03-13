@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Redis;
  * @property float $pv 业绩
  * @property float $divvy_pv 已结算业绩
  * @property float $dikouquan 抵扣券数量
- * @property float $dikouquan_k 可用消费券
+ * @property float $dikouquan_k 可用抵扣券
  * @property int $pid_shop_member_id 上级社区
  * @property int $shop_member_id 所属社区
  * @property string $avatar 图像

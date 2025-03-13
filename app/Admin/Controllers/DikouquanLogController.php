@@ -43,7 +43,7 @@ class DikouquanLogController extends AdminController
                 $filter->equal('related_id', __('Related id'));
             });
             $filter->column(1/2, function(Grid\Filter $filter){
-                $filter->equal('type',  '消费券类型')->select(DikouquanLog::TYPE_MAP);
+                $filter->equal('type',  '抵扣券类型')->select(DikouquanLog::TYPE_MAP);
                 $filter->equal('action', '动作')->select(DikouquanLog::STATUS_MAP);
                 $filter->between('created_at',__('Created at'))->datetime();
             });
@@ -54,7 +54,7 @@ class DikouquanLogController extends AdminController
         $grid->column('member.number', __('Number'));
         $grid->column('member.real_name', __('Real name'));
         $grid->column('action', __('Action'))->using(DikouquanLog::STATUS_MAP);
-        $grid->column('type', '消费券类型')->using(DikouquanLog::TYPE_MAP);
+        $grid->column('type', '抵扣券类型')->using(DikouquanLog::TYPE_MAP);
         $grid->column('amount', __('Amount'));
         $grid->column('balance_before', __('Balance before'));
         $grid->column('balance_after', __('Balance after'));

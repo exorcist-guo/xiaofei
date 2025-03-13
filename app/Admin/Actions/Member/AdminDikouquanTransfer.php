@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Redis;
 
 class AdminDikouquanTransfer extends RowAction
 {
-    public $name = '消费券转账';
+    public $name = '抵扣券转账';
 
     public function handle(Member $user, Request $request)
     {
@@ -26,7 +26,7 @@ class AdminDikouquanTransfer extends RowAction
             $amount = $request->input('amount',0);
             $amount = abs($amount);
             if($amount > $user->dikouquan_k){
-                throw new BizException('用户消费券数量不足');
+                throw new BizException('用户抵扣券数量不足');
             }
 
 

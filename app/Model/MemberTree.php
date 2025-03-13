@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $divvy_pv 已结算业绩
  * @property float|null $divvy_pv_t 特殊已结算业绩，只对自己有效
  * @property float $dikouquan 抵扣券数量
- * @property float $dikouquan_k 可用消费券
+ * @property float $dikouquan_k 可用抵扣券
  * @property int $pid_shop_member_id 上级社区
  * @property int $shop_member_id 所属社区
  * @property string $avatar 图像

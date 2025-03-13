@@ -18,7 +18,7 @@ class ChangeOrderDController extends AdminController
      *
      * @var string
      */
-    protected $title = '消费券变动申请';
+    protected $title = '抵扣券变动申请';
 
     /**
      * Make a grid builder.

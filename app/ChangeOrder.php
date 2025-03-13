@@ -53,18 +53,18 @@ class ChangeOrder extends Model
         6 => '修改上级',
         7 => '社区等级修改',
         8 => '社区等级防降级',
-        9 => '冻结消费券修改',
-        10 => '可用消费券修改',
+        9 => '冻结抵扣券修改',
+        10 => '可用抵扣券修改',
         11 => '个人结算业绩修改',
-        12 => '消费券转账申请',
+        12 => '抵扣券转账申请',
         13 => '激活设置',
     ];
 
     const ASSET_TYPE = [
         3 => '奖励金',
         4 => '营业额',
-        9 => '冻结消费券',
-        10 => '可用消费券',
+        9 => '冻结抵扣券',
+        10 => '可用抵扣券',
         11 => '个人结算业绩',
     ];
 
@@ -301,9 +301,9 @@ class ChangeOrder extends Model
                 case 3:
                     if(isset($content['amount'])){
                         if($content['amount']>0 ){
-                            $view = "增加消费券:". abs($content['amount']);
+                            $view = "增加抵扣券:". abs($content['amount']);
                         }else{
-                            $view = "减少消费券:". abs($content['amount']);
+                            $view = "减少抵扣券:". abs($content['amount']);
                         }
 
                     }
@@ -375,7 +375,7 @@ class ChangeOrder extends Model
                     break;
                 case 12:
                     if(isset($content['amount']) && isset($content['to_number'])){
-                        $view = "转账消费券：{$content['amount']} 到账号：{$content['to_number']}";
+                        $view = "转账抵扣券：{$content['amount']} 到账号：{$content['to_number']}";
                     }
                     break;
                 case 13:

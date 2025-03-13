@@ -52,7 +52,7 @@ class SettlementLog extends Model
 
     const TYPE_MAP = [
         1 => '推新奖励',
-        2 => '消费奖励',
+        2 => '激活抵扣券',
 
         3 => '极差奖励',
         10 => '福利奖励',
