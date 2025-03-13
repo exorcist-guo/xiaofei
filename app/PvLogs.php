@@ -59,6 +59,7 @@ class PvLogs extends Model
             'order_no' => Member::getTradeNo('DR'),
             'amount' => $amount,
             'cash_amount' => $amount,
+            'cash_amount_new' => $amount,
             'status' => 1,
             'created_at' => $time,
             'updated_at' => $time,

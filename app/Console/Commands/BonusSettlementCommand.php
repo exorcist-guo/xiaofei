@@ -103,8 +103,7 @@ class BonusSettlementCommand extends Command
                                             $this->chuxiao($user,$pv_order,$bonus_settlement_id);
                                         }
 
-                                        //激活奖励
-                                        $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
+
                                     }
 
 
@@ -119,6 +118,8 @@ class BonusSettlementCommand extends Command
 
                                     if($user->is_chuxiao){
 
+                                        //激活奖励
+                                        $this->jihuoJiang($user,$pv_order,$bonus_settlement_id);
 
                                         //极差奖励
                                         $this->jicha($user,$pv_order,$bonus_settlement_id,$levels);

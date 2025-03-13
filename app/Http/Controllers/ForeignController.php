@@ -80,7 +80,7 @@ class ForeignController extends Controller
         $order_no = $request->input('order_no','');
         $mobile = $request->input('mobile','');
         $amount = $request->input('amount',0);
-        $cash_amount = $request->input('cash_amount',0);
+        $cash_amount_new = $request->input('cash_amount',0);
         $redis_key = 'push_mobile'.$order_no;
         $point = $request->input('point',0);
         $dikou = $request->input('dikou',0);
@@ -107,6 +107,11 @@ class ForeignController extends Controller
             if($order){
                 throw new BizException('订单号重复');
             }
+            if(config('dividend.jieduan_chuxiao',2) == 1){
+                $cash_amount =  $amount;
+            }else{
+                $cash_amount =  $cash_amount_new;
+            }
 //            \DB::transaction(function() use($user, $request){
 //                $user = Member::whereId($user->id)->lockForUpdate()->first();
 //                $order_no = $request->input('order_no','');
@@ -121,6 +126,7 @@ class ForeignController extends Controller
                     'order_no' => $order_no,
                     'amount' => $amount,
                     'cash_amount' => $cash_amount,
+                    'cash_amount_new' => $cash_amount_new,
                     'status' => 0,
                     'created_at' => $time,
                     'updated_at' => $time,
