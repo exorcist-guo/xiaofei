@@ -347,9 +347,9 @@ class ChangeOrder extends Model
                 case 9:
                     if(isset($content['amount'])){
                         if($content['amount']>0 ){
-                            $view = "增加冻结消费劵:". abs($content['amount']);
+                            $view = "增加冻结抵扣券:". abs($content['amount']);
                         }else{
-                            $view = "减少冻结消费劵:". abs($content['amount']);
+                            $view = "减少冻结抵扣券:". abs($content['amount']);
                         }
 
                     }
@@ -357,9 +357,9 @@ class ChangeOrder extends Model
                 case 10:
                     if(isset($content['amount'])){
                         if($content['amount']>0 ){
-                            $view = "增加可用消费劵:". abs($content['amount']);
+                            $view = "增加可用抵扣券:". abs($content['amount']);
                         }else{
-                            $view = "减少可用消费劵:". abs($content['amount']);
+                            $view = "减少可用抵扣券:". abs($content['amount']);
                         }
 
                     }
