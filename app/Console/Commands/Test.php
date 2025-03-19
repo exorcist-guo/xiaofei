@@ -69,9 +69,7 @@ class Test extends Command
      */
     public function handle()
     {
-        $key = 'config_card_names';
-        Redis::set($key,0,'ex',60);
-        var_dump(0);
+        $this->cleanAllData();
         exit;
         ChangeOrderJob::dispatchNow(300);
         exit;
@@ -303,7 +301,7 @@ exit;
             'level_log' => 0,
             'login_log' => 0,
             'member_examine' => 0,
-            'members' => 0,
+            'members' => 126,
             'message'  => 0,
             'migrations' => 0,
             'post_member' => 0,
