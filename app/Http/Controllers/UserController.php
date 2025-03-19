@@ -65,6 +65,10 @@ class UserController extends Controller
 //        $data['is_mobile'] = $user->mobile?1:0;
         $data['is_real'] = 1;
         $data['is_mobile'] = 1;
+        $data['is_tuig'] = 0;
+        if($data['is_chuxiao'] && $data['pv']>=400){
+            $data['is_tuig'] = 1;
+        }
         if($user->is_disabled > 0){
             if($user->is_disabled == 1){
                 return $this->error('账号已冻结');
@@ -403,7 +407,7 @@ class UserController extends Controller
                 throw new BizException('该人员不能作为推荐人');
             }
 
-            if(!$parent->is_chuxiao){
+            if(!$parent->is_chuxiao && $parent->pv < 400){
                 throw new BizException('邀请人未激活,无法邀请');
             }
 
