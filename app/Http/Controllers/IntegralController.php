@@ -47,7 +47,7 @@ class IntegralController extends Controller
         $limit = 16;
         $status_map =  IntegralLogs::STATUS_MAP;
         $data = IntegralLogs::whereMemberId($user->id)
-            ->where('action', 12)
+            ->whereIn('action', [11,12])
             ->orderBy('id', 'desc')
             ->forPage($page, $limit)
             ->get()
@@ -504,7 +504,7 @@ class IntegralController extends Controller
                 $push_integral->member_id = $member->id;
                 $push_integral->status = 1;
                 $push_integral->amount = $amount;
-                $push_integral->star_amount = bcmul($amount,100);
+                $push_integral->star_amount = $amount;
                 $push_integral->save();
                 $related_id = $push_integral->id;
                 //数量变动

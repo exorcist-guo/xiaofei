@@ -467,6 +467,7 @@ class BonusSettlementCommand extends Command
                 //有冻结抵扣券的用户
                 $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                 SettlementLog::addLog($jihuo_amount,$pv_order->cash_amount,$jihuo_ratio,$settlement_member,2,$pv_order->id);
+                break;
             }
         }
 
