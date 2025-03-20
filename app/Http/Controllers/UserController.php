@@ -66,7 +66,7 @@ class UserController extends Controller
         $data['is_real'] = 1;
         $data['is_mobile'] = 1;
         $data['is_tuig'] = 0;
-        if($data['is_chuxiao'] && $data['pv']>=400){
+        if($data['is_chuxiao'] || $data['pv'] >= 400){
             $data['is_tuig'] = 1;
         }
         if($user->is_disabled > 0){
