@@ -70,7 +70,7 @@ class ForeignController extends Controller
         $list = PushOrder::whereStatus(0)->limit(100)->get();
         $data = [];
         foreach ($list as $order){
-            $order->content = json_decode($order->content);
+            $order->content = json_decode($order->content, true);
             $data[] = $order;
         }
         return $this->success('获取成功',$data);
@@ -84,6 +84,7 @@ class ForeignController extends Controller
         $redis_key = 'push_mobile'.$order_no;
         $point = $request->input('point',0);
         $dikou = $request->input('dikou',0);
+        $qianbao = $request->input('qianbao',0);
 
         try {
             if(!Redis::set($redis_key, 1, 'ex', 15, 'nx')) {
@@ -112,6 +113,7 @@ class ForeignController extends Controller
             }else{
                 $cash_amount =  $cash_amount_new;
             }
+            $cash_amount = bcadd($cash_amount,$qianbao,2);
 //            \DB::transaction(function() use($user, $request){
 //                $user = Member::whereId($user->id)->lockForUpdate()->first();
 //                $order_no = $request->input('order_no','');
@@ -132,6 +134,7 @@ class ForeignController extends Controller
                     'updated_at' => $time,
                     'point' => $point,
                     'dikou' => $dikou,
+                    'qianbao' => $qianbao
 
                 ]);
                 if(!$order_id){
