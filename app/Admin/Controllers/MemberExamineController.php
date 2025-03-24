@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Batch\BatchCheckMember;
 use App\Admin\Actions\Member\CheckChangeOrder;
 use App\Admin\Actions\Member\CheckMember;
 use App\Member;
@@ -44,7 +45,7 @@ class MemberExamineController extends AdminController
         $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
             $batchActions->disableDelete();
             if (Admin::user()->can('disable-member')) {
-//                $batchActions->add(new AdminBatchRemoveMembersToBlackList());
+                $batchActions->add(new BatchCheckMember());
             }
 
         });
