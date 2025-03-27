@@ -69,7 +69,8 @@ class Test extends Command
      */
     public function handle()
     {
-        $this->cleanAllData();
+        $member = DB::table('members')->where('id',126)->first();
+        var_dump($member->id);
         exit;
         ChangeOrderJob::dispatchNow(300);
         exit;

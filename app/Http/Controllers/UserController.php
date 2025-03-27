@@ -59,7 +59,7 @@ class UserController extends Controller
 
     public function info(Request $request){
         $user = \Auth::user();
-        $data = \Arr::only($user->toArray(), ['id','is_chuxiao', 'shop_level','level','mobile','number','integral','all_integral','pv','dikouquan','dikouquan_k','is_set_transaction_password']);
+        $data = \Arr::only($user->toArray(), ['id','is_chuxiao','is_disabled', 'shop_level','level','mobile','number','integral','all_integral','pv','dikouquan','dikouquan_k','is_set_transaction_password']);
         $data['mobile'] = substr_replace($data['mobile'], '****', 3, 4);
 //        $data['is_real'] = $user->real_name?1:0;
 //        $data['is_mobile'] = $user->mobile?1:0;
@@ -230,7 +230,7 @@ class UserController extends Controller
                 throw new BizException('等待管理员审核');
             }
 
-            if($user->is_disabled) {
+            if($user->is_disabled == 1) {
                 throw new BizException('您已经被封号无法登录');
             }
 
@@ -252,8 +252,11 @@ class UserController extends Controller
             $log->member_id = $user->id;
             $log->ip = $ip;
             $log->save();
-
-            return $this->success('success', compact('token','is_real','is_mobile'));
+            $pid_number = isset($user->spread->number)?$user->spread->number:'';
+            $m_info =  \Arr::only($user->toArray(), ['id','is_chuxiao','is_disabled', 'shop_level','level','mobile','number','integral','all_integral','pv','dikouquan','dikouquan_k','is_set_transaction_password','real_name','id_number','certificate_type']);
+            $m_info['pid_number'] = $pid_number;
+            $m_info['certificate_type'] = $m_info['certificate_type']??1;
+            return $this->success('success', compact('token','is_real','is_mobile','m_info'));
         } catch (BizException $e) {
             return $this->error($e->getMessage());
         }
@@ -315,10 +318,10 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'mobile' => [
-                'required',
-                'not_exists:members,mobile'
-            ],
+//            'mobile' => [
+//                'required',
+//                'not_exists:members,mobile'
+//            ],
             'invite_mobile' => [
                 'required',
             ],
@@ -387,7 +390,7 @@ class UserController extends Controller
             $real_name = $request->input('real_name');
 
             if(!empty($id_number)){
-                $is_user = Member::Where('id_number',$id_number)->first();
+                $is_user = Member::Where('id_number',$id_number)->whereIn('is_disabled',[0,1,2,3,4,6,7,9])->first();
                 if($is_user){
                     throw new BizException('该证件号已被注册');
                 }
@@ -445,8 +448,14 @@ class UserController extends Controller
                 'certificate_image' => $certificate_image,
                 'group_number' => $group_number,
             ];
-            $member = DB::table('members')->where('mobile',$mobile)->where('is_disabled',8)->first();
+            $member = DB::table('members')->where('mobile',$mobile)->whereIn('is_disabled',[5,8])->first();
             if($member){
+                if($member->pid != $pid){
+                    //判断有无下级
+                    if(Member::where('pid',$member->id)->count()){
+                        throw new BizException('已有下级,不能修改推荐人');
+                    }
+                }
                 DB::table('members')->where('id',$member->id)->update($data);
                 $id = $member->id;
             }else{

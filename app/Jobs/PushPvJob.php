@@ -55,6 +55,12 @@ class PushPvJob implements ShouldQueue
                         $push_order->save();
                         return true;
                     }
+                    if(in_array($user->is_disabled,[5,9])){
+                        //状态为锁定、注销的会员从商城推送过来的订单不接收
+                        $push_order->status = $user->is_disabled;
+                        $push_order->save();
+                        return true;
+                    }
                     $push_order->status = 1;
                     $push_order->save();
                     //增加业绩

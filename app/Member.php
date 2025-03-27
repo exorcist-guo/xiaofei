@@ -117,6 +117,7 @@ class Member extends Authenticatable
     const IS_DISABLED_MAP = [
         0 => '正常',
         1 => '锁定',
+        5 => '导入锁定',
         7 => '待审核',
         8 => '审核失败',
         9 => '注销',

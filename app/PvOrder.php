@@ -49,6 +49,9 @@ class PvOrder extends Model
         1 => '待结算',
         2 => '已结算',
         7 => '未找到用户',
+
+        5 => '锁定中',
+        9 => '已注销',
     ];
 
 //    protected function asDateTime($value) {

@@ -93,6 +93,18 @@ class PostMemberJob implements ShouldQueue
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ];
+
+                //激活
+                if($post_member->js_jihuo == 1){
+                    $data['is_chuxiao'] = 1;
+                    $data['chuxiao_time'] = date('Y-m-d H:i:s');
+                }
+
+                //锁定
+                if($post_member->suo == 1){
+                    $data['is_disabled'] = 5;
+                }
+
                 $id = DB::table('members')->insertGetId($data);
                 if($id){
                     $post_member->status = 7;
@@ -173,6 +185,8 @@ class PostMemberJob implements ShouldQueue
             $post_member->id_number = $data['id_number'];
             $post_member->group_number = $data['group_number'];
             $post_member->number = $data['number'];
+            $post_member->is_jihuo = $data['is_jihuo'];
+            $post_member->is_suo = $data['is_suo'];
             if(empty($post_member->number)){
                 $post_member->status = 3;
                 $error .= '账号不能为空';

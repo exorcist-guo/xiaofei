@@ -69,6 +69,8 @@ class PostMemberController extends AdminController
         $grid->column('real_name', __('Real name'));
         $grid->column('group_number', __('Group number'));
         $grid->column('id_number', __('Id number'));
+        $grid->column('is_jihuo', __('is_jihuo'));
+        $grid->column('is_suo', __('is_suo'));
         $grid->column('error', __('Error'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
