@@ -95,13 +95,13 @@ class PostMemberJob implements ShouldQueue
                 ];
 
                 //激活
-                if($post_member->js_jihuo == 1){
+                if($post_member->is_jihuo == 1){
                     $data['is_chuxiao'] = 1;
                     $data['chuxiao_time'] = date('Y-m-d H:i:s');
                 }
 
                 //锁定
-                if($post_member->suo == 1){
+                if($post_member->is_suo == 1){
                     $data['is_disabled'] = 5;
                 }
 
