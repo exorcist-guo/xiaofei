@@ -570,7 +570,7 @@ class UserController extends Controller
                 'certificate_image' => $certificate_image,
                 'group_number' => $group_number,
             ];
-            $member = DB::table('members')->where('mobile',$mobile)->whereIn('is_disabled',[5,8])->first();
+            $member = DB::table('members')->where('mobile',$mobile)->where('is_disabled',8)->first();
             if($member){
                 if($member->pid != $pid){
                     //判断有无下级
