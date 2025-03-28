@@ -22,4 +22,5 @@ return [
     '提现' => 'withdraw',
     '冻结消费券减少' => 'Freeze spending coupons to reduce',
     '可用消费券激活增加' => 'Available coupon activation increases',
+    '兑换' => 'Exchange',
 ];

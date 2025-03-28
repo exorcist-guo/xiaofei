@@ -188,6 +188,7 @@ class UserController extends Controller
 
     public function passwordLogin(Request $request)
     {
+
         try {
             $rules = [
                 'mobile' => [
@@ -233,7 +234,7 @@ class UserController extends Controller
 
             if($user->is_disabled == 8){
                 $msg = MemberExamine::whereMemberId($user->id)->orderByDesc('id')->value('msg');
-                throw new BizException('审核失败，请重新注册。失败原因：'.$msg);
+                return $this->error(['msg'=>'审核失败,失败原因：:name', 'name'=>$msg]);
             }elseif ($user->is_disabled == 7){
                 throw new BizException('等待管理员审核');
             }
