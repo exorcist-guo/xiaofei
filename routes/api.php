@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 Route::post('/get/config', 'UserController@getConfig');
 Route::post('/user/register', 'UserController@register');
+Route::post('/user/unlock', 'UserController@unlock');
 Route::post('/cp', 'UserController@captcha');
 Route::post('/send/verify', 'UserController@sendVerifyGuest');
 Route::post('/user/login', 'UserController@passwordLogin');

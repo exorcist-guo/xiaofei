@@ -217,10 +217,18 @@ class UserController extends Controller
             }
             $user = Member::where('mobile',$mobile)
 //                ->orWhere('number',$mobile)
-                ->orWhere('id_number',$mobile)->first();
+                ->orWhere('number',$mobile)->first();
+
 
             if (!$user || $user->is_disabled > 8) {
                 throw new BizException('用户不存在或密码错误');
+            }
+
+
+            if (!$user->verifyPassword($request->input('password'))) {
+                $current = Redis::incrby($key, 1);
+                Redis::expire($key, 2 * 60 * 60); //
+                throw new BizException('用户不存在或密码错误2');
             }
 
             if($user->is_disabled == 8){
@@ -234,11 +242,7 @@ class UserController extends Controller
                 throw new BizException('您已经被封号无法登录');
             }
 
-            if (!$user->verifyPassword($request->input('password'))) {
-                $current = Redis::incrby($key, 1);
-                Redis::expire($key, 2 * 60 * 60); //
-                throw new BizException('用户不存在或密码错误');
-            }
+
             $ip = VerifyService::getClientIp();
 
             $token = JwtUserProvider::getToken($user->id);
@@ -313,6 +317,124 @@ class UserController extends Controller
         return $this->error('操作失败');
     }
 
+    //解锁账号
+    public function unlock(Request $request)
+    {
+        $rules = [
+//            'mobile' => [
+//                'required',
+//                'not_exists:members,mobile'
+//            ],
+            'number' => [
+                'required',
+            ],
+            'certificate_image' => [
+                'required',
+            ],
+
+            'password' => [
+                'required',
+                'between:6,12'
+            ],
+        ];
+        $messages = [
+            'required' => '请完善信息',
+            'required.number' => '账号不能为空',
+            'required.nation' => '国家不能为空',
+            'required.lang' => '语言不能为空',
+            'mobile.not_exists' => '账号已注册',
+            'invite_mobile.exists' => '邀请人不存在',
+            'verify_code' => '验证码错误',
+            'password.between' => '密码长度必须为6到12个字符',
+            'required.certificate_image' => '证件照不能为空'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first());
+        }
+
+        try {
+            \DB::beginTransaction();
+            $mobile = $request->input('mobile');
+            $number = $request->input('number');
+            $certificate_image = $request->input('certificate_image');
+            $certificate_type = $request->input('certificate_type');
+            $nation = $request->input('nation');
+            $nation = $nation??1;
+
+            $lang = \App::getLocale();
+
+            $id_number = $request->input('id_number');
+            $real_name = $request->input('real_name');
+
+            $member = Member::where('number',$number)->where('is_disabled',5)->first();
+            if($member){
+                if (!$member->verifyPassword($request->input('password'))) {
+                    throw new BizException('密码错误');
+                }
+
+            }else{
+                throw new BizException('未找到待解锁账号');
+            }
+
+            if(!empty($id_number)){
+                $is_user = Member::Where('id_number',$id_number)->whereIn('is_disabled',[0,1,2,3,4,6,7,9])->first();
+                if($is_user){
+                    throw new BizException('该证件号已被注册');
+                }
+            }
+
+            /** @var Member $parent */
+
+
+
+
+            $data = [
+                'mobile' => $mobile,
+                'updated_at' => date('Y-m-d H:i:s'),
+                'certificate_type' => $certificate_type,
+                'nation' => $nation,
+                'lang' => $lang,
+                'real_name' => $real_name,
+                'id_number' => $id_number,
+                'is_disabled' => 7,
+                'certificate_image' => $certificate_image,
+            ];
+
+            DB::table('members')->where('id',$member->id)->update($data);
+            $id = $member->id;
+
+            $data_e = [
+                'mobile' => $mobile,
+                'number' => $number,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'certificate_type' => $certificate_type,
+                'nation' => $nation,
+                'real_name' => $real_name,
+                'id_number' => $id_number,
+                'is_disabled' => 7,
+                'type' => 5,
+                'member_id' => $id,
+                'certificate_image' => $certificate_image,
+            ];
+            Db::table('member_examine')->insert($data_e);
+
+
+            \DB::commit();
+            return $this->success('解锁成功');
+        } catch (BizException $bizException) {
+            \DB::rollBack();
+            return $this->error($bizException->getMessage());
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::channel('user')->error('解锁失败，请联系管理员', [$e->getMessage(), $mobile]);
+            return $this->error('解锁失败，请联系管理员');
+        }
+    }
 
     //注册账号
     public function register(Request $request)

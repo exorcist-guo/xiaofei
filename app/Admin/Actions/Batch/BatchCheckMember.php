@@ -42,6 +42,9 @@ class BatchCheckMember extends BatchAction
                         if($status == 6){
                             Member::whereId($model->member_id)->update(['is_disabled'=>0]);
                         }elseif($status == 8){
+                            if($model->type == 5){
+                                $status = 5;
+                            }
                             Member::whereId($model->member_id)->update(['is_disabled'=>$status]);
                         }
                     }

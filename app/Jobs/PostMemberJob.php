@@ -83,7 +83,7 @@ class PostMemberJob implements ShouldQueue
                     'path' => $path,
                     'shop_level' => 0,
                     'group_number' => $group_number,
-                    'password' => \Hash::make(substr($post_member->mobile,-6)),
+                    'password' => \Hash::make(substr($post_member->number,-6)),
                     'pid' => $pid,
                     'pid_shop_member_id' => $pid_shop_member_id,
                     'shop_member_id' => $shop_member_id,
@@ -155,7 +155,7 @@ class PostMemberJob implements ShouldQueue
                     ->where('id','<>',$post_member->id)
                     ->first();
                 $pp2 = Member::where('mobile',$post_member->mobile)->first();
-                if($pp || $pp2){
+                if($post_member->mobile && ($pp || $pp2)){
                     $post_member->status = 3;
                     $error .= '该邮箱已经存在';
                 }
@@ -179,7 +179,7 @@ class PostMemberJob implements ShouldQueue
             $post_member = new PostMember();
             $post_member->status = 4;
             $post_member->pici = $data['pici'];
-            $post_member->mobile = $data['mobile'];
+            $post_member->mobile = $data['mobile']??'';
             $post_member->pid_id_number = $data['pid_id_number']??'';
             $post_member->real_name = $data['real_name'];
             $post_member->id_number = $data['id_number'];
@@ -223,7 +223,7 @@ class PostMemberJob implements ShouldQueue
 //            }
             $pp = PostMember::where('status','>',1)->where('mobile',$post_member->mobile)->first();
             $pp2 = Member::where('mobile',$post_member->mobile)->first();
-            if($pp || $pp2){
+            if($post_member->mobile && ($pp || $pp2)){
                 $post_member->status = 3;
                 $error .= '该邮箱已经存在';
             }

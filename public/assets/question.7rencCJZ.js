@@ -1,0 +1,1 @@
+import{a as s}from"./request.8kQxyx6u.js";const t=t=>s({url:"message/submit",method:"post",data:t,showToast:!0}),a=t=>s({url:"message",method:"post",data:t,showToast:!0}),o=t=>s({url:"message/list",method:"post",data:t,showToast:!0}),e=t=>s({url:"proclamation/list",method:"post",data:t,showToast:!0});export{o as a,a as m,e as p,t as s};

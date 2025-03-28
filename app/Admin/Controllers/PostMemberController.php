@@ -114,7 +114,7 @@ class PostMemberController extends AdminController
 
 //        $form->number('status', __('Status'));
 //        $form->number('pici', __('Pici'));
-        $form->text('mobile', __('Mobile'));
+//        $form->text('mobile', __('Mobile'));
         $form->text('pid_id_number', __('Pid id number'));
 //        $form->text('number', __('Number'));
         $form->text('real_name', __('Real name'));
