@@ -5,6 +5,20 @@ namespace App\Services;
 class ForeignService
 {
 
+    public static function test()
+    {
+        $data = [
+            'amount' => 508,
+            'appid' => '9885489545245',
+            'cash_amount' => 508,
+            'dikou' => 0,
+            'mobile' => 'vivia0707@163.com',
+            'order_no' => 'HB-345',
+            'point' => 0,
+            'qianbao' => 0
+        ];
+        $a = self::httpPost('test',$data);
+    }
 
     public static function checksign($data){
 
@@ -51,7 +65,7 @@ class ForeignService
         return $ok;
     }
 
-    public static function httpPost($method,$data){
+    public static function httpPost($method,$params){
         $url = '';
         $config = config('app.foreign');
         $params['appid'] = $config['appid'];

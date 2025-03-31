@@ -341,7 +341,7 @@ class BonusSettlementCommand extends Command
                     //未激活，不给奖励
                     return true;
                 }
-                $count = Member::wherePid($user->pid)->where('divvy_pv','>=',400)->count();
+                $count = Member::wherePid($user->pid)->where('is_chuxiao',1)->count();
                 if($count){
                     $settlement_member = SettlementMember::getSettlementMember($member,$bonus_settlement_id);
                     $y_ratio = bcmul(0.01 , $count,2);

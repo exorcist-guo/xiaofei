@@ -69,6 +69,8 @@ class Test extends Command
      */
     public function handle()
     {
+        ForeignService::test();
+        exit;
         $this->cleanAllData();
         exit;
         $member = DB::table('members')->where('id',126)->first();
