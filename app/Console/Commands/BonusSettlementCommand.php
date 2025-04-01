@@ -456,8 +456,10 @@ class BonusSettlementCommand extends Command
         }*/
 
         //老会员本人及网体下人员，每期消费都可以激活现金消费部分的25%的抵扣券到可用余额
-        $user_ids = explode('/',$user->path);
+        $user_ids = array_reverse(explode('/',$user->path));
         $user_ids[0] = $user->id;
+        $user_ids = array_filter($user_ids);
+
         $jihuo_ratio = 0.25; //激活比率
         $jihuo_amount = bcmul($pv_order->cash_amount,$jihuo_ratio,2);
         foreach ($user_ids as $user_id){
